@@ -571,11 +571,15 @@ class ValorantResolver:
         # Resolve players
         resolved_players = []
         for p in current.get("all_players", []):
+            # Skip completely empty placeholder slots
+            if not p.get("Subject") and not p.get("puuid"):
+                continue
+                
             resolved_players.append(ResolvedPlayer(
-                puuid=p["puuid"],
-                team_id=p["team_id"],
-                agent=self.resolve_agent(p.get("character_id", "")),
-                is_coach=p.get("is_coach", False),
+                puuid=p.get("puuid") or p.get("Subject", ""),
+                team_id=p.get("team_id") or p.get("TeamID", ""),
+                agent=self.resolve_agent(p.get("character_id") or p.get("CharacterID", "")),
+                is_coach=p.get("is_coach") or p.get("IsCoach", False),
             ))
 
         # Resolve loadouts

@@ -31,6 +31,15 @@ class AnalysisRequest(Model):
     game_state_text: str   # Gemini's synthesized text — only thing Fetch.ai sees
     round_num: int
     map_name: str
+    # from Valorant API
+    time_remaining: Optional[float] = None
+    score: Optional[str] = None         # e.g. "5-3"
+    credits: Optional[int] = None
+    spike_status: Optional[str] = None  # "none" | "planted" | "defusing" | "held"
+    # from ShooterGame.log
+    recent_events: Optional[str] = None
+    # from Gemini output
+    urgency: Optional[str] = None       # "high" | "medium" | "low"
     player_query: Optional[str] = None
 
 

@@ -1,4 +1,5 @@
 import os
+import json
 import google.generativeai as genai
 import base64
 import io
@@ -14,19 +15,30 @@ model = genai.GenerativeModel("gemini-2.0-flash")
 async def analyze_all(
     screenshot_b64: str,
     profile: PlayerProfile,
-    player_query: str = None
-) -> str:
+    log_events: str = None,
+    api_data: dict = None,
+    player_query: str = None,
+) -> dict:
     """
-    Takes all 3 inputs:
-      - screenshot_b64   : raw base64 JPEG of the game screen
-      - profile          : full player profile (rank, agent, playstyle, weaknesses)
-      - player_query     : optional voice/text question from the player
-
-    Returns one rich plain-text game-state summary for Fetch.ai agents.
+    Takes all data sources and returns a structured dict.
     Gemini is the ONLY component that ever sees images.
+
+    Returns dict with keys: should_coach, urgency, game_state_text,
+    round_num, map_name, time_remaining, score, credits, spike_status,
+    agent_name, health, armor, weapon, position, crosshair_placement,
+    in_gunfight, is_shooting, is_moving, teammates_alive, enemies_alive,
+    visible_enemies, recent_death
     """
 
-    prompt = f"""You are a Valorant game state analyzer.
+    api_section = ""
+    if api_data:
+        api_section = f"\nVALORANT API DATA:\n{json.dumps(api_data, indent=2)}\n"
+
+    log_section = ""
+    if log_events:
+        log_section = f"\nRECENT SHOOTERGAME.LOG EVENTS:\n{log_events}\n"
+
+    prompt = f"""You are a Valorant game state analyzer. Analyze all provided data sources and return a single JSON object.
 
 PLAYER PROFILE:
 - Player ID  : {profile.player_id}
@@ -36,43 +48,61 @@ PLAYER PROFILE:
 - IGL        : {"Yes" if profile.igl else "No"}
 - Strengths  : {", ".join(profile.strengths)}
 - Weak areas : {", ".join(profile.weak_areas)}
-
+{api_section}{log_section}
 {"PLAYER QUESTION: " + player_query if player_query else ""}
 
-Analyze the screenshot above in the full context of this player's profile.
-Describe in plain text, covering ALL of the following:
+Analyze the screenshot and all other data sources above.
 
-GAME STATE:
-- Map area and player's current location
-- Visible enemies and their positions
-- Visible teammates and their positions
-- Minimap state: rotations, coverage gaps
-- Round number, time remaining, spike status (planted / held / none)
-- Current score (attacker vs defender rounds)
+Return ONLY a valid JSON object with these exact keys (no markdown, no extra text):
+{{
+  "should_coach": true or false,
+  "urgency": "high" or "medium" or "low",
+  "game_state_text": "3-5 sentence narrative summary of the full game state for coaching agents",
+  "round_num": integer or null,
+  "map_name": "map name or empty string",
+  "time_remaining": float seconds or null,
+  "score": "attacker-defender e.g. 5-3" or null,
+  "credits": integer or null,
+  "spike_status": "none" or "planted" or "defusing" or "held",
+  "agent_name": "Valorant agent name e.g. Jett",
+  "health": integer 0-100,
+  "armor": true or false,
+  "weapon": "weapon name e.g. Vandal",
+  "position": "map area e.g. B Site",
+  "crosshair_placement": "head_level" or "off_angle" or "ground" or "unknown",
+  "in_gunfight": true or false,
+  "is_shooting": true or false,
+  "is_moving": true or false,
+  "teammates_alive": integer,
+  "enemies_alive": integer,
+  "visible_enemies": integer,
+  "recent_death": true or false
+}}
 
-ECONOMY:
-- Player credits, weapon equipped, armor status
-- Visible teammate loadouts if shown
-
-MECHANICS OBSERVATIONS:
-- Crosshair placement relative to likely enemy angles
-- Whether player is moving or stationary
-- Any spray or aim patterns visible in the frame
-
-MENTAL / BEHAVIORAL SIGNALS:
-- Any patterns suggesting tilt, aggression, or passivity
-- Communication indicators if visible (muted teammates, etc.)
-
-PROFILE FIT:
-- How the current situation relates to this player's known weak areas
-- Whether their playstyle is appropriate for the current round state
-
-Be factual and specific. Do NOT give coaching advice yet.
-This text will be passed to three specialist coaching agents (gamesense, mechanics, mental)
-who will each produce targeted coaching calls from it."""
+Set should_coach=true only when there is an actionable coaching moment right now (gunfight, spike event, positional mistake, economic decision, tilt signal).
+Set urgency based on how time-sensitive the coaching call is."""
 
     img_bytes = base64.b64decode(screenshot_b64)
     img = Image.open(io.BytesIO(img_bytes))
 
     response = model.generate_content([prompt, img])
-    return response.text
+    raw = response.text.strip()
+
+    # Strip markdown code fences if Gemini wraps the JSON
+    if raw.startswith("```"):
+        raw = raw.split("```")[1]
+        if raw.startswith("json"):
+            raw = raw[4:]
+    raw = raw.strip()
+
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        return {
+            "should_coach": False,
+            "urgency": "low",
+            "game_state_text": raw,
+            "round_num": 0,
+            "map_name": "",
+            "spike_status": "none",
+        }

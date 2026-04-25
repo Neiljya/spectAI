@@ -5,3 +5,4 @@ Pillow>=10.0.0
 mss>=9.0.0
 elevenlabs>=1.0.0
 python-dotenv>=1.0.0
+aiofiles>=23.0.0

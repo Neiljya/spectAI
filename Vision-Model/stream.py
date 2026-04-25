@@ -1,7 +1,14 @@
+import io
 import win32gui
 import numpy as np
-import cv2
 import mss
+
+try:
+    import cv2
+    _CV2_AVAILABLE = True
+except ImportError:
+    _CV2_AVAILABLE = False
+    from PIL import Image
 
 class WindowCapture:
     def __init__(self, window_title: str):
@@ -27,10 +34,12 @@ class WindowCapture:
         if self.width <= 0 or self.height <= 0:
             return None
 
-        sct_img = self.sct.grab(self.monitor)  
-        frame = np.array(sct_img)
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
-        return frame
+        sct_img = self.sct.grab(self.monitor)
+        bgra = np.array(sct_img)
+        if _CV2_AVAILABLE:
+            return cv2.cvtColor(bgra, cv2.COLOR_BGRA2BGR)
+        # Pillow fallback: drop alpha, swap B and R → RGB
+        return bgra[:, :, [2, 1, 0]]
 
     # def frame_to_jpeg(self, frame, quality=80):
     #     encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), quality]
@@ -40,9 +49,15 @@ class WindowCapture:
     #     return None
     
     def frame_to_jpeg(self, frame, size=(768, 768)) -> bytes:
-        resized = cv2.resize(frame, size)
-        _, jpeg = cv2.imencode('.jpg', resized, [cv2.IMWRITE_JPEG_QUALITY, 80])
-        return jpeg.tobytes()
+        if _CV2_AVAILABLE:
+            resized = cv2.resize(frame, size)
+            _, jpeg = cv2.imencode('.jpg', resized, [cv2.IMWRITE_JPEG_QUALITY, 80])
+            return jpeg.tobytes()
+        img = Image.fromarray(frame)
+        img = img.resize(size, Image.LANCZOS)
+        buf = io.BytesIO()
+        img.save(buf, format="JPEG", quality=80)
+        return buf.getvalue()
     
     def list_windows(): 
         """Run this first to find your exact window title"""

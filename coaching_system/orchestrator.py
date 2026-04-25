@@ -1,10 +1,7 @@
 import asyncio
 import os
-import subprocess
-import tempfile
 from typing import Optional
 
-import httpx
 from uagents import Agent, Context
 from dotenv import load_dotenv
 from supabase import create_client, Client
@@ -15,8 +12,20 @@ from shared.player_store import PLAYER_PROFILES
 load_dotenv()
 
 # ── ElevenLabs TTS ────────────────────────────────────────────────────────────
+import ctypes
+import tempfile
+import httpx
+
 _ELEVENLABS_KEY   = os.environ.get("ELEVENLABS_API_KEY", "")
 _ELEVENLABS_VOICE = "JBFqnCBsd6RMkjVDRZzb"  # George — deep, clear coaching voice
+
+
+def _play_mp3(path: str):
+    """Play an MP3 using Windows MCI — no ffmpeg or extra packages needed."""
+    mci = ctypes.windll.winmm.mciSendStringW
+    mci(f'open "{path}" type mpegvideo alias spectai_tts', None, 0, None)
+    mci('play spectai_tts wait', None, 0, None)
+    mci('close spectai_tts', None, 0, None)
 
 
 def _speak_sync(text: str):
@@ -36,9 +45,7 @@ def _speak_sync(text: str):
     with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as f:
         f.write(resp.content)
         tmp_path = f.name
-    subprocess.Popen(
-        ["ffplay", "-nodisp", "-autoexit", "-loglevel", "quiet", tmp_path]
-    )
+    _play_mp3(tmp_path)
 
 
 # ── Supabase ──────────────────────────────────────────────────────────────────
@@ -154,7 +161,8 @@ orchestrator = Agent(
     name="orchestrator",
     seed="spectai_orchestrator_siddharth_2026",
     port=8000,
-    endpoint=["http://127.0.0.1:8000/submit"]
+    endpoint=["http://127.0.0.1:8000/submit"],
+    mailbox=True,
 )
 
 # Buffer: player_id → {"req": AnalysisRequest, "reports": list[AgentReport]}

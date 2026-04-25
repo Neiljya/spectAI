@@ -15,7 +15,6 @@ gamesense = Agent(
     port=8001,
     endpoint=["http://127.0.0.1:8001/submit"],
     mailbox=True,
-    publish_agent_details=True,
 )
 
 

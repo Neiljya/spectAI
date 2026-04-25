@@ -15,7 +15,6 @@ mechanics = Agent(
     port=8002,
     endpoint=["http://127.0.0.1:8002/submit"],
     mailbox=True,
-    publish_agent_details=True,
 )
 
 

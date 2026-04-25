@@ -13,7 +13,41 @@ from stream import WindowCapture
 from valorant_local_api import ValorantLocalClient, GamePhase
 from valorant_resolver import ValorantResolver
 
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'coaching_system'))
+from uagents import Agent, Context as AgentContext
+from shared.models import AnalysisRequest
+from shared.player_store import PLAYER_PROFILES
+
 log = logging.getLogger(__name__)
+
+# --- uAgent setup ---
+ORCHESTRATOR_ADDRESS = "agent1qv3vml6d7av788k4yyhwrwssmj4tsct7z9nw8eyva9h6jc29quka5wmh6am"
+
+_vision_agent = Agent(
+    name="vision_collector",
+    seed="spectai_vision_collector_2026",
+    port=8010,
+    endpoint=["http://127.0.0.1:8010/submit"],
+    mailbox=True,
+)
+_agent_ctx: AgentContext | None = None
+
+def _parse_time(t: str) -> float | None:
+    if not t or t == "unknown":
+        return None
+    try:
+        m, s = t.split(":") if ":" in t else (0, t)
+        return float(m) * 60 + float(s)
+    except Exception:
+        return None
+
+@_vision_agent.on_event("startup")
+async def on_start(ctx: AgentContext):
+    global _agent_ctx
+    _agent_ctx = ctx
+    ctx.logger.info(f"Vision collector running at: {_vision_agent.address}")
+    asyncio.create_task(run_spect_ai())
 
 # --- Config ---
 dotenv.load_dotenv()
@@ -416,8 +450,32 @@ async def run_spect_ai():
                         history_buffer.append(history_entry)
                         if len(history_buffer) > MAX_HISTORY:
                             history_buffer.pop(0)
-                            
-                        # TODO: pass ctx to agent router
+                        
+                        # Send to orchestrator if should coach
+                        if ctx.should_coach and _agent_ctx:
+                            profile = PLAYER_PROFILES.get("player_001")
+                            if profile:
+                                profile = profile.model_copy(update={"agent_name": ctx.player_character or profile.agent_name})
+                                score_str = f"{ctx.team_score}-{ctx.enemy_score}" if ctx.team_score >= 0 and ctx.enemy_score >= 0 else None
+                                req = AnalysisRequest(
+                                    profile=profile,
+                                    game_state_text=ctx.game_state,
+                                    round_num=ctx.round_number or 0,
+                                    map_name=ctx.map_name or "",
+                                    time_remaining=_parse_time(ctx.time_remaining),
+                                    score=score_str,
+                                    credits=ctx.player_credits if ctx.player_credits >= 0 else None,
+                                    spike_status=ctx.spike_status if ctx.spike_status != "unknown" else None,
+                                    urgency=ctx.urgency,
+                                    position=ctx.player_position,
+                                    weapon=ctx.player_weapon,
+                                    health=ctx.player_health if ctx.player_health >= 0 else None,
+                                    armor=ctx.player_armor,
+                                    crosshair_placement=ctx.crosshair_placement,
+                                    in_gunfight=ctx.in_gunfight,
+                                )
+                                await _agent_ctx.send(ORCHESTRATOR_ADDRESS, req)
+                                _agent_ctx.logger.info(f"[vision] Analysis sent — round {req.round_num}, urgency={req.urgency}")
                     else:
                         print(f"[SpectAI] Parse failed. Raw: {full_text[:300]}")
                 else:
@@ -430,4 +488,4 @@ async def run_spect_ai():
 
 
 if __name__ == "__main__":
-    asyncio.run(run_spect_ai())
+    _vision_agent.run()

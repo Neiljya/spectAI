@@ -15,7 +15,6 @@ mental = Agent(
     port=8003,
     endpoint=["http://127.0.0.1:8003/submit"],
     mailbox=True,
-    publish_agent_details=True,
 )
 
 

@@ -1,174 +1,103 @@
-# bubble.py
-# One speech bubble. Slides in, holds, fades out.
-# Call show_bubble(text, kind) from coach.py — that's the only integration point.
+# coach.py
+# ============================================================
+# THE ONLY FILE YOU TOUCH when integrating your LLM.
+#
+# Two surfaces exposed:
+#   push(text, kind)              — show a speech bubble
+#   show_play(map_name, play_name) — show a minimap play diagram
+#
+# Swap the demo loop at the bottom for your actual pipeline.
+# ============================================================
 
-from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout
-from PyQt6.QtCore    import Qt, QTimer, QPropertyAnimation, QEasingCurve, pyqtProperty
-from PyQt6.QtGui     import QPainter, QColor, QPainterPath, QLinearGradient, QBrush, QPen
+import time
+import threading
+from overlay  import Overlay
+from minimap  import MinimapOverlay
+from plays    import list_plays
 
-
-# ── Bubble kinds → visual accent color + icon ─────────────
-# Swap in whatever kinds your LLM output produces.
-# Just make sure the "kind" string you pass to show_bubble() matches a key here.
-KINDS = {
-    "coach":    {"color": "#E63946", "icon": "◈"},   # red   — proactive tip
-    "warning":  {"color": "#FFB703", "icon": "▲"},   # gold  — danger
-    "positive": {"color": "#06D6A0", "icon": "◉"},   # teal  — good play
-    "info":     {"color": "#7B8896", "icon": "○"},   # gray  — neutral
-}
-
-DURATION_MS = 6000   # how long bubble stays visible
-FADE_MS     = 350    # fade in/out duration
+_overlay:  Overlay | None        = None
+_minimap:  MinimapOverlay | None = None
 
 
-class SpeechBubble(QWidget):
+def init(overlay: Overlay, minimap: MinimapOverlay):
+    global _overlay, _minimap
+    _overlay = overlay
+    _minimap = minimap
 
-    def __init__(self, text: str, kind: str = "coach", parent=None):
-        super().__init__(parent)
-        self.kind_   = KINDS.get(kind, KINDS["coach"])
-        self._alpha  = 0.0
-        self._on_done = None
 
-        self._init_window()
-        self._build_ui(text)
-        self._fade_in()
-        QTimer.singleShot(DURATION_MS, self._fade_out)
+# ── Speech bubble ─────────────────────────────────────────
 
-    # ── Window flags ─────────────────────────────────────
+def push(text: str, kind: str = "coach"):
+    """
+    Show a coach speech bubble.
+    kind: "coach" | "warning" | "positive" | "info"
 
-    def _init_window(self):
-        self.setWindowFlags(
-            Qt.WindowType.FramelessWindowHint       |
-            Qt.WindowType.WindowStaysOnTopHint      |
-            Qt.WindowType.Tool                      |
-            Qt.WindowType.WindowTransparentForInput
-        )
-        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-        self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
-        self.setMaximumWidth(360)
-        self.setMinimumWidth(260)
+    Example:
+        push("Rotate B now.", "coach")
+        push("Low HP — disengage!", "warning")
+        push("Clean clutch.", "positive")
+    """
+    assert _overlay, "call init() first"
+    _overlay.push(text, kind)
 
-    # ── UI ────────────────────────────────────────────────
 
-    def _build_ui(self, text: str):
-        root = QVBoxLayout(self)
-        root.setContentsMargins(16, 12, 16, 14)
-        root.setSpacing(7)
+# ── Minimap play ──────────────────────────────────────────
 
-        # Header: icon + "AI COACH" tag
-        header = QHBoxLayout()
-        header.setSpacing(7)
+def show_play(map_name: str, play_name: str):
+    """
+    Show a play diagram on the minimap overlay.
+    map_name:  "Split" | "Pearl" | "Ascent" | "Bind" | "Haven"
+    play_name: "B Split" | "Mid Push" | "B Default" | etc.
 
-        icon = QLabel(self.kind_["icon"])
-        icon.setStyleSheet(f"""
-            color: {self.kind_['color']};
-            font-size: 12px;
-            background: transparent;
-        """)
+    All available plays:
+        from plays import list_plays
+        print(list_plays())
 
-        tag = QLabel("AI COACH")
-        tag.setStyleSheet(f"""
-            color: {self.kind_['color']};
-            font-family: 'DM Mono', 'Courier New', monospace;
-            font-size: 9px;
-            letter-spacing: 2.5px;
-            background: transparent;
-        """)
+    Example:
+        show_play("Split", "B Split")
+        show_play("Pearl", "Mid Push")
+    """
+    assert _minimap, "call init() first"
+    _minimap.show_play(map_name, play_name)
 
-        header.addWidget(icon)
-        header.addWidget(tag)
-        header.addStretch()
 
-        # Message
-        msg = QLabel(text)
-        msg.setWordWrap(True)
-        msg.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
-        msg.setStyleSheet("""
-            color: #EDF0F3;
-            font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
-            font-size: 13px;
-            font-weight: 400;
-            line-height: 1.5;
-            background: transparent;
-        """)
+def hide_map():
+    """Dismiss the minimap overlay."""
+    assert _minimap, "call init() first"
+    _minimap.hide_map()
 
-        root.addLayout(header)
-        root.addWidget(msg)
-        self.adjustSize()
 
-    # ── Paint ─────────────────────────────────────────────
+# ── DEMO LOOP — delete when going live ────────────────────
 
-    def paintEvent(self, _):
-        p = QPainter(self)
-        p.setRenderHint(QPainter.RenderHint.Antialiasing)
-        p.setOpacity(self._alpha)
+def run_demo():
+    time.sleep(1.5)
+    push("Setting up attack round — let's run B Split.", "coach")
 
-        w, h, r = self.width(), self.height(), 14
+    time.sleep(2.5)
+    show_play("Split", "B Split")   # minimap pops up
 
-        # Shape
-        path = QPainterPath()
-        path.addRoundedRect(0, 0, w, h, r, r)
+    time.sleep(4)
+    push("Smoke back CT, ropes and main hit simultaneously.", "coach")
 
-        # Fill — dark translucent
-        p.fillPath(path, QColor(8, 12, 17, 215))
+    time.sleep(4)
+    push("Low HP — save the rifle!", "warning")
 
-        # Subtle top-to-bottom shimmer
-        grad = QLinearGradient(0, 0, 0, h)
-        grad.setColorAt(0, QColor(255, 255, 255, 10))
-        grad.setColorAt(1, QColor(255, 255, 255, 0))
-        p.fillPath(path, QBrush(grad))
+    time.sleep(3)
+    hide_map()
 
-        # Left accent bar
-        c = QColor(self.kind_["color"])
-        p.setPen(QPen(c, 2))
-        p.drawLine(1, r, 1, h - r)
+    time.sleep(1.5)
+    push("Nice clutch. Let's look at mid for next round.", "positive")
 
-        # Top accent dash
-        c.setAlpha(160)
-        p.setPen(QPen(c, 1))
-        p.drawLine(2, 1, 80, 1)
+    time.sleep(2)
+    show_play("Split", "Mid Control")
 
-        # Outer border
-        p.setPen(QPen(QColor(255, 255, 255, 16), 1))
-        p.drawPath(path)
+    time.sleep(5)
+    push("Control mail then decide A or B.", "info")
 
-    # ── Alpha property for animation ──────────────────────
+    time.sleep(4)
+    hide_map()
 
-    def _get_alpha(self): return self._alpha
-    def _set_alpha(self, v: float):
-        self._alpha = v
-        self.update()
 
-    alpha = pyqtProperty(float, _get_alpha, _set_alpha)
-
-    # ── Animations ────────────────────────────────────────
-
-    def _fade_in(self):
-        a = QPropertyAnimation(self, b"alpha")
-        a.setDuration(FADE_MS)
-        a.setStartValue(0.0)
-        a.setEndValue(1.0)
-        a.setEasingCurve(QEasingCurve.Type.OutCubic)
-        a.start()
-        self._anim = a   # keep ref
-
-    def _fade_out(self):
-        a = QPropertyAnimation(self, b"alpha")
-        a.setDuration(FADE_MS)
-        a.setStartValue(1.0)
-        a.setEndValue(0.0)
-        a.setEasingCurve(QEasingCurve.Type.InCubic)
-        a.finished.connect(self._cleanup)
-        a.start()
-        self._anim_out = a   # keep ref
-
-    def _cleanup(self):
-        if self._on_done:
-            self._on_done(self)
-        self.hide()
-        self.deleteLater()
-
-    def on_done(self, cb):
-        """Register callback for when bubble finishes. Used by Overlay to update stack."""
-        self._on_done = cb
-        return self
+def start_demo():
+    t = threading.Thread(target=run_demo, daemon=True)
+    t.start()

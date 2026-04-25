@@ -35,7 +35,8 @@ KIND_COLORS = {
     "info":     "#7B8896",
 }
 
-AVATAR_PATH = "avatar.png"   # drop a PNG here — fallback draws initials
+import os as _os
+AVATAR_PATH = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), 'avatar.png')   # drop a PNG here — fallback draws initials
 
 
 def _click_through(hwnd: int):
@@ -299,3 +300,9 @@ class Overlay(QWidget):
         by = OFFSET_Y + (AVATAR_SIZE - bh) // 2
         by = max(OFFSET_Y, by)   # don't go above top edge
         self._box.move(bx, by)
+
+    def toggle(self):
+        """Show/hide the entire overlay including avatar and message box."""
+        self._visible = not getattr(self, '_visible', True)
+        self._avatar.setVisible(self._visible)
+        self._box.setVisible(self._visible if self._box.isVisible() else False)

@@ -1,0 +1,254 @@
+/* ── Main Container ── */
+.rm-container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 100%;
+}
+
+/* ── Header ── */
+.rm-header-glass {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 32px 40px;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+}
+
+.rm-title-main {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+/* ── Glass Buttons ── */
+.glass-btn-primary {
+  background: rgba(255, 59, 48, 0.15);
+  border: 1px solid rgba(255, 59, 48, 0.3);
+  color: #ff4655;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-btn-primary:hover {
+  background: var(--red);
+  color: #ffffff;
+  box-shadow: 0 0 20px rgba(255, 59, 48, 0.4);
+  transform: translateY(-2px);
+}
+
+/* ── Match List Layout ── */
+.rm-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Align columns precisely */
+.rm-list-header, .match-row-summary {
+  display: grid;
+  grid-template-columns: 80px 100px 100px 80px 100px 60px 60px 80px 100px;
+  align-items: center;
+  gap: 16px;
+  padding: 0 24px;
+}
+
+.rm-list-header {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: #71717A;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 8px;
+}
+
+/* ── Individual Match Cards ── */
+.match-glass-card {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden; /* Contains the dropdown */
+}
+
+.match-glass-card:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.match-glass-card.is-expanded {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
+}
+
+.match-row-summary {
+  height: 64px;
+  cursor: pointer;
+}
+
+.rm-action-cell {
+  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.glass-pill-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  pointer-events: none; /* Let the row handle the click */
+}
+
+/* ── VOD Review Dropdown ── */
+.match-dropdown-content {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.2);
+  padding: 24px;
+  animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.vod-review-hub {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Tabs */
+.vod-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.vod-tab {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #A1A1A6;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.vod-tab:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.vod-tab.active {
+  background: rgba(255, 59, 48, 0.15);
+  border-color: rgba(255, 59, 48, 0.4);
+  color: #ff4655;
+}
+
+/* Split Layout */
+.vod-content-split {
+  display: grid;
+  grid-template-columns: 2fr 1fr; /* Video takes 2/3, Notes take 1/3 */
+  gap: 24px;
+}
+
+.vod-player-wrapper {
+  background: #000;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vod-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.vod-placeholder {
+  color: #71717A;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+/* Notes Panel */
+.vod-notes-panel {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.notes-title {
+  font-size: 18px;
+  color: #ffffff;
+  margin-top: 8px;
+  margin-bottom: 16px;
+}
+
+.notes-body {
+  font-size: 14px;
+  color: #A1A1A6;
+  line-height: 1.6;
+  overflow-y: auto;
+}
+
+/* ── Typography Utilities ── */
+.rm-outcome { font-weight: 700; text-transform: uppercase; font-size: 12px; }
+.rm-outcome--win { color: #4ade80; }
+.rm-outcome--loss { color: #ff4655; }
+.rm-outcome--draw { color: #71717A; }
+
+.rm-map { font-weight: 600; color: #ffffff; text-transform: uppercase; font-size: 13px; }
+.rm-agent { color: #A1A1A6; font-size: 13px; }
+
+.text-white { color: #ffffff; font-size: 13px; }
+.text-dim { color: #71717A; font-size: 12px; }
+.text-teal { color: #4ade80; font-size: 13px; }
+
+/* ── Loading / Empty States ── */
+.rm-empty-glass {
+  padding: 80px 40px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+}
+
+.empty-glyph {
+  font-size: 48px;
+  color: #27272A;
+  margin-bottom: 16px;
+}

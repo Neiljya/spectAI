@@ -1,0 +1,337 @@
+/* src/components/training/DrillRouter.css */
+
+/* ── Root containers ── */
+.dr-list,
+.dr-gs-wrap,
+.dr-summary {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.dr-list {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.dr-list__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.dr-list__title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.02em;
+  margin-top: 5px;
+}
+
+/* ── Buttons ── */
+.dr-btn {
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #fff;
+  padding: 11px 22px;
+  border-radius: 40px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+.dr-btn--primary:hover:not(:disabled) {
+  background: var(--red);
+  border-color: var(--red);
+  box-shadow: 0 0 20px rgba(232,58,58,0.35);
+  transform: translateY(-1px);
+}
+.dr-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* ── Task list ── */
+.dr-tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.dr-task {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  padding: 22px 28px;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+.dr-task:hover {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.1);
+  transform: translateX(4px);
+}
+
+.dr-task__left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  min-width: 40px;
+}
+
+.dr-task__num {
+  font-size: 10px;
+  color: var(--t3);
+  letter-spacing: 0.1em;
+}
+
+.dr-task__icon {
+  font-size: 18px;
+  color: var(--t2);
+}
+
+.dr-task__body {
+  flex: 1;
+  min-width: 0;           /* critical — prevents flex child overflow */
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dr-task__meta {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 2px;
+}
+
+.dr-task__title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dr-task__desc {
+  font-size: 13px;
+  color: var(--t2);
+  line-height: 1.5;
+  font-weight: 300;
+}
+
+.dr-task__start {
+  flex-shrink: 0;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #fff;
+  padding: 9px 18px;
+  border-radius: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  white-space: nowrap;
+}
+.dr-task__start:hover {
+  background: #fff;
+  color: #000;
+  border-color: #fff;
+}
+
+/* ── Fullscreen aim engine ── */
+.dr-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+}
+
+.dr-fullscreen > .aim-engine {
+  flex: 1;
+  height: 100%;
+}
+
+.dr-back {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  z-index: 1010;
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #fff;
+  padding: 9px 18px;
+  border-radius: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.dr-back:hover { background: rgba(255,255,255,0.12); }
+
+/* ── Gamesense wrap ── */
+.dr-gs-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.dr-gs-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.dr-gs-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+.dr-back-inline {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--t3);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.dr-back-inline:hover { color: var(--t2); }
+
+/* ── Empty / loading / error states ── */
+.dr-empty {
+  padding: 80px 40px;
+  text-align: center;
+  background: rgba(255,255,255,0.01);
+  border: 1px dashed rgba(255,255,255,0.08);
+  border-radius: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.dr-empty__glyph {
+  font-size: 40px;
+  color: var(--t4);
+  margin-bottom: 14px;
+  display: block;
+}
+
+.dr-empty h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--t1);
+  margin-bottom: 10px;
+}
+
+.dr-empty p {
+  font-size: 14px;
+  color: var(--t3);
+  line-height: 1.6;
+  max-width: 380px;
+  margin: 0 auto;
+}
+
+.dr-empty strong { color: var(--t2); font-weight: 500; }
+
+.dr-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
+  gap: 16px;
+  width: 100%;
+}
+
+.dr-loading__spinner {
+  width: 24px; height: 24px;
+  border: 2px solid rgba(255,255,255,0.08);
+  border-top-color: var(--red);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.dr-error {
+  background: rgba(232,58,58,0.08);
+  color: var(--red);
+  padding: 14px 18px;
+  border-radius: 10px;
+  border: 1px solid rgba(232,58,58,0.2);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ── Summary view ── */
+.dr-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 720px;
+}
+
+.dr-summary__title { font-size: 28px; font-weight: 700; margin-top: 4px; }
+
+.dr-summary__text {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--t2);
+  line-height: 1.7;
+  background: rgba(255,255,255,0.02);
+  border-left: 2px solid var(--red);
+  padding: 14px 18px;
+  border-radius: 0 8px 8px 0;
+}
+
+.dr-summary__cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+
+.dr-summary__col {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dr-summary__item {
+  display: flex;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--t2);
+  line-height: 1.5;
+}
+
+.dr-summary__bullet {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}

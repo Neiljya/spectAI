@@ -1,0 +1,216 @@
+/* src/components/dashboard/PlaystyleCard.css */
+
+.playstyle-card {
+  background: rgba(20, 20, 20, 0.4);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Soft top-left red glow */
+.playstyle-card::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -20%;
+  width: 50%; height: 100%;
+  background: radial-gradient(circle, rgba(255, 70, 85, 0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.playstyle-card__header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.playstyle-card__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--red, #ff4655);
+}
+
+.playstyle-card__title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--t1, #fff);
+  line-height: 1.2;
+}
+
+.playstyle-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.glass-badge {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--t1, #fff);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 6px 12px;
+  border-radius: 8px;
+  backdrop-filter: blur(8px);
+}
+.glass-badge--red { border-color: rgba(255, 70, 85, 0.4); color: #ff4655; }
+.glass-badge--teal { border-color: rgba(74, 222, 128, 0.4); color: #4ade80; }
+.glass-badge--gold { border-color: rgba(250, 204, 21, 0.4); color: #facc15; }
+
+.playstyle-card__desc {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--t2, #ccc);
+}
+
+.glass-divider {
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.08) 0%, transparent 100%);
+  width: 100%;
+}
+
+/* ── Skill bars ── */
+.playstyle-card__skills {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.skill-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skill-bar__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.skill-bar__label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--t3, #888);
+}
+
+.skill-bar__score {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.skill-bar__track {
+  height: 6px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+}
+
+.skill-bar__fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Agent prefs ── */
+.playstyle-card__agents {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.agent-prefs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.agent-pref {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.agent-pref:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateX(4px);
+}
+
+.agent-pref__rank {
+  font-size: 13px;
+  color: var(--t3, #888);
+  width: 24px;
+  flex-shrink: 0;
+}
+
+.agent-pref__info {
+  flex: 1;
+}
+
+.agent-pref__name {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--t1, #fff);
+  line-height: 1;
+}
+
+.agent-pref__role {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--t3, #888);
+  margin-top: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.agent-pref__stats {
+  display: flex;
+  gap: 20px;
+}
+
+.agent-pref__stat-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.agent-pref__stat-val {
+  font-size: 14px;
+  color: var(--t1, #fff);
+}
+
+.agent-pref__stat-lbl {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--t3, #888);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}

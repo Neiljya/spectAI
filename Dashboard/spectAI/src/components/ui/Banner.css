@@ -1,0 +1,63 @@
+/* src/components/ui/Banner.css */
+
+.banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  border: 1px solid transparent;
+}
+
+.banner__content {
+  flex-grow: 1;
+}
+
+.banner__close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.6;
+  padding: 0 0 0 12px;
+  color: inherit; /* Adopts the color of the specific banner type */
+  transition: opacity 0.2s ease;
+}
+
+.banner__close:hover {
+  opacity: 1;
+}
+
+/* ── Type Modifiers (Dark Theme Optimized) ── */
+
+/* Info (Used for your Landing Page Beta announcement) */
+.banner--info {
+  background-color: rgba(56, 189, 248, 0.1); /* Light Blue tint */
+  border-color: rgba(56, 189, 248, 0.2);
+  color: #38bdf8; 
+}
+
+/* Error (Used in your LoginForm) */
+.banner--error {
+  background-color: rgba(239, 68, 68, 0.1); /* Valorant Red tint */
+  border-color: rgba(239, 68, 68, 0.2);
+  color: #ef4444; 
+}
+
+/* Success */
+.banner--success {
+  background-color: rgba(34, 197, 94, 0.1); /* Green tint */
+  border-color: rgba(34, 197, 94, 0.2);
+  color: #4ade80; 
+}
+
+/* Warning */
+.banner--warning {
+  background-color: rgba(245, 158, 11, 0.1); /* Amber tint */
+  border-color: rgba(245, 158, 11, 0.2);
+  color: #fbbf24; 
+}

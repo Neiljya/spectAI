@@ -204,13 +204,13 @@ class GameContext(BaseModel):
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 LIVE_CONFIG = types.LiveConnectConfig(
-    response_modalities=["TEXT"],
+    response_modalities=["AUDIO"],
     system_instruction=types.Content(
         parts=[types.Part.from_text(text=SYSTEM_PROMPT)]
     ),
     temperature=0.1,
+    output_audio_transcription=types.AudioTranscriptionConfig(),
 )
-
 # --- Parsing ---
 def parse_game_context(text: str) -> GameContext | None:
     """Extract and validate a GameContext JSON from the model's text response."""
@@ -464,10 +464,8 @@ async def run_spect_ai():
                 full_text = ""
                 async for msg in session.receive():
                     if msg.server_content:
-                        if msg.server_content.model_turn:
-                            for part in (msg.server_content.model_turn.parts or []):
-                                if part.text:
-                                    full_text += part.text
+                        if msg.server_content.output_transcription:
+                            full_text += msg.server_content.output_transcription.text or ""
                         if msg.server_content.turn_complete:
                             break
 

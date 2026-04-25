@@ -1,15 +1,15 @@
 import os
 import json
-import google.generativeai as genai
 import base64
 import io
 from PIL import Image
 from dotenv import load_dotenv
+from google import genai
+from google.genai import types
 from shared.models import PlayerProfile
 
 load_dotenv()
-genai.configure(api_key=os.environ["GEMINI_API_KEY"])
-model = genai.GenerativeModel("gemini-2.0-flash")
+_client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
 
 async def analyze_all(
@@ -83,9 +83,11 @@ Set should_coach=true only when there is an actionable coaching moment right now
 Set urgency based on how time-sensitive the coaching call is."""
 
     img_bytes = base64.b64decode(screenshot_b64)
-    img = Image.open(io.BytesIO(img_bytes))
 
-    response = model.generate_content([prompt, img])
+    response = await _client.aio.models.generate_content(
+        model="gemini-2.0-flash",
+        contents=[prompt, types.Part.from_bytes(data=img_bytes, mime_type="image/jpeg")],
+    )
     raw = response.text.strip()
 
     # Strip markdown code fences if Gemini wraps the JSON

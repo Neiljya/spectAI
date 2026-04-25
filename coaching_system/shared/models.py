@@ -10,6 +10,7 @@ class PlayerProfile(Model):
     igl: bool
     strengths: List[str]
     weak_areas: List[str]
+    riot_puuid: Optional[str] = None  # links to profiles.riot_puuid in Supabase
 
 
 class GameFrame(Model):
@@ -40,6 +41,12 @@ class AnalysisRequest(Model):
     recent_events: Optional[str] = None
     # from Gemini output
     urgency: Optional[str] = None       # "high" | "medium" | "low"
+    position: Optional[str] = None
+    weapon: Optional[str] = None
+    health: Optional[int] = None
+    armor: Optional[bool] = None
+    crosshair_placement: Optional[str] = None
+    in_gunfight: Optional[bool] = None
     player_query: Optional[str] = None
 
 

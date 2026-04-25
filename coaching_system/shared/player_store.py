@@ -11,6 +11,7 @@ PLAYER_PROFILES: dict[str, PlayerProfile] = {
         playstyle="aggressive entry",
         igl=False,
         strengths=["aim", "movement"],
-        weak_areas=["util usage", "rotation timing"]
+        weak_areas=["util usage", "rotation timing"],
+        riot_puuid="d61f41e1-ce59-5aa6-820d-6dcc42175042"
     )
 }

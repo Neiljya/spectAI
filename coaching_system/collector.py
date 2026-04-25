@@ -128,6 +128,12 @@ async def _trigger_analysis(ctx: Context, player_id: str = "player_001", player_
         spike_status=result.get("spike_status"),
         recent_events=log_summary,
         urgency=result.get("urgency"),
+        position=result.get("position"),
+        weapon=result.get("weapon"),
+        health=result.get("health"),
+        armor=result.get("armor"),
+        crosshair_placement=result.get("crosshair_placement"),
+        in_gunfight=result.get("in_gunfight"),
         player_query=player_query,
     )
     await ctx.send(ORCHESTRATOR_ADDRESS, req)

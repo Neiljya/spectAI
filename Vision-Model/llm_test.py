@@ -1,13 +1,10 @@
-import ollama
-import base64
+import os
+import dotenv
+from google import genai
 
-with open("test_frame.jpg", "rb") as f:
-    b64 = base64.b64encode(f.read()).decode()
+dotenv.load_dotenv()
 
-response = ollama.chat(
-    model="gemma4:e2b",
-    messages=[
-        {"role": "user", "images": [b64], "content": "Describe what you see in this image in one sentence."}
-    ]
-)
-print(repr(response["message"]["content"]))
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+
+for model in client.models.list():
+    print(model.name)

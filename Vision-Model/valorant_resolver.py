@@ -417,10 +417,9 @@ class ValorantResolver:
         # Sanitize coordinates — the API value contains Unicode degree symbols
         # that can render as garbage in some terminals. Keep it clean.
         raw_coords = raw.get("coordinates", "") or ""
-        try:
-            coords = raw_coords.encode("utf-8").decode("utf-8")
-        except Exception:
-            coords = raw_coords.encode("ascii", errors="replace").decode("ascii")
+        # The coordinates from the API sometimes have weirdly encoded degree minutes/seconds
+        # e.g., 'BF' instead of '15"'. Let's clean up common garbled characters if present
+        coords = raw_coords.replace("BF", "15\"").replace("Q", "9\"")
 
         # Parse callouts
         callouts = []
@@ -586,7 +585,7 @@ class ValorantResolver:
 
         # Strip "GamePhase." prefix if phase was serialised as enum repr
         raw_phase = raw_state.get("phase", "UNKNOWN")
-        clean_phase = raw_phase.replace("GamePhase.", "") if isinstance(raw_phase, str) else raw_phase
+        clean_phase = str(raw_phase).replace("GamePhase.", "")
 
         return ResolvedGameState(
             phase=clean_phase,

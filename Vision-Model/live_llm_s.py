@@ -2,8 +2,10 @@ import asyncio
 import json
 import os
 import re
+import sys
 import logging
 import dotenv
+from collections import deque
 from dataclasses import asdict
 from google import genai
 from google.genai import types
@@ -12,8 +14,82 @@ from typing import Literal
 from stream import WindowCapture
 from valorant_local_api import ValorantLocalClient, GamePhase
 from valorant_resolver import ValorantResolver
+from hud import ValorantHUDScanner
 
 log = logging.getLogger(__name__)
+
+
+# --- HUD Smoothing ---
+_HUD_NUMERIC_FIELDS = {"hp", "shield", "credits", "loaded_ammo", "stored_ammo", "my_team_score", "enemy_team_score"}
+_HUD_STRING_FIELDS = {"match_timer", "game_phase"}
+HUD_SMOOTHING_WINDOW = 5  # number of recent valid readings to average
+
+
+class HUDSmoother:
+    """Smooths noisy OCR readings with a rolling average per field."""
+
+    def __init__(self, window: int = HUD_SMOOTHING_WINDOW):
+        self._numeric: dict[str, deque] = {f: deque(maxlen=window) for f in _HUD_NUMERIC_FIELDS}
+        self._string: dict[str, str] = {f: "" for f in _HUD_STRING_FIELDS}
+
+    def update(self, raw: dict):
+        for field in _HUD_NUMERIC_FIELDS:
+            val = str(raw.get(field, "")).strip()
+            if val.isdigit():
+                self._numeric[field].append(int(val))
+        for field in _HUD_STRING_FIELDS:
+            val = str(raw.get(field, "")).strip()
+            if val:
+                self._string[field] = val
+
+    def get_smoothed(self) -> dict:
+        result = {}
+        for field in _HUD_NUMERIC_FIELDS:
+            readings = self._numeric[field]
+            result[field] = round(sum(readings) / len(readings)) if readings else None
+        for field in _HUD_STRING_FIELDS:
+            result[field] = self._string[field] or None
+        return result
+
+
+def format_hud_context(smoothed: dict) -> str:
+    """Format smoothed HUD data as a concise LLM context string."""
+    lines = []
+
+    hp = smoothed.get("hp")
+    shield = smoothed.get("shield")
+    if hp is not None:
+        shield_str = f" | Shield: {shield}" if shield is not None else ""
+        lines.append(f"  HP: {hp}{shield_str}")
+
+    credits = smoothed.get("credits")
+    if credits is not None:
+        lines.append(f"  Credits: {credits}")
+
+    timer = smoothed.get("match_timer")
+    if timer:
+        lines.append(f"  Round Timer: {timer}")
+
+    left_score = smoothed.get("my_team_score")
+    right_score = smoothed.get("enemy_team_score")
+    if left_score is not None or right_score is not None:
+        l = str(left_score) if left_score is not None else "?"
+        r = str(right_score) if right_score is not None else "?"
+        lines.append(f"  Score: {l} - {r}")
+
+    loaded = smoothed.get("loaded_ammo")
+    stored = smoothed.get("stored_ammo")
+    if loaded is not None:
+        ammo_str = f"{loaded}/{stored}" if stored is not None else str(loaded)
+        lines.append(f"  Ammo: {ammo_str}")
+
+    if not lines:
+        return ""
+
+    header = "HUD OCR DATA (screen-scraped — averaged over recent frames, may still be inaccurate):"
+    footer = "  (OCR can misread digits. Cross-reference with what you actually see in the frame.)"
+    return "\n".join([header] + lines + [footer])
+
 
 # --- Config ---
 dotenv.load_dotenv()
@@ -26,11 +102,19 @@ MODEL = "gemini-3.1-flash-live-preview"
 
 SYSTEM_PROMPT = """You are SpectAI, the vision layer of a real-time competitive FPS coaching system (Valorant).
 You analyze game frames and extract structured information for specialist coaching agents.
-You are a precise observer, not a coach. Extract what you see accurately.
+You are a precise observer. Extract what you see accurately, then reason tactically about what it implies.
 Use information from the HUD, like health, ammo, top bar (for agent icons, ult status, time, scores), killfeed, and minimap.
 IMPORTANT: To identify the player's agent (character), look at the top bar icon or the center of the minimap.
 You will sometimes receive a RECENT HISTORY buffer of previous game states. Use it to infer what changed over time. Note that previous states may be inaccurate, so prioritize the current frame over history.
 You may also receive LIVE GAME DATA from the Valorant API. This gives you ground-truth about the map, agents, and teams. Use it to fill in map_name, player_character, and team compositions accurately instead of guessing from vision alone. Use the provided callout names when describing player_position.
+
+TACTICAL REASONING GUIDELINES for game_state and narrative_update:
+- Always state WHERE the player is using precise map callout names (e.g. "A Main", "B Link", "Mid Courtyard").
+- Reason about what the ENEMY TEAM is likely doing based on all available signals: kill feed deaths, sound cues visible in-game, spike carrier status, time remaining, score pressure, and recent history. Use language like "enemy likely rotating A", "they may be faking B", "two unaccounted enemies — possible flank through mid".
+- Reason about what TEAMMATES are doing if visible on minimap or top bar.
+- Factor in TIME PRESSURE: late round with spike unplanted means attackers are forced; low time on a planted spike means defenders must defuse or die.
+- Factor in ECONOMY signals: player or team on low credits likely means eco or force buy next round.
+- Use natural, concise coaching language. Not "player is in location X". Instead: "Player is deep in B site holding the back-plant spot. With 0:30 left and spike unplanted, enemies must push — expect contact from B Main or Short immediately."
 
 OUTPUT RULES — follow these exactly:
 - Respond with ONLY a valid JSON object. Nothing else.
@@ -41,8 +125,8 @@ OUTPUT RULES — follow these exactly:
 should_coach: boolean
 agent: one of "gamesense", "mechanics", "mental", "none" (which coaching agent to route to)
 urgency: one of "low", "medium", "high", "critical"
-game_state: string, ~1 paragraph tactical summary focusing on player positions, enemy positions, and urgent game context
-narrative_update: string, what changed since last context
+game_state: string, rich tactical paragraph — describe player position by callout, what the enemy team is likely doing and why, what teammates are doing, time/economy pressure, and any imminent threats or opportunities. Aim for 2-3 sentences of dense tactical context.
+narrative_update: string, what tactically changed since last context — not just "player moved" but WHY it matters (e.g. "Player retreated from A Main to Haven — enemy Jett was pushing aggressively, now player is isolated with no util and low time")
 phase: one of "buy", "live", "post_round", "unknown"
 round_number: integer
 time_remaining: string (e.g. "1:30" or "unknown")
@@ -70,7 +154,7 @@ recent_death: boolean
 kill_feed_events: string, empty string if none
 
 Example response (respond exactly like this, only JSON):
-{"should_coach":true,"agent":"gamesense","urgency":"medium","game_state":"Player is holding B site. Two teammates are positioned at B link and C site. The enemy team has been spotted pushing A main aggressively with the spike. Urgently need to watch for potential flanks through mid.","narrative_update":"Teammate just died on A, enemy likely rotating.","phase":"live","round_number":8,"time_remaining":"0:45","team_score":4,"enemy_score":3,"map_name":"Haven","player_character":"Omen","player_health":100,"player_armor":true,"player_credits":4500,"player_weapon":"Vandal","player_ammo":25,"ultimate_status":"ready","player_alive":true,"player_position":"B site","spike_status":"carried","teammates_alive":2,"enemies_alive":3,"visible_enemies":0,"is_shooting":false,"is_moving":false,"crosshair_placement":"head_level","in_gunfight":false,"recent_death":false,"kill_feed_events":"Teammate eliminated by enemy Jett"}"""
+{"should_coach":true,"agent":"gamesense","urgency":"high","game_state":"Player is holding B Long on Haven with a Vandal, two teammates covering B Short and C Long. The spike carrier is unaccounted for — with 0:45 left and no plant, the enemy is time-pressured and likely to force a push or fake B to pull rotations. One unconfirmed enemy on the killfeed last died at A Main, suggesting a potential 3-man B execute incoming. Player should expect contact within 10 seconds.","narrative_update":"Teammate just died at A Main — enemy Jett likely rotated or the team is executing B. Two enemies are now unaccounted for near B, raising flank risk through Garage.","phase":"live","round_number":8,"time_remaining":"0:45","team_score":4,"enemy_score":3,"map_name":"Haven","player_character":"Omen","player_health":100,"player_armor":true,"player_credits":4500,"player_weapon":"Vandal","player_ammo":25,"ultimate_status":"ready","player_alive":true,"player_position":"B Long","spike_status":"carried","teammates_alive":2,"enemies_alive":3,"visible_enemies":0,"is_shooting":false,"is_moving":false,"crosshair_placement":"head_level","in_gunfight":false,"recent_death":false,"kill_feed_events":"Teammate eliminated by enemy Jett at A Main"}"""
 
 # --- Schema ---
 class GameContext(BaseModel):
@@ -81,8 +165,8 @@ class GameContext(BaseModel):
     urgency: Literal["low", "medium", "high", "critical"] = Field(
         description="How urgently the player needs coaching"
     )
-    game_state: str = Field(description="A ~1 paragraph rich summary including player positions, enemy positions, and urgent info")
-    narrative_update: str = Field(description="What specifically changed since the previous context")
+    game_state: str = Field(description="Rich tactical paragraph: player position by callout, likely enemy movements and reasoning, teammate positions, time/economy pressure, imminent threats")
+    narrative_update: str = Field(description="What tactically changed and why it matters — not just what happened but the implication (e.g. enemy rotation, flank risk, forced push)")
     phase: Literal["buy", "live", "post_round", "unknown"] = Field(
         description="Current phase of the round"
     )
@@ -120,12 +204,11 @@ class GameContext(BaseModel):
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 LIVE_CONFIG = types.LiveConnectConfig(
-    response_modalities=["AUDIO"],
+    response_modalities=["TEXT"],
     system_instruction=types.Content(
         parts=[types.Part.from_text(text=SYSTEM_PROMPT)]
     ),
     temperature=0.1,
-    output_audio_transcription=types.AudioTranscriptionConfig(),
 )
 
 # --- Parsing ---
@@ -161,21 +244,15 @@ def parse_game_context(text: str) -> GameContext | None:
 
 # --- Logging ---
 def log_context(ctx: GameContext):
+    coach_flag = f"  [COACH → {ctx.agent.upper()} | {ctx.urgency.upper()}]" if ctx.should_coach else ""
     print(f"[SpectAI] ─────────────────────────────────")
-    print(f"[SpectAI] Map: {ctx.map_name} | Phase: {ctx.phase} | Round: {ctx.round_number} | Time: {ctx.time_remaining}")
-    print(f"[SpectAI] Score: {ctx.team_score}-{ctx.enemy_score}")
-    print(f"[SpectAI] State: {ctx.game_state}")
-    print(f"[SpectAI] Update: {ctx.narrative_update}")
-    print(f"[SpectAI] Agent: {ctx.agent} | Urgency: {ctx.urgency}")
-    print(f"[SpectAI] Character: {ctx.player_character} | Ult: {ctx.ultimate_status}")
-    print(f"[SpectAI] Health: {ctx.player_health} | Armor: {ctx.player_armor} | Weapon: {ctx.player_weapon} (Ammo: {ctx.player_ammo}) | Credits: {ctx.player_credits}")
-    print(f"[SpectAI] Position: {ctx.player_position} | Spike: {ctx.spike_status}")
-    print(f"[SpectAI] Teammates: {ctx.teammates_alive} | Enemies: {ctx.enemies_alive} | Visible: {ctx.visible_enemies}")
-    print(f"[SpectAI] Gunfight: {ctx.in_gunfight} | Shooting: {ctx.is_shooting} | Moving: {ctx.is_moving}")
-    print(f"[SpectAI] Crosshair: {ctx.crosshair_placement} | Recent death: {ctx.recent_death}")
+    print(f"[SpectAI] {ctx.map_name} | {ctx.phase} | R{ctx.round_number} | {ctx.time_remaining} | {ctx.team_score}-{ctx.enemy_score}{coach_flag}")
+    print(f"[SpectAI] {ctx.player_character} | HP:{ctx.player_health} | Armor:{ctx.player_armor} | {ctx.player_weapon}({ctx.player_ammo}) | Credits:{ctx.player_credits} | Ult:{ctx.ultimate_status}")
+    print(f"[SpectAI] Pos:{ctx.player_position} | Spike:{ctx.spike_status} | TM:{ctx.teammates_alive} | ENE:{ctx.enemies_alive} | Vis:{ctx.visible_enemies}")
+    print(f"[SpectAI] {ctx.game_state}")
+    print(f"[SpectAI] ↳ {ctx.narrative_update}")
     if ctx.kill_feed_events:
         print(f"[SpectAI] Killfeed: {ctx.kill_feed_events}")
-    print(f"[SpectAI] Should coach: {ctx.should_coach}")
     print(f"[SpectAI] ─────────────────────────────────")
 
 
@@ -270,6 +347,10 @@ async def run_spect_ai():
     screen_capture = WindowCapture(TARGET_WINDOW)
     last_coached = 0.0
     history_buffer: list[str] = []
+
+    # HUD OCR scanner + smoother
+    hud_scanner = ValorantHUDScanner()
+    hud_smoother = HUDSmoother()
     
     # Maintain a rolling state of the player to act as a sanity check guide for the LLM
     tracked_player_state = {
@@ -333,6 +414,13 @@ async def run_spect_ai():
                 await asyncio.sleep(0.5)
                 continue
 
+            # Run HUD OCR scan and update smoother
+            try:
+                raw_hud = hud_scanner.parse_hud(frame)
+                hud_smoother.update(raw_hud)
+            except Exception as e:
+                log.debug("HUD scan error: %s", e)
+
             try:
                 jpeg_bytes = screen_capture.frame_to_jpeg(frame)
 
@@ -345,6 +433,10 @@ async def run_spect_ai():
                 parts = []
                 if game_context_summary:
                     parts.append(f"LIVE GAME DATA (from Valorant API):\n{game_context_summary}")
+
+                hud_context = format_hud_context(hud_smoother.get_smoothed())
+                if hud_context:
+                    parts.append(hud_context)
                     
                 # Include the tracked player state as a guide
                 parts.append(
@@ -368,12 +460,14 @@ async def run_spect_ai():
 
                 await session.send_realtime_input(text=prompt)
 
-                # Collect transcription from audio response
+                # Collect text response
                 full_text = ""
                 async for msg in session.receive():
                     if msg.server_content:
-                        if msg.server_content.output_transcription:
-                            full_text += msg.server_content.output_transcription.text or ""
+                        if msg.server_content.model_turn:
+                            for part in (msg.server_content.model_turn.parts or []):
+                                if part.text:
+                                    full_text += part.text
                         if msg.server_content.turn_complete:
                             break
 

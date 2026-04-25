@@ -16,10 +16,11 @@ CAPTURE_FPS = 2
 COOLDOWN_SECONDS = 4
 MODEL = "gemini-3.1-flash-live-preview"
 
-SYSTEM_PROMPT = """You are SpectAI, the vision layer of a real-time competitive FPS coaching system.
+SYSTEM_PROMPT = """You are SpectAI, the vision layer of a real-time competitive FPS coaching system (Valorant).
 You analyze game frames and extract structured information for specialist coaching agents.
 You are a precise observer, not a coach. Extract what you see accurately.
-Use information from the HUD, like health, ammo, agent icon, team/enemy outlines, player icons, killfeed, and minimap to inform your analysis.
+Use information from the HUD, like health, ammo, top bar (for agent icons, ult status, time, scores), killfeed, and minimap.
+IMPORTANT: To identify the player's agent (character), look at the top bar icon or the center of the minimap.
 You will sometimes receive the PREVIOUS game state. Use it to infer what changed.
 
 OUTPUT RULES — follow these exactly:
@@ -29,19 +30,25 @@ OUTPUT RULES — follow these exactly:
 - Use these exact keys and value types:
 
 should_coach: boolean
-agent: one of "gamesense", "mechanics", "mental", "none"
+agent: one of "gamesense", "mechanics", "mental", "none" (which coaching agent to route to)
 urgency: one of "low", "medium", "high", "critical"
-game_state: string, 1-2 sentence tactical summary
+game_state: string, ~1 paragraph tactical summary focusing on player positions, enemy positions, and urgent game context
 narrative_update: string, what changed since last context
 phase: one of "buy", "live", "post_round", "unknown"
 round_number: integer
+time_remaining: string (e.g. "1:30" or "unknown")
+team_score: integer
+enemy_score: integer
+map_name: string (or "unknown")
+player_character: string (the Valorant agent the player is controlling)
 player_health: integer 0-150, or -1 if unknown
 player_armor: boolean
-player_credits: integer, -1 if unknown
+player_credits: integer, -1 if unknown (crucial for economy coaching)
 player_weapon: string
+ultimate_status: string (e.g., "ready", "3/8", "unknown")
 player_alive: boolean
 player_position: string
-spike_status: one of "planted", "carried", "dropped", "unknown"
+spike_status: one of "planted", "carried", "dropped", "defusing", "unknown" (crucial for tactical decisions)
 teammates_alive: integer, -1 if unknown
 enemies_alive: integer, -1 if unknown
 visible_enemies: integer
@@ -53,7 +60,7 @@ recent_death: boolean
 kill_feed_events: string, empty string if none
 
 Example response (respond exactly like this, only JSON):
-{"should_coach":true,"agent":"gamesense","urgency":"medium","game_state":"Player holding B site with Vandal, 3v3 situation.","narrative_update":"Teammate just died on A, enemy likely rotating.","phase":"live","round_number":8,"player_health":100,"player_armor":true,"player_credits":-1,"player_weapon":"Vandal","player_alive":true,"player_position":"B site","spike_status":"unknown","teammates_alive":2,"enemies_alive":3,"visible_enemies":0,"is_shooting":false,"is_moving":false,"crosshair_placement":"head_level","in_gunfight":false,"recent_death":false,"kill_feed_events":"Teammate eliminated by enemy Jett"}"""
+{"should_coach":true,"agent":"gamesense","urgency":"medium","game_state":"Player is holding B site. Two teammates are positioned at B link and C site. The enemy team has been spotted pushing A main aggressively with the spike. Urgently need to watch for potential flanks through mid.","narrative_update":"Teammate just died on A, enemy likely rotating.","phase":"live","round_number":8,"time_remaining":"0:45","team_score":4,"enemy_score":3,"map_name":"Haven","player_character":"Omen","player_health":100,"player_armor":true,"player_credits":4500,"player_weapon":"Vandal","ultimate_status":"ready","player_alive":true,"player_position":"B site","spike_status":"carried","teammates_alive":2,"enemies_alive":3,"visible_enemies":0,"is_shooting":false,"is_moving":false,"crosshair_placement":"head_level","in_gunfight":false,"recent_death":false,"kill_feed_events":"Teammate eliminated by enemy Jett"}"""
 
 # --- Schema ---
 class GameContext(BaseModel):
@@ -64,19 +71,25 @@ class GameContext(BaseModel):
     urgency: Literal["low", "medium", "high", "critical"] = Field(
         description="How urgently the player needs coaching"
     )
-    game_state: str = Field(description="A 1-2 sentence rich summary of the exact situation")
+    game_state: str = Field(description="A ~1 paragraph rich summary including player positions, enemy positions, and urgent info")
     narrative_update: str = Field(description="What specifically changed since the previous context")
     phase: Literal["buy", "live", "post_round", "unknown"] = Field(
         description="Current phase of the round"
     )
     round_number: int = Field(description="Current round number if visible, else 0")
+    time_remaining: str = Field(description="Time remaining in current phase, e.g. '1:30' or 'unknown'")
+    team_score: int = Field(description="Player's team score, -1 if unknown")
+    enemy_score: int = Field(description="Enemy team score, -1 if unknown")
+    map_name: str = Field(description="Name of the map, or 'unknown'")
+    player_character: str = Field(description="Valorant agent being played (from top bar or minimap center)")
     player_health: int = Field(description="Player HP 0-150, or -1 if unknown")
     player_armor: bool = Field(description="Whether player has armor equipped")
-    player_credits: int = Field(description="Credits visible in buy phase, else -1")
+    player_credits: int = Field(description="Credits visible, else -1. Crucial for buy phase")
     player_weapon: str = Field(description="Current weapon name or 'unknown'")
+    ultimate_status: str = Field(description="Ultimate charge status (e.g. 'ready', '7/8', 'unknown')")
     player_alive: bool = Field(description="Whether the player is alive")
     player_position: str = Field(description="Where on map player appears to be, or 'unknown'")
-    spike_status: Literal["planted", "carried", "dropped", "unknown"] = Field(
+    spike_status: Literal["planted", "carried", "dropped", "defusing", "unknown"] = Field(
         description="Current spike status"
     )
     teammates_alive: int = Field(description="Number of teammates alive if visible, else -1")
@@ -138,11 +151,13 @@ def parse_game_context(text: str) -> GameContext | None:
 # --- Logging ---
 def log_context(ctx: GameContext):
     print(f"[SpectAI] ─────────────────────────────────")
-    print(f"[SpectAI] Phase: {ctx.phase} | Round: {ctx.round_number}")
+    print(f"[SpectAI] Map: {ctx.map_name} | Phase: {ctx.phase} | Round: {ctx.round_number} | Time: {ctx.time_remaining}")
+    print(f"[SpectAI] Score: {ctx.team_score}-{ctx.enemy_score}")
     print(f"[SpectAI] State: {ctx.game_state}")
     print(f"[SpectAI] Update: {ctx.narrative_update}")
     print(f"[SpectAI] Agent: {ctx.agent} | Urgency: {ctx.urgency}")
-    print(f"[SpectAI] Health: {ctx.player_health} | Armor: {ctx.player_armor} | Weapon: {ctx.player_weapon}")
+    print(f"[SpectAI] Character: {ctx.player_character} | Ult: {ctx.ultimate_status}")
+    print(f"[SpectAI] Health: {ctx.player_health} | Armor: {ctx.player_armor} | Weapon: {ctx.player_weapon} | Credits: {ctx.player_credits}")
     print(f"[SpectAI] Position: {ctx.player_position} | Spike: {ctx.spike_status}")
     print(f"[SpectAI] Teammates: {ctx.teammates_alive} | Enemies: {ctx.enemies_alive} | Visible: {ctx.visible_enemies}")
     print(f"[SpectAI] Gunfight: {ctx.in_gunfight} | Shooting: {ctx.is_shooting} | Moving: {ctx.is_moving}")

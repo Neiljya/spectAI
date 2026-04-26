@@ -28,6 +28,7 @@ export function AIAnalysisCard({ userId }: Props) {
     async function load() {
       setLoading(true);
 
+      // 1. Check if we already have a saved summary
       const { data: saved } = await supabase
         .from('ai_summaries')
         .select('*')
@@ -40,13 +41,22 @@ export function AIAnalysisCard({ userId }: Props) {
           strengths: saved.strengths,
           weaknesses: saved.weaknesses,
         });
-
         setLoading(false);
         return;
       }
 
+      // 2. If no summary exists, generate a fresh one
       try {
         const fresh = await processCoachAnalysis(userId, 'summary');
+        
+        // Save the brand new summary to the database
+        await supabase.from('ai_summaries').upsert({
+          profile_id: userId,
+          summary: fresh.summary,
+          strengths: fresh.strengths,
+          weaknesses: fresh.weaknesses,
+        });
+
         setData(fresh);
       } catch (err) {
         console.error('Initial summary generation failed:', err);
@@ -66,9 +76,26 @@ export function AIAnalysisCard({ userId }: Props) {
     setBuildMsg(null);
 
     try {
+      // 1. Generate new analysis from the AI
       const fresh = await processCoachAnalysis(userId, 'summary');
+      
+      // 2. FORCE SAVE it to the database (upsert overwrites the old row)
+      const { error: dbError } = await supabase
+        .from('ai_summaries')
+        .upsert({
+          profile_id: userId,
+          summary: fresh.summary,
+          strengths: fresh.strengths,
+          weaknesses: fresh.weaknesses,
+          // If you have an updated_at column, uncomment the line below:
+          // updated_at: new Date().toISOString() 
+        }, { onConflict: 'profile_id' }); // Ensures it replaces the existing row for this user
+
+      if (dbError) throw new Error(`Database save failed: ${dbError.message}`);
+
+      // 3. Update the UI
       setData(fresh);
-      setRefreshMsg('Analysis regenerated from latest data.');
+      setRefreshMsg('Analysis regenerated and saved.');
     } catch (err: unknown) {
       setRefreshMsg(`Failed: ${(err as Error).message}`);
     } finally {
@@ -157,8 +184,7 @@ export function AIAnalysisCard({ userId }: Props) {
         <div
           className={`ai-card__msg ${
             refreshMsg.startsWith('Failed')
-              ? 'ai-card__msg--err'
-              : 'ai-card__msg--ok'
+          } ? 'ai-card__msg--err' : 'ai-card__msg--ok'
           }`}
         >
           {refreshMsg}
@@ -169,8 +195,7 @@ export function AIAnalysisCard({ userId }: Props) {
         <div
           className={`ai-card__msg ${
             buildMsg.startsWith('Failed')
-              ? 'ai-card__msg--err'
-              : 'ai-card__msg--ok'
+          } ? 'ai-card__msg--err' : 'ai-card__msg--ok'
           }`}
         >
           {buildMsg}

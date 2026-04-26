@@ -91,44 +91,54 @@ export function DashboardPage() {
       });
 
       // Map API matches to DB schema (Excludes generated columns like 'map' to prevent 400 errors)
-      const matches = data.raw?.matches || [];
-      const [riotName, riotTag] = data.riot_id.split('#');
+   // Replace the matchInserts block in Dashboard.tsx syncTracker()
+// from "const matches = data.raw?.matches || [];" down to the filter
 
-      const matchInserts = matches.map((m: any) => {
-        const player = m.players.all_players.find((p: any) => 
-          p.name.toLowerCase() === riotName.toLowerCase() && 
-          p.tag.toLowerCase() === riotTag.toLowerCase()
-        );
-        if (!player) return null;
+const matches = data.raw?.matches || [];
+const [riotName, riotTag] = data.riot_id.split('#');
 
-        const team = player.team.toLowerCase();
-        const outcome = m.teams[team]?.has_won ? 'Win' : 'Loss';
-        const roundsPlayed = m.metadata.rounds_played || 1;
-        const acs = Math.round(player.stats.score / roundsPlayed);
-        const totalShots = player.stats.headshots + player.stats.bodyshots + player.stats.legshots;
-        const hsPct = totalShots > 0 ? (player.stats.headshots / totalShots) * 100 : 0;
+const matchInserts = matches
+  .filter((m: any) =>
+    m?.players?.all_players &&          // guard: skip matches with no player data
+    m?.metadata?.matchid &&             // skip matches with no ID
+    m?.metadata?.map                    // skip matches with no map
+  )
+  .map((m: any) => {
+    const player = m.players.all_players.find((p: any) =>
+      p.name?.toLowerCase() === riotName?.toLowerCase() &&
+      p.tag?.toLowerCase()  === riotTag?.toLowerCase()
+    );
+    if (!player) return null;
 
-        return {
-          profile_id: user.id,
-          match_id: m.metadata.matchid, 
-          played_at: new Date(m.metadata.game_start * 1000).toISOString(),
-          schema_version: 1, 
-          data: {
-            map: m.metadata.map,
-            agent: player.character,
-            outcome,
-            mode: 'Competitive', 
-            score_us: m.teams[team]?.rounds_won || 0,
-            score_them: m.teams[team]?.rounds_lost || 0,
-            kills: player.stats.kills,
-            deaths: player.stats.deaths,
-            assists: player.stats.assists,
-            score: acs,
-            damage: player.damage_made,
-            headshot_pct: Number(hsPct.toFixed(2))
-          }
-        };
-      }).filter(Boolean);
+    const team        = player.team?.toLowerCase() ?? 'red';
+    const outcome     = m.teams?.[team]?.has_won ? 'Win' : 'Loss';
+    const roundsPlayed = m.metadata.rounds_played || 1;
+    const acs         = Math.round((player.stats?.score ?? 0) / roundsPlayed);
+    const totalShots  = (player.stats?.headshots ?? 0) + (player.stats?.bodyshots ?? 0) + (player.stats?.legshots ?? 0);
+    const hsPct       = totalShots > 0 ? (player.stats.headshots / totalShots) * 100 : 0;
+
+    return {
+      profile_id: user.id,
+      match_id:   m.metadata.matchid,
+      played_at:  new Date((m.metadata.game_start ?? 0) * 1000).toISOString(),
+      schema_version: 1,
+      data: {
+        map:         m.metadata.map,
+        agent:       player.character ?? 'Unknown',
+        outcome,
+        mode:        'Spike Rush',
+        score_us:    m.teams?.[team]?.rounds_won  ?? 0,
+        score_them:  m.teams?.[team]?.rounds_lost ?? 0,
+        kills:       player.stats?.kills   ?? 0,
+        deaths:      player.stats?.deaths  ?? 0,
+        assists:     player.stats?.assists ?? 0,
+        score:       acs,
+        damage:      player.damage_made    ?? 0,
+        headshot_pct: Number(hsPct.toFixed(2)),
+      },
+    };
+  })
+  .filter(Boolean);
 
       // Safe insert: Skip duplicates
       if (matchInserts.length > 0) {

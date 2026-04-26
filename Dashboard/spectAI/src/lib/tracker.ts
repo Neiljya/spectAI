@@ -62,9 +62,9 @@ export async function fetchTrackerProfile(riotId: string): Promise<ParsedTracker
     const mmrRes = await fetchHenrik(`/v2/mmr/${region}/${encodeURIComponent(name)}/${encodeURIComponent(tag)}`);
     const mmrJson = mmrRes.ok ? await mmrRes.json() : null;
 
-
-  // 3. Fetch Last 4 Matches (Under the 1MB proxy limit)
-    const matchesRes = await fetchHenrik(`/v3/matches/${region}/${encodeURIComponent(name)}/${encodeURIComponent(tag)}?size=10&mode=competitive`);
+    // 3. Fetch Last 10 Matches
+    // FIXED: mode=spikerush (No underscore)
+    const matchesRes = await fetchHenrik(`/v3/matches/${region}/${encodeURIComponent(name)}/${encodeURIComponent(tag)}?size=10&mode=spikerush`);
     const matchesJson = matchesRes.ok ? await matchesRes.json() : { data: [] };
     const matches = matchesJson.data || [];
 
@@ -77,6 +77,9 @@ export async function fetchTrackerProfile(riotId: string): Promise<ParsedTracker
     const agentMap: Record<string, { matches: number, wins: number, kills: number, deaths: number }> = {};
 
     matches.forEach((match: any) => {
+      // FIXED: Guard against corrupted matches that return without player data
+      if (!match?.players?.all_players) return;
+
       const player = match.players.all_players.find((p: any) => 
         p.name.toLowerCase() === name.toLowerCase() && p.tag.toLowerCase() === tag.toLowerCase()
       );

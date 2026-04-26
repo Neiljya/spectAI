@@ -1,0 +1,27 @@
+# Vision-Model dependencies
+# Install with: pip install -r requirements.txt
+
+# Gemini live streaming API
+google-genai>=1.0.0
+
+# Screen capture (Windows)
+mss>=9.0.0
+pywin32>=306
+
+# Image processing + OCR
+opencv-python>=4.9.0
+numpy>=1.26.0
+easyocr>=1.7.0
+
+# Valorant local API client
+requests>=2.31.0
+urllib3>=2.0.0
+
+# Config / env
+python-dotenv>=1.0.0
+
+# ElevenLabs TTS (REST)
+httpx>=0.27.0
+
+# Supabase persistence
+supabase>=2.0.0

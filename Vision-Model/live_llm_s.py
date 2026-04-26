@@ -50,7 +50,7 @@ class HUDSmoother:
 dotenv.load_dotenv()
 TARGET_WINDOW = "VALORANT  "
 CAPTURE_FPS = 1
-NUDGE_INTERVAL = 4  # Ask for advice every 4 seconds
+NUDGE_INTERVAL = 6  # Ask for advice every 4 seconds
 MODEL = "gemini-3.1-flash-live-preview"
 
 SYSTEM_PROMPT = """You are SpectAI, a real-time competitive FPS coaching system (Valorant).

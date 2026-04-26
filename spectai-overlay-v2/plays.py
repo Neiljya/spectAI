@@ -576,3 +576,11 @@ def list_plays() -> list[tuple[str, str]]:
 def get_play(map_name: str, play_name: str) -> dict | None:
     """Lookup a play. Returns None if not found."""
     return PLAYS.get(map_name, {}).get(play_name)
+
+def get_plays_summary() -> str:
+    """Compact text listing of all plays for injection into the AI system prompt."""
+    lines = ["Available plays (use exact names):"]
+    for map_name, plays in PLAYS.items():
+        names = ", ".join(f'"{p}" ({plays[p]["description"]})' for p in plays)
+        lines.append(f"  {map_name}: {names}")
+    return "\n".join(lines)

@@ -142,11 +142,11 @@ class SpectAI:
 
     async def _run(self):
         print("[SpectAI] Starting vision layer (Live API)...")
-        client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+        client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"), http_options={"api_version": "v1alpha"})
 
         config = types.LiveConnectConfig(
             response_modalities=["AUDIO"],
-            system_instruction=types.Content(parts=[types.Part.from_text(text=SYSTEM_PROMPT)]),
+            system_instruction=types.Content(parts=[types.Part(text=SYSTEM_PROMPT)]),
             temperature=0.1,
             output_audio_transcription=types.AudioTranscriptionConfig(),
         )
@@ -245,7 +245,7 @@ class SpectAI:
                 await session.send_client_content(
                     turns=types.Content(
                         role="user",
-                        parts=[types.Part.from_text(text=nudge_prompt)]
+                        parts=[types.Part(text=nudge_prompt)]
                     ),
                     turn_complete=True
                 )

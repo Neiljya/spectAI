@@ -7,9 +7,13 @@
 # ============================================================
 
 import sys
+import os
 import threading
 from PyQt6.QtWidgets import QApplication
 from pynput import keyboard
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'Vision-Model'))
+from live_llm_s import SpectAI
 
 from overlay import Overlay
 from minimap import MinimapOverlay
@@ -62,6 +66,9 @@ def main():
     minimap  = MinimapOverlay()
     coach.init(_overlay, minimap)
 
+    spect_ai = SpectAI(response_callback=lambda text: coach.push(text, "coach"))
+    spect_ai.start()
+
     # Global hotkey listener
     listener = keyboard.Listener(on_press=_on_press, on_release=_on_release)
     listener.daemon = True
@@ -69,7 +76,9 @@ def main():
 
     coach.push("SpectAI ready.  ALT+M → show play  |  ALT+H → hide", "info")
 
-    sys.exit(app.exec())
+    exit_code = app.exec()
+    spect_ai.stop()
+    sys.exit(exit_code)
 
 
 if __name__ == "__main__":

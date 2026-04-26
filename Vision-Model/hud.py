@@ -4,9 +4,6 @@ import cv2
 import numpy as np
 import json
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "valorant-data-extraction")))
-sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
-
 from stream import WindowCapture
 from core.ocr import extract_text as easyocr_extract_text, initialize_ocr
 from core.image_processing import enhance_for_ocr

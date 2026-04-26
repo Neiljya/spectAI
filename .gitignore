@@ -16,6 +16,7 @@ myenv/
 develop-eggs/
 dist/
 downloads/
+sessions/
 eggs/
 .eggs/
 lib/

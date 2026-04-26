@@ -1,7 +1,11 @@
 # main.py
 # ============================================================
 # HOTKEYS
-#   ALT + M  — cycle through demo plays (remove when using LLM)
+#   F8       — start / stop session (SpectAI + recording)
+#   F9       — push-to-talk voice query (hold)
+#   F10      — toggle AI voice mute
+#   F12      — kill / close the app
+#   ALT + M  — cycle through demo plays
 #   ALT + H  — hide / show minimap
 #   ALT + X  — toggle speech bubble overlay
 # ============================================================
@@ -10,15 +14,17 @@ import sys
 import os
 import threading
 from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout
-from PyQt6.QtCore import Qt, QTimer, pyqtSignal
+from PyQt6.QtCore import Qt, QTimer, QMetaObject, pyqtSignal
 from pynput import keyboard
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'Vision-Model'))
-from live_llm_s import SpectAI
+from live_llm_s import SpectAI, set_muted
 
 from overlay import Overlay
 from minimap import MinimapOverlay
 from plays   import list_plays, get_plays_summary
+from session  import GameSession
+from recorder import ScreenRecorder
 import coach
 
 # ── Custom Voice Overlay ──────────────────────────────────
@@ -92,11 +98,77 @@ def _cycle_play():
     coach.push(f"{map_name} — {play_name}", "coach")
     _play_index += 1
 
+# ── Session / SpectAI toggle ───────────────────────────────
+_session_active  = False
+_current_session: GameSession    | None = None
+_spect_ai:        SpectAI        | None = None
+_recorder:        ScreenRecorder | None = None
+_is_muted = False
+
+def _on_coach_response(text: str):
+    coach.push(text, "coach")
+    if _current_session:
+        _current_session.add_event(text, source="coach")
+
+def _on_voice_response(text: str):
+    _voice_overlay.response_received.emit(text)
+    if _current_session:
+        _current_session.add_event(text, source="voice")
+
+def _toggle_session():
+    global _session_active, _current_session
+    if not _session_active:
+        _session_active = True
+        session = GameSession()
+        _current_session = session
+
+        video_path = os.path.join("sessions", session.match_id, "match_recording.mp4")
+        started = _recorder.start(video_path)
+        if started:
+            session.video_path = video_path
+
+        _spect_ai.start()
+        coach.push("Session started — SpectAI active.  F8 to stop  |  F10 mute.", "info")
+    else:
+        _session_active = False
+        session = _current_session
+        _current_session = None
+        coach.push("Stopping session…", "info")
+        def _stop():
+            _recorder.stop()
+            _spect_ai.stop()
+            if session:
+                path = session.save()
+                coach.push(f"Session saved → {path}", "positive")
+        threading.Thread(target=_stop, daemon=True).start()
+
+def _toggle_mute():
+    global _is_muted
+    _is_muted = not _is_muted
+    set_muted(_is_muted)
+    label = "MUTED" if _is_muted else "unmuted"
+    coach.push(f"AI voice {label}.  F10 to toggle.", "info")
+
 # ── Hotkey state ───────────────────────────────────────────
 _held = set()
 
 def _on_press(key):
     _held.add(key)
+
+    if key == keyboard.Key.f8:
+        _toggle_session()
+        return
+
+    if key == keyboard.Key.f10:
+        _toggle_mute()
+        return
+
+    if key == keyboard.Key.f12:
+        QMetaObject.invokeMethod(
+            QApplication.instance(), "quit",
+            Qt.ConnectionType.QueuedConnection,
+        )
+        return
 
     alt = keyboard.Key.alt_l in _held or keyboard.Key.alt_r in _held
 
@@ -118,7 +190,7 @@ def _on_release(key):
 
 
 def main():
-    global _overlay, _voice_overlay
+    global _overlay, _voice_overlay, _spect_ai, _recorder
 
     app = QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
@@ -129,24 +201,26 @@ def main():
     minimap  = MinimapOverlay()
     coach.init(_overlay, minimap)
 
-    # Initialize SpectAI with callbacks for both coach nudges and voice queries
-    spect_ai = SpectAI(
-        response_callback=lambda text: coach.push(text, "coach"),
-        voice_callback=lambda text: _voice_overlay.response_received.emit(text),
+    _recorder = ScreenRecorder()
+
+    # Build SpectAI — not started until F8
+    _spect_ai = SpectAI(
+        response_callback=_on_coach_response,
+        voice_callback=_on_voice_response,
         play_callback=lambda m, p: coach.show_play(m, p),
+        frame_callback=_recorder.write_frame,
         plays_summary=get_plays_summary(),
     )
-    spect_ai.start()
 
     # Global hotkey listener
     listener = keyboard.Listener(on_press=_on_press, on_release=_on_release)
     listener.daemon = True
     listener.start()
 
-    coach.push("SpectAI ready.  ALT+M → show play  |  ALT+H → hide", "info")
+    coach.push("SpectAI ready.  F8 → start session  |  ALT+M → play  |  ALT+H → hide", "info")
 
     exit_code = app.exec()
-    spect_ai.stop()
+    _spect_ai.stop()
     sys.exit(exit_code)
 
 

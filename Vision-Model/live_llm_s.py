@@ -113,7 +113,7 @@ def _speak_sync(text: str):
                     "model_id": "eleven_flash_v2_5",
                     "voice_settings": {"stability": 0.5, "similarity_boost": 0.75},
                 },
-                timeout=30.0, # Increased timeout to 30 seconds
+                timeout=30.0,
             )
             resp.raise_for_status()
             elapsed = time.time() - start_time
@@ -227,7 +227,7 @@ OUTPUT RULES:
 - Use this exact JSON format:
 {"should_coach": true, "advice": "Your crosshair is too low, aim at head level. Also, reload your Vandal before peeking."}
 
-VOICE EXCEPTION: When the player asks a voice question (marked PLAYER VOICE QUESTION), answer in 1-2 sentences max — direct and actionable. Do NOT respond with JSON for voice questions.
+VOICE EXCEPTION: If the user speaks to you directly (via audio), answer in 1-2 sentences max — direct and actionable. Do NOT respond with JSON for voice questions.
 """
 
 class CoachResponse(BaseModel):
@@ -259,13 +259,18 @@ def parse_coach_response(text: str) -> CoachResponse | None:
 
 
 class SpectAI:
-    def __init__(self, response_callback: Callable[[str], None]):
+    def __init__(self, response_callback: Callable[[str], None], voice_callback: Callable[[str], None] = None):
         self._response_callback = response_callback
+        self._voice_callback = voice_callback
         self._thread: threading.Thread | None = None
         self._loop: asyncio.AbstractEventLoop | None = None
         self._stop_event: asyncio.Event | None = None
         self._session = None
-        self._session_lock = asyncio.Lock()  # Synchronize nudge and voice turns
+        
+        # State routing variables
+        self._expecting_voice_response = False
+        self._voice_query_timestamp = 0.0
+        self._last_voice_time = 0.0
 
     def start(self):
         if self._thread and self._thread.is_alive():
@@ -286,17 +291,6 @@ class SpectAI:
                 self._thread.join(timeout=1)
         except KeyboardInterrupt:
             self.stop()
-
-    def inject_voice_query(self, pcm_bytes: bytes) -> str:
-        if not self._loop or not self._loop.is_running():
-            return ""
-        future = asyncio.run_coroutine_threadsafe(
-            self._handle_voice_query_async(pcm_bytes), self._loop
-        )
-        try:
-            return future.result(timeout=30)
-        except Exception:
-            return ""
 
     def _run_loop(self):
         self._loop = asyncio.new_event_loop()
@@ -326,12 +320,10 @@ class SpectAI:
         hud_scanner = ValorantHUDScanner()
         hud_smoother = HUDSmoother()
         
-        # Core state
         shared_context = {"hud_text": "None", "api_text": "None"}
         coaching_history = deque(maxlen=3)
         voice_queue: asyncio.Queue = asyncio.Queue()
 
-        # Connect Valorant Local API
         val_client = None
         resolver = None
         try:
@@ -341,7 +333,6 @@ class SpectAI:
         except Exception as e:
             print(f"[SpectAI] Valorant API unavailable ({e}) — running vision-only mode.")
 
-        # Start PTT Listener
         if VOICE_AVAILABLE:
             loop = asyncio.get_event_loop()
             threading.Thread(
@@ -349,77 +340,140 @@ class SpectAI:
             ).start()
             print("[SpectAI] Push-to-talk ready — hold F9 to ask a question.")
 
-        async with client.aio.live.connect(model=MODEL, config=config) as session:
-            print("[SpectAI] Live session connected.")
-            self._session = session
+        # --- AUTO-RECONNECT LOOP ---
+        while not self._stop_event.is_set():
+            try:
+                async with client.aio.live.connect(model=MODEL, config=config) as session:
+                    print("[SpectAI] Live session connected.")
+                    self._session = session
 
-            push_task = asyncio.create_task(
-                self._push_info_task(session, screen_capture, hud_scanner, hud_smoother, shared_context)
-            )
-            api_task = asyncio.create_task(
-                self._api_fetch_task(val_client, resolver, shared_context)
-            )
-            nudge_task = asyncio.create_task(
-                self._nudge_and_receive_task(session, shared_context, coaching_history)
-            )
-            voice_task = asyncio.create_task(
-                self._voice_queue_processor(voice_queue)
-            )
+                    receive_task = asyncio.create_task(self._continuous_receive_task(session, coaching_history))
+                    push_task = asyncio.create_task(self._push_info_task(session, screen_capture, hud_scanner, hud_smoother, shared_context))
+                    api_task = asyncio.create_task(self._api_fetch_task(val_client, resolver, shared_context))
+                    nudge_task = asyncio.create_task(self._nudge_task(session, shared_context, coaching_history))
+                    voice_task = asyncio.create_task(self._voice_queue_processor(voice_queue, session))
+                    
+                    stop_task = asyncio.create_task(self._stop_event.wait())
 
-            await self._stop_event.wait()
+                    tasks = [receive_task, push_task, api_task, nudge_task, voice_task, stop_task]
 
-            push_task.cancel()
-            api_task.cancel()
-            nudge_task.cancel()
-            voice_task.cancel()
-            await asyncio.gather(push_task, api_task, nudge_task, voice_task, return_exceptions=True)
-            self._session = None
+                    # Wait for the first task to finish (or crash)
+                    done, pending = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
+
+                    # A task completed (likely a disconnect error), so we clean up pending tasks
+                    for t in pending:
+                        t.cancel()
+                    
+                    # Ensure cleanup finishes
+                    await asyncio.gather(*pending, return_exceptions=True)
+                    self._session = None
+
+                    # If the stop event was triggered, exit the loop
+                    if self._stop_event.is_set():
+                        break
+                    
+                    print("[SpectAI] Connection lost. Reconnecting in 3 seconds...")
+                    await asyncio.sleep(3)
+
+            except Exception as e:
+                if not self._stop_event.is_set():
+                    print(f"[SpectAI] Connection failed: {e}. Retrying in 3 seconds...")
+                    await asyncio.sleep(3)
 
         print("[SpectAI] Session closed.")
 
+    async def _continuous_receive_task(self, session, coaching_history):
+        current_turn_text = ""
+        try:
+            async for msg in session.receive():
+                text = self._extract_text_from_msg(msg)
+                if text:
+                    current_turn_text += text
+                
+                if msg.server_content and msg.server_content.turn_complete:
+                    response_text = current_turn_text.strip()
+                    current_turn_text = ""  
+                    
+                    if not response_text:
+                        continue
+                    
+                    if self._expecting_voice_response:
+                        self._expecting_voice_response = False
+                        self._last_voice_time = time.time()
+                        self._process_voice_response(response_text)
+                    else:
+                        self._process_coach_response(response_text, coaching_history)
+        except asyncio.CancelledError:
+            pass
+        except Exception as e:
+            print(f"\n[SpectAI] Receive loop closed ({e}).")
+            # Exiting this function triggers the FIRST_COMPLETED in the main loop to initiate a reconnect.
+
+    def _extract_text_from_msg(self, msg) -> str:
+        if not msg.server_content:
+            return ""
+        if msg.server_content.output_transcription:
+            return msg.server_content.output_transcription.text or ""
+        if msg.server_content.model_turn:
+            return "".join(p.text for p in msg.server_content.model_turn.parts if p.text)
+        return ""
+
     async def _push_info_task(self, session, screen_capture, hud_scanner, hud_smoother, shared_context):
-        while True:
-            frame = await asyncio.to_thread(screen_capture.capture)
-            if frame is not None:
-                jpeg_bytes = await asyncio.to_thread(screen_capture.frame_to_jpeg, frame)
-                try:
-                    await session.send_realtime_input(
-                        video=types.Blob(data=jpeg_bytes, mime_type="image/jpeg")
-                    )
-                except Exception as e:
-                    print(f"Error sending frame: {e}")
+        try:
+            while True:
+                frame = await asyncio.to_thread(screen_capture.capture)
+                if frame is not None:
+                    jpeg_bytes = await asyncio.to_thread(screen_capture.frame_to_jpeg, frame)
+                    try:
+                        await session.send_realtime_input(
+                            video=types.Blob(data=jpeg_bytes, mime_type="image/jpeg")
+                        )
+                    except Exception:
+                        pass # Ignore individual frame drops
 
-                try:
-                    raw_hud = await asyncio.to_thread(hud_scanner.parse_hud, frame)
-                    hud_smoother.update(raw_hud)
-                    smoothed = hud_smoother.get_smoothed()
-                    shared_context["hud_text"] = (
-                        f"HP:{smoothed.get('hp')} | "
-                        f"Ammo:{smoothed.get('loaded_ammo')}/{smoothed.get('stored_ammo')} | "
-                        f"Creds:{smoothed.get('credits')}"
-                    )
-                except Exception:
-                    pass
+                    try:
+                        raw_hud = await asyncio.to_thread(hud_scanner.parse_hud, frame)
+                        hud_smoother.update(raw_hud)
+                        smoothed = hud_smoother.get_smoothed()
+                        shared_context["hud_text"] = (
+                            f"HP:{smoothed.get('hp')} | "
+                            f"Ammo:{smoothed.get('loaded_ammo')}/{smoothed.get('stored_ammo')} | "
+                            f"Creds:{smoothed.get('credits')}"
+                        )
+                    except Exception:
+                        pass
 
-            await asyncio.sleep(1.0 / CAPTURE_FPS)
+                await asyncio.sleep(1.0 / CAPTURE_FPS)
+        except asyncio.CancelledError:
+            pass
 
     async def _api_fetch_task(self, val_client, resolver, shared_context):
         if not val_client or not resolver:
             return
-        while True:
-            try:
-                summary = await asyncio.to_thread(build_game_context_summary, val_client, resolver)
-                if summary:
-                    shared_context["api_text"] = summary
-            except Exception:
-                pass
-            await asyncio.sleep(GAME_STATE_REFRESH_SECONDS)
+        try:
+            while True:
+                try:
+                    summary = await asyncio.to_thread(build_game_context_summary, val_client, resolver)
+                    if summary:
+                        shared_context["api_text"] = summary
+                except Exception:
+                    pass
+                await asyncio.sleep(GAME_STATE_REFRESH_SECONDS)
+        except asyncio.CancelledError:
+            pass
 
-    async def _nudge_and_receive_task(self, session, shared_context, coaching_history):
-        while True:
-            await asyncio.sleep(NUDGE_INTERVAL)
+    async def _nudge_task(self, session, shared_context, coaching_history):
+        try:
+            while True:
+                await asyncio.sleep(NUDGE_INTERVAL)
 
-            async with self._session_lock:
+                if self._expecting_voice_response and (time.time() - self._voice_query_timestamp > 15.0):
+                    print("\n[Voice Telemetry] Warning: Voice response timed out. Resuming normal coach operations.")
+                    self._expecting_voice_response = False
+
+                if self._expecting_voice_response or (time.time() - self._last_voice_time < 8.0):
+                    continue
+
                 history_text = " | ".join(coaching_history) if coaching_history else "None"
                 nudge_prompt = (
                     f"Analyze. Current HUD context: {shared_context['hud_text']}. "
@@ -437,95 +491,75 @@ class SpectAI:
                         ),
                         turn_complete=True
                     )
-
-                    full_response = await self._collect_turn_response(session)
-                    if full_response:
-                        self._handle_coach_response(full_response, coaching_history)
-
                 except asyncio.CancelledError:
                     raise
                 except Exception as e:
-                    print(f"\n[SpectAI] Nudge/Receive error: {e}")
+                    print(f"\n[SpectAI] Nudge error: {e}")
+                    break # Break loop to trigger a reconnect
 
-    async def _voice_queue_processor(self, voice_queue):
-        while True:
-            pcm_bytes = await voice_queue.get()
-            print("[Voice Telemetry] Audio popped from queue. Dispatching to Gemini...")
-            await self._handle_voice_query_async(pcm_bytes)
+        except asyncio.CancelledError:
+            pass
 
-    async def _handle_voice_query_async(self, pcm_bytes: bytes) -> str:
-        if self._session is None:
-            return ""
-
-        print("[Voice Telemetry] Waiting for Gemini session lock...")
-        async with self._session_lock:
-            print("[Voice Telemetry] Session lock acquired. Sending voice payload to Gemini API...")
-            start_time = time.time()
-            
-            await self._session.send_client_content(
-                turns=types.Content(
-                    role="user",
-                    parts=[types.Part.from_text(text="PLAYER VOICE QUESTION")]
-                ),
-                turn_complete=False
-            )
-            await self._session.send_realtime_input(activity_start=types.ActivityStart())
-            await self._session.send_realtime_input(
-                audio=types.Blob(data=pcm_bytes, mime_type=f"audio/pcm;rate={MIC_SAMPLE_RATE}")
-            )
-            await self._session.send_realtime_input(activity_end=types.ActivityEnd())
-
-            print("[Voice Telemetry] Audio payload sent. Awaiting Gemini response...")
-            full_text = await self._collect_turn_response(self._session)
-            elapsed = time.time() - start_time
-            print(f"[Voice Telemetry] Gemini responded in {elapsed:.2f} seconds.")
-
-            if full_text:
-                print(f"[Voice Telemetry] Raw Gemini Text: {full_text.strip()}")
-                sentences = re.split(r'(?<=[.!?])\s+', full_text.strip())
-                spoken = sentences[-1] if sentences else full_text
-                print(f"[Voice Telemetry] Filtered text for TTS: {spoken}")
+    async def _voice_queue_processor(self, voice_queue, session):
+        try:
+            while True:
+                pcm_bytes = await voice_queue.get()
+                print("\n[Voice Telemetry] Audio popped from queue. Dispatching to Gemini...")
                 
-                # Dispatch to TTS in background executor
-                asyncio.get_event_loop().run_in_executor(None, _speak_sync, spoken)
-                return spoken
+                self._expecting_voice_response = True
+                self._voice_query_timestamp = time.time()
+                
+                try:
+                    await session.send_realtime_input(activity_start=types.ActivityStart())
+                    await session.send_realtime_input(
+                        audio=types.Blob(data=pcm_bytes, mime_type=f"audio/pcm;rate={MIC_SAMPLE_RATE}")
+                    )
+                    await session.send_realtime_input(activity_end=types.ActivityEnd())
+                    print("[Voice Telemetry] Audio payload sent. Awaiting response in receive loop...")
+                except Exception as e:
+                    print(f"[Voice Telemetry] Error sending audio: {e}")
+                    self._expecting_voice_response = False
+                    break # Break loop to trigger a reconnect
 
-        return ""
+        except asyncio.CancelledError:
+            pass
 
-    def _extract_text_from_msg(self, msg) -> str:
-        if not msg.server_content:
-            return ""
-        if msg.server_content.output_transcription:
-            return msg.server_content.output_transcription.text or ""
-        if msg.server_content.model_turn:
-            return "".join(p.text for p in msg.server_content.model_turn.parts if p.text)
-        return ""
+    def _process_voice_response(self, full_response: str):
+        print(f"[Voice Telemetry] Raw Gemini Text: {full_response}")
+        sentences = re.split(r'(?<=[.!?])\s+', full_response)
+        spoken = sentences[-1] if sentences else full_response
+        print(f"[Voice Telemetry] Filtered text for TTS: {spoken}")
+        
+        if self._voice_callback:
+            self._voice_callback(spoken)
+            
+        asyncio.get_event_loop().run_in_executor(None, _speak_sync, spoken)
 
-    async def _collect_turn_response(self, session) -> str:
-        full_response = ""
-        async for msg in session.receive():
-            full_response += self._extract_text_from_msg(msg)
-            if msg.server_content and msg.server_content.turn_complete:
-                break
-        return full_response
+    def _process_coach_response(self, full_response: str, coaching_history: deque):
+        if time.time() - self._last_voice_time < 8.0:
+            return
 
-    def _handle_coach_response(self, full_response: str, coaching_history: deque):
         ctx = parse_coach_response(full_response)
         if not ctx:
-            print(f"\n[Parse Failed]: {full_response.strip()}")
+            print(f"\n[Parse Failed]: {full_response}")
             return
+            
         if ctx.should_coach and ctx.advice:
             coaching_history.append(ctx.advice)
             asyncio.get_event_loop().run_in_executor(None, _speak_sync, ctx.advice)
-            self._response_callback(ctx.advice)
+            if self._response_callback:
+                self._response_callback(ctx.advice)
         else:
             print(".", end="", flush=True)
 
 
 if __name__ == "__main__":
-    def on_response(advice: str):
+    def on_coach_response(advice: str):
         print(f"\n[COACH]: {advice}")
 
-    ai = SpectAI(response_callback=on_response)
+    def on_voice_response(advice: str):
+        print(f"\n[VOICE]: Response: {advice}")
+
+    ai = SpectAI(response_callback=on_coach_response, voice_callback=on_voice_response)
     ai.start()
     ai.wait()

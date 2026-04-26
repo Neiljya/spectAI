@@ -8,18 +8,22 @@ import tempfile
 import threading
 import logging
 import warnings
+import time
 import dotenv
+import httpx
+import numpy as np
 from collections import deque
 from dataclasses import asdict
+
 from google import genai
 from google.genai import types
 from pydantic import BaseModel, Field, ValidationError
 from typing import Optional, Callable
+
 from stream import WindowCapture
+from hud import ValorantHUDScanner
 from valorant_local_api import ValorantLocalClient, GamePhase
 from valorant_resolver import ValorantResolver
-import httpx
-import numpy as np
 
 try:
     import sounddevice as sd
@@ -33,13 +37,13 @@ warnings.filterwarnings("ignore")
 os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "3")
 logging.disable(logging.WARNING)
 
+# --- Configuration & Constants ---
 dotenv.load_dotenv()
 TARGET_WINDOW = "VALORANT  "
-CAPTURE_FPS = 2
-COOLDOWN_SECONDS = 8
+CAPTURE_FPS = 1
+NUDGE_INTERVAL = 6
 GAME_STATE_REFRESH_SECONDS = 10
-MAX_HISTORY = 10
-MODEL = "gemini-2.5-flash-native-audio-latest"
+MODEL = "gemini-3.1-flash-live-preview"
 
 PTT_KEY = kb.Key.f9 if VOICE_AVAILABLE else None
 MIC_SAMPLE_RATE = 16000
@@ -49,19 +53,57 @@ _ELEVENLABS_KEY = os.getenv("ELEVENLABS_API_KEY", "")
 _ELEVENLABS_VOICE = "JBFqnCBsd6RMkjVDRZzb"  # George
 _tts_lock = threading.Lock()
 
+# --- HUD Smoothing & Config ---
+_HUD_NUMERIC_FIELDS = {"hp", "shield", "credits", "loaded_ammo", "stored_ammo", "my_team_score", "enemy_team_score"}
+_HUD_STRING_FIELDS = {"match_timer", "game_phase"}
+HUD_SMOOTHING_WINDOW = 5
 
+
+class HUDSmoother:
+    def __init__(self, window: int = HUD_SMOOTHING_WINDOW):
+        self._numeric: dict[str, deque] = {f: deque(maxlen=window) for f in _HUD_NUMERIC_FIELDS}
+        self._string: dict[str, str] = {f: "" for f in _HUD_STRING_FIELDS}
+
+    def update(self, raw: dict):
+        for field in _HUD_NUMERIC_FIELDS:
+            val = str(raw.get(field, "")).strip()
+            if val.isdigit():
+                self._numeric[field].append(int(val))
+        for field in _HUD_STRING_FIELDS:
+            val = str(raw.get(field, "")).strip()
+            if val:
+                self._string[field] = val
+
+    def get_smoothed(self) -> dict:
+        result = {}
+        for field in _HUD_NUMERIC_FIELDS:
+            readings = self._numeric[field]
+            result[field] = round(sum(readings) / len(readings)) if readings else None
+        for field in _HUD_STRING_FIELDS:
+            result[field] = self._string[field] or None
+        return result
+
+
+# --- Text-to-Speech & Voice Helpers ---
 def _play_mp3(path: str):
+    print(f"[Voice Telemetry] Playing MP3 audio via MCI from {path}...")
     if sys.platform == "win32":
         mci = ctypes.windll.winmm.mciSendStringW
         mci(f'open "{path}" type mpegvideo alias spectai_tts', None, 0, None)
         mci('play spectai_tts wait', None, 0, None)
         mci('close spectai_tts', None, 0, None)
+    print("[Voice Telemetry] Audio playback complete.")
 
 
 def _speak_sync(text: str):
     if not _ELEVENLABS_KEY or not text.strip():
+        print("[Voice Telemetry] Aborting TTS: No ElevenLabs key or empty text.")
         return
+        
+    print(f"[Voice Telemetry] Acquiring TTS lock to speak: '{text[:30]}...'")
     with _tts_lock:
+        print("[Voice Telemetry] TTS lock acquired. Sending POST request to ElevenLabs API...")
+        start_time = time.time()
         try:
             resp = httpx.post(
                 f"https://api.elevenlabs.io/v1/text-to-speech/{_ELEVENLABS_VOICE}",
@@ -71,63 +113,62 @@ def _speak_sync(text: str):
                     "model_id": "eleven_flash_v2_5",
                     "voice_settings": {"stability": 0.5, "similarity_boost": 0.75},
                 },
-                timeout=15,
+                timeout=30.0, # Increased timeout to 30 seconds
             )
             resp.raise_for_status()
+            elapsed = time.time() - start_time
+            print(f"[Voice Telemetry] ElevenLabs API responded successfully in {elapsed:.2f} seconds.")
+            
             with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as f:
                 f.write(resp.content)
                 tmp_path = f.name
+            
+            print("[Voice Telemetry] Audio saved to temp file. Routing to playback...")
             _play_mp3(tmp_path)
+            
+        except httpx.ReadTimeout:
+            elapsed = time.time() - start_time
+            print(f"[Voice Telemetry] ERROR: ElevenLabs API read operation timed out after {elapsed:.2f} seconds.")
         except Exception as e:
-            print(f"[SpectAI] TTS error: {e}")
+            elapsed = time.time() - start_time
+            print(f"[Voice Telemetry] ERROR: TTS request failed after {elapsed:.2f} seconds. Details: {e}")
 
 
-SYSTEM_PROMPT = """You are SpectAI, an elite real-time Valorant coach with vision access to the player's screen.
-You watch game frames and deliver precise, actionable coaching in the moment.
-Use the HUD: health, ammo, top bar (agent icons, ult status, time, scores), killfeed, and minimap.
-IMPORTANT: To identify the player's agent, look at the top bar icon or the center of the minimap.
-You will sometimes receive a RECENT COACHING HISTORY buffer. Use it to avoid repeating yourself.
-You may also receive LIVE GAME DATA from the Valorant API. Use it for accurate map, agent, and team info.
-When the player asks a voice question (marked PLAYER VOICE QUESTION), answer in 1-2 sentences max — direct and actionable. Do NOT respond with JSON for voice questions.
+def start_ptt_listener(loop: asyncio.AbstractEventLoop, voice_queue: asyncio.Queue):
+    if not VOICE_AVAILABLE:
+        return
 
-OUTPUT RULES for screen analysis:
-- Respond with ONLY a valid JSON object. No markdown, no code blocks, no extra text.
-- If there is nothing actionable, set should_coach to false and omit advice.
-- Use this exact format:
-{"should_coach": true, "advice": "Hold B Main — spike is planted and your team has a 3v1 with 40s left."}
-"""
+    recording = False
+    audio_chunks: list = []
 
+    def audio_callback(indata, _frames, _time, _status):
+        if recording:
+            audio_chunks.append(indata.copy())
 
-class CoachResponse(BaseModel):
-    should_coach: bool = Field(description="Whether there is an actionable coaching moment right now.")
-    advice: Optional[str] = Field(None, description="Short, actionable coaching callout. Null if should_coach is false.")
+    def on_press(key):
+        nonlocal recording, audio_chunks
+        if key == PTT_KEY and not recording:
+            recording = True
+            audio_chunks = []
+            print("\n[Voice Telemetry] PTT Key pressed. Recording audio...")
 
+    def on_release(key):
+        nonlocal recording
+        if key == PTT_KEY and recording:
+            recording = False
+            if audio_chunks:
+                print(f"[Voice Telemetry] PTT Key released. Captured {len(audio_chunks)} audio chunks. Queuing for AI...")
+                pcm = (np.concatenate(audio_chunks, axis=0) * 32767).astype(np.int16).tobytes()
+                asyncio.run_coroutine_threadsafe(voice_queue.put(pcm), loop)
+            else:
+                print("[Voice Telemetry] PTT Key released, but no audio was captured.")
 
-def parse_coach_response(text: str) -> CoachResponse | None:
-    text = text.strip()
-    try:
-        return CoachResponse.model_validate_json(text)
-    except (ValidationError, json.JSONDecodeError):
-        pass
-
-    match = re.search(r'`{3}(?:json)?\s*(.*?)\s*`{3}', text, re.DOTALL)
-    if match:
-        try:
-            return CoachResponse.model_validate_json(match.group(1))
-        except (ValidationError, json.JSONDecodeError):
-            pass
-
-    start = text.find('{')
-    end = text.rfind('}')
-    if start != -1 and end != -1:
-        try:
-            return CoachResponse.model_validate_json(text[start:end + 1])
-        except (ValidationError, json.JSONDecodeError):
-            pass
-
-    return None
+    with sd.InputStream(samplerate=MIC_SAMPLE_RATE, channels=MIC_CHANNELS, dtype='float32', callback=audio_callback):
+        with kb.Listener(on_press=on_press, on_release=on_release) as listener:
+            listener.join()
 
 
+# --- Game State Resolvers ---
 def _classify_players(valid_players, my_puuid: str, my_team_id) -> tuple[list, list]:
     allies, enemies = [], []
     for p in valid_players:
@@ -140,7 +181,7 @@ def _classify_players(valid_players, my_puuid: str, my_team_id) -> tuple[list, l
     return allies, enemies
 
 
-def build_game_context_summary(val_client: ValorantLocalClient, resolver: ValorantResolver) -> tuple[str, int, int] | None:
+def build_game_context_summary(val_client: ValorantLocalClient, resolver: ValorantResolver) -> str | None:
     try:
         raw_state = val_client.get_full_game_state()
     except Exception:
@@ -165,40 +206,56 @@ def build_game_context_summary(val_client: ValorantLocalClient, resolver: Valora
         callout_names = sorted({c.region_name for c in resolved.map.callouts})
         lines.append(f"Map callouts: {', '.join(callout_names)}")
 
-    return "\n".join(lines), len(allies), len(enemies)
+    return "\n".join(lines)
 
 
-def start_ptt_listener(loop: asyncio.AbstractEventLoop, voice_queue: asyncio.Queue):
-    if not VOICE_AVAILABLE:
-        return
+# --- System Prompt & Models ---
+SYSTEM_PROMPT = """You are SpectAI, a real-time competitive FPS coaching system (Valorant).
+You watch the video stream, track HUD data, and receive LIVE GAME DATA. Every few seconds, you will be nudged to analyze the situation.
 
-    recording = False
-    audio_chunks: list = []
+Prioritize player positioning, map control, gamesense. Focus less on weapon choice. Positioning and awareness are key!
+IMPORTANT: To identify the player's agent, look at the top bar icon, the center of the minimap, or the LIVE GAME DATA.
 
-    def audio_callback(indata, _frames, _time, _status):
-        if recording:
-            audio_chunks.append(indata.copy())
+OUTPUT RULES:
+- Respond with ONLY a valid JSON object. No markdown, no code blocks, no extra text.
+- Pay attention to positioning (minimap data, player exposure) in relation to the game state (post plant, defense, clearing)
+- Give advice if the player might be neglecting flanks, has bad positioning (cant fall back to cover easily or has no util to)
+- Give advice when suspecting if enemies might have rotated from a site or not based on the timer, player count, and typical enemy behavior.
+- Tell player specific places to position themselves based on game state and map knowledge (e.g. "Hold an aggressive angle like B Main to punish common rushes" or "Consider playing close to the box for cover after planting")
+- Decide if the player needs immediate, actionable coaching based on the current context (e.g., low ammo, bad crosshair placement, enemy rotation spotted, economy failure).
+- If no immediate advice is needed, set should_coach to false.
+- Use this exact JSON format:
+{"should_coach": true, "advice": "Your crosshair is too low, aim at head level. Also, reload your Vandal before peeking."}
 
-    def on_press(key):
-        nonlocal recording, audio_chunks
-        if key == PTT_KEY and not recording:
-            recording = True
-            audio_chunks = []
-            print("[SpectAI] Listening... (release F9 to send)")
+VOICE EXCEPTION: When the player asks a voice question (marked PLAYER VOICE QUESTION), answer in 1-2 sentences max — direct and actionable. Do NOT respond with JSON for voice questions.
+"""
 
-    def on_release(key):
-        nonlocal recording
-        if key == PTT_KEY and recording:
-            recording = False
-            if audio_chunks:
-                pcm = (np.concatenate(audio_chunks, axis=0) * 32767).astype(np.int16).tobytes()
-                asyncio.run_coroutine_threadsafe(voice_queue.put(pcm), loop)
-                print("[SpectAI] Voice query received — processing...")
+class CoachResponse(BaseModel):
+    should_coach: bool = Field(description="Whether anything worth coaching is happening right now.")
+    advice: Optional[str] = Field(None, description="Short, actionable coaching callout if should_coach is true. Null otherwise.")
 
-    with sd.InputStream(samplerate=MIC_SAMPLE_RATE, channels=MIC_CHANNELS,
-                        dtype='float32', callback=audio_callback):
-        with kb.Listener(on_press=on_press, on_release=on_release) as listener:
-            listener.join()
+def parse_coach_response(text: str) -> CoachResponse | None:
+    text = text.strip()
+    try:
+        return CoachResponse.model_validate_json(text)
+    except (ValidationError, json.JSONDecodeError):
+        pass
+
+    match = re.search(r'`{3}(?:json)?\s*(.*?)\s*`{3}', text, re.DOTALL)
+    if match:
+        try:
+            return CoachResponse.model_validate_json(match.group(1))
+        except (ValidationError, json.JSONDecodeError):
+            pass
+
+    start = text.find('{')
+    end = text.rfind('}')
+    if start != -1 and end != -1:
+        try:
+            return CoachResponse.model_validate_json(text[start:end + 1])
+        except (ValidationError, json.JSONDecodeError):
+            pass
+    return None
 
 
 class SpectAI:
@@ -208,6 +265,7 @@ class SpectAI:
         self._loop: asyncio.AbstractEventLoop | None = None
         self._stop_event: asyncio.Event | None = None
         self._session = None
+        self._session_lock = asyncio.Lock()  # Synchronize nudge and voice turns
 
     def start(self):
         if self._thread and self._thread.is_alive():
@@ -230,7 +288,6 @@ class SpectAI:
             self.stop()
 
     def inject_voice_query(self, pcm_bytes: bytes) -> str:
-        """Trigger an on-demand voice query on the live session. Speaks and returns the response."""
         if not self._loop or not self._loop.is_running():
             return ""
         future = asyncio.run_coroutine_threadsafe(
@@ -253,11 +310,11 @@ class SpectAI:
 
     async def _run(self):
         print("[SpectAI] Starting vision layer (Live API)...")
-        client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"), http_options={"api_version": "v1alpha"})
+        client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
         config = types.LiveConnectConfig(
             response_modalities=["AUDIO"],
-            system_instruction=types.Content(parts=[types.Part(text=SYSTEM_PROMPT)]),
+            system_instruction=types.Content(parts=[types.Part.from_text(text=SYSTEM_PROMPT)]),
             temperature=0.1,
             output_audio_transcription=types.AudioTranscriptionConfig(),
             realtime_input_config=types.RealtimeInputConfig(
@@ -266,7 +323,15 @@ class SpectAI:
         )
 
         screen_capture = WindowCapture(TARGET_WINDOW)
+        hud_scanner = ValorantHUDScanner()
+        hud_smoother = HUDSmoother()
+        
+        # Core state
+        shared_context = {"hud_text": "None", "api_text": "None"}
+        coaching_history = deque(maxlen=3)
+        voice_queue: asyncio.Queue = asyncio.Queue()
 
+        # Connect Valorant Local API
         val_client = None
         resolver = None
         try:
@@ -276,9 +341,9 @@ class SpectAI:
         except Exception as e:
             print(f"[SpectAI] Valorant API unavailable ({e}) — running vision-only mode.")
 
-        voice_queue: asyncio.Queue = asyncio.Queue()
-        loop = asyncio.get_event_loop()
+        # Start PTT Listener
         if VOICE_AVAILABLE:
+            loop = asyncio.get_event_loop()
             threading.Thread(
                 target=start_ptt_listener, args=(loop, voice_queue), daemon=True
             ).start()
@@ -288,126 +353,142 @@ class SpectAI:
             print("[SpectAI] Live session connected.")
             self._session = session
 
-            analysis_task = asyncio.create_task(
-                self._analysis_loop(session, screen_capture, val_client, resolver, voice_queue)
+            push_task = asyncio.create_task(
+                self._push_info_task(session, screen_capture, hud_scanner, hud_smoother, shared_context)
+            )
+            api_task = asyncio.create_task(
+                self._api_fetch_task(val_client, resolver, shared_context)
+            )
+            nudge_task = asyncio.create_task(
+                self._nudge_and_receive_task(session, shared_context, coaching_history)
+            )
+            voice_task = asyncio.create_task(
+                self._voice_queue_processor(voice_queue)
             )
 
             await self._stop_event.wait()
 
-            analysis_task.cancel()
-            await asyncio.gather(analysis_task, return_exceptions=True)
+            push_task.cancel()
+            api_task.cancel()
+            nudge_task.cancel()
+            voice_task.cancel()
+            await asyncio.gather(push_task, api_task, nudge_task, voice_task, return_exceptions=True)
             self._session = None
 
         print("[SpectAI] Session closed.")
 
-    def _build_analysis_prompt(self, game_context_summary: str | None, history_buffer: list[str]) -> str:
-        parts = []
-        if game_context_summary:
-            parts.append(f"LIVE GAME DATA (from Valorant API):\n{game_context_summary}")
-        if history_buffer:
-            history_lines = "\n".join(f"T-{len(history_buffer)-i}: {h}" for i, h in enumerate(history_buffer))
-            parts.append(f"RECENT COACHING HISTORY:\n{history_lines}")
-        parts.append("Analyze the CURRENT frame. Respond with JSON only.")
-        return "\n\n".join(parts)
-
-    def _process_coach_text(self, full_text: str, history_buffer: list[str], loop) -> None:
-        ctx = parse_coach_response(full_text)
-        if not ctx:
-            print(f"\n[Parse Failed]: {full_text[:200]}")
-            return
-        if ctx.should_coach and ctx.advice:
-            loop.run_in_executor(None, _speak_sync, ctx.advice)
-            self._response_callback(ctx.advice)
-            history_buffer.append(ctx.advice)
-            if len(history_buffer) > MAX_HISTORY:
-                history_buffer.pop(0)
-        else:
-            print(".", end="", flush=True)
-
-    def _try_refresh_context(self, val_client, resolver, now: float, last_fetch: float, summary: str | None) -> tuple[str | None, float]:
-        if not (val_client and resolver and (now - last_fetch) >= GAME_STATE_REFRESH_SECONDS):
-            return summary, last_fetch
-        try:
-            result = build_game_context_summary(val_client, resolver)
-            if result:
-                print("[SpectAI] Game context refreshed.")
-                return result[0], now
-        except Exception:
-            pass
-        return summary, now
-
-    async def _analyze_frame(self, session, jpeg_bytes: bytes, game_context_summary: str | None, history_buffer: list[str], loop) -> None:
-        await session.send_realtime_input(video=types.Blob(data=jpeg_bytes, mime_type="image/jpeg"))
-        await session.send_realtime_input(text=self._build_analysis_prompt(game_context_summary, history_buffer))
-        full_text = await self._collect_turn_response(session)
-        if full_text:
-            self._process_coach_text(full_text, history_buffer, loop)
-
-    async def _analysis_loop(
-        self,
-        session,
-        screen_capture: WindowCapture,
-        val_client,
-        resolver,
-        voice_queue: asyncio.Queue,
-    ):
-        last_coached = 0.0
-        history_buffer: list[str] = []
-        game_context_summary: str | None = None
-        last_game_state_fetch = 0.0
-        loop = asyncio.get_event_loop()
-
+    async def _push_info_task(self, session, screen_capture, hud_scanner, hud_smoother, shared_context):
         while True:
-            now = loop.time()
-
-            if not voice_queue.empty():
-                pcm_bytes = await voice_queue.get()
-                await self._handle_voice_query_async(pcm_bytes)
-                last_coached = loop.time()
-                continue
-
-            if (now - last_coached) < COOLDOWN_SECONDS:
-                await asyncio.sleep(0.1)
-                continue
-
-            game_context_summary, last_game_state_fetch = self._try_refresh_context(
-                val_client, resolver, now, last_game_state_fetch, game_context_summary
-            )
-
             frame = await asyncio.to_thread(screen_capture.capture)
-            if frame is None:
-                await asyncio.sleep(0.1)
-                continue
-
-            try:
+            if frame is not None:
                 jpeg_bytes = await asyncio.to_thread(screen_capture.frame_to_jpeg, frame)
-                await self._analyze_frame(session, jpeg_bytes, game_context_summary, history_buffer, loop)
-            except asyncio.CancelledError:
-                raise
-            except Exception as e:
-                print(f"[SpectAI] Error: {e}")
-            finally:
-                last_coached = loop.time()
+                try:
+                    await session.send_realtime_input(
+                        video=types.Blob(data=jpeg_bytes, mime_type="image/jpeg")
+                    )
+                except Exception as e:
+                    print(f"Error sending frame: {e}")
+
+                try:
+                    raw_hud = await asyncio.to_thread(hud_scanner.parse_hud, frame)
+                    hud_smoother.update(raw_hud)
+                    smoothed = hud_smoother.get_smoothed()
+                    shared_context["hud_text"] = (
+                        f"HP:{smoothed.get('hp')} | "
+                        f"Ammo:{smoothed.get('loaded_ammo')}/{smoothed.get('stored_ammo')} | "
+                        f"Creds:{smoothed.get('credits')}"
+                    )
+                except Exception:
+                    pass
+
+            await asyncio.sleep(1.0 / CAPTURE_FPS)
+
+    async def _api_fetch_task(self, val_client, resolver, shared_context):
+        if not val_client or not resolver:
+            return
+        while True:
+            try:
+                summary = await asyncio.to_thread(build_game_context_summary, val_client, resolver)
+                if summary:
+                    shared_context["api_text"] = summary
+            except Exception:
+                pass
+            await asyncio.sleep(GAME_STATE_REFRESH_SECONDS)
+
+    async def _nudge_and_receive_task(self, session, shared_context, coaching_history):
+        while True:
+            await asyncio.sleep(NUDGE_INTERVAL)
+
+            async with self._session_lock:
+                history_text = " | ".join(coaching_history) if coaching_history else "None"
+                nudge_prompt = (
+                    f"Analyze. Current HUD context: {shared_context['hud_text']}. "
+                    f"LIVE GAME DATA: {shared_context['api_text']}. "
+                    f"Recent advice given: {history_text}. "
+                    "Do NOT repeat recent advice unless the situation has drastically worsened. "
+                    "Respond strictly in JSON."
+                )
+
+                try:
+                    await session.send_client_content(
+                        turns=types.Content(
+                            role="user",
+                            parts=[types.Part.from_text(text=nudge_prompt)]
+                        ),
+                        turn_complete=True
+                    )
+
+                    full_response = await self._collect_turn_response(session)
+                    if full_response:
+                        self._handle_coach_response(full_response, coaching_history)
+
+                except asyncio.CancelledError:
+                    raise
+                except Exception as e:
+                    print(f"\n[SpectAI] Nudge/Receive error: {e}")
+
+    async def _voice_queue_processor(self, voice_queue):
+        while True:
+            pcm_bytes = await voice_queue.get()
+            print("[Voice Telemetry] Audio popped from queue. Dispatching to Gemini...")
+            await self._handle_voice_query_async(pcm_bytes)
 
     async def _handle_voice_query_async(self, pcm_bytes: bytes) -> str:
-        """Send player voice to Gemini, speak the response via TTS, and return it."""
         if self._session is None:
             return ""
 
-        session = self._session
-        await session.send_realtime_input(activity_start=types.ActivityStart())
-        await session.send_realtime_input(
-            audio=types.Blob(data=pcm_bytes, mime_type=f"audio/pcm;rate={MIC_SAMPLE_RATE}")
-        )
-        await session.send_realtime_input(activity_end=types.ActivityEnd())
+        print("[Voice Telemetry] Waiting for Gemini session lock...")
+        async with self._session_lock:
+            print("[Voice Telemetry] Session lock acquired. Sending voice payload to Gemini API...")
+            start_time = time.time()
+            
+            await self._session.send_client_content(
+                turns=types.Content(
+                    role="user",
+                    parts=[types.Part.from_text(text="PLAYER VOICE QUESTION")]
+                ),
+                turn_complete=False
+            )
+            await self._session.send_realtime_input(activity_start=types.ActivityStart())
+            await self._session.send_realtime_input(
+                audio=types.Blob(data=pcm_bytes, mime_type=f"audio/pcm;rate={MIC_SAMPLE_RATE}")
+            )
+            await self._session.send_realtime_input(activity_end=types.ActivityEnd())
 
-        full_text = await self._collect_turn_response(session)
-        if full_text:
-            sentences = re.split(r'(?<=[.!?])\s+', full_text.strip())
-            spoken = sentences[-1] if sentences else full_text
-            print(f"[SpectAI] Voice response: {spoken}")
-            asyncio.get_event_loop().run_in_executor(None, _speak_sync, spoken)
-            return spoken
+            print("[Voice Telemetry] Audio payload sent. Awaiting Gemini response...")
+            full_text = await self._collect_turn_response(self._session)
+            elapsed = time.time() - start_time
+            print(f"[Voice Telemetry] Gemini responded in {elapsed:.2f} seconds.")
+
+            if full_text:
+                print(f"[Voice Telemetry] Raw Gemini Text: {full_text.strip()}")
+                sentences = re.split(r'(?<=[.!?])\s+', full_text.strip())
+                spoken = sentences[-1] if sentences else full_text
+                print(f"[Voice Telemetry] Filtered text for TTS: {spoken}")
+                
+                # Dispatch to TTS in background executor
+                asyncio.get_event_loop().run_in_executor(None, _speak_sync, spoken)
+                return spoken
 
         return ""
 
@@ -427,6 +508,18 @@ class SpectAI:
             if msg.server_content and msg.server_content.turn_complete:
                 break
         return full_response
+
+    def _handle_coach_response(self, full_response: str, coaching_history: deque):
+        ctx = parse_coach_response(full_response)
+        if not ctx:
+            print(f"\n[Parse Failed]: {full_response.strip()}")
+            return
+        if ctx.should_coach and ctx.advice:
+            coaching_history.append(ctx.advice)
+            asyncio.get_event_loop().run_in_executor(None, _speak_sync, ctx.advice)
+            self._response_callback(ctx.advice)
+        else:
+            print(".", end="", flush=True)
 
 
 if __name__ == "__main__":

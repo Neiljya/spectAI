@@ -41,7 +41,6 @@ logging.disable(logging.WARNING)
 dotenv.load_dotenv()
 TARGET_WINDOW = "VALORANT  "
 CAPTURE_FPS = 1
-RECORD_FPS  = 24
 NUDGE_INTERVAL = 6
 GAME_STATE_REFRESH_SECONDS = 10
 MODEL = "gemini-3.1-flash-live-preview"
@@ -293,13 +292,11 @@ class SpectAI:
         response_callback: Callable[[str], None],
         voice_callback: Callable[[str], None] = None,
         play_callback: Callable[[str, str], None] = None,
-        frame_callback: Callable = None,
         plays_summary: str = "",
     ):
         self._response_callback = response_callback
         self._voice_callback = voice_callback
         self._play_callback = play_callback
-        self._frame_callback = frame_callback
         self._plays_summary = plays_summary
         self._thread: threading.Thread | None = None
         self._loop: asyncio.AbstractEventLoop | None = None
@@ -459,45 +456,33 @@ class SpectAI:
         return ""
 
     async def _push_info_task(self, session, screen_capture, hud_scanner, hud_smoother, shared_context):
-        last_ai_t  = 0.0
-        last_hud_t = 0.0
         try:
             while True:
                 frame = await asyncio.to_thread(screen_capture.capture)
-                now = time.monotonic()
 
                 if frame is not None:
-                    # recorder — every frame at RECORD_FPS
-                    if self._frame_callback:
-                        self._frame_callback(frame)
+                    jpeg_bytes = await asyncio.to_thread(screen_capture.frame_to_jpeg, frame)
+                    try:
+                        await session.send_realtime_input(
+                            video=types.Blob(data=jpeg_bytes, mime_type="image/jpeg")
+                        )
+                    except Exception:
+                        pass
 
-                    # Gemini video — throttled to CAPTURE_FPS (1 FPS)
-                    if now - last_ai_t >= 1.0 / CAPTURE_FPS:
-                        last_ai_t = now
-                        jpeg_bytes = await asyncio.to_thread(screen_capture.frame_to_jpeg, frame)
-                        try:
-                            await session.send_realtime_input(
-                                video=types.Blob(data=jpeg_bytes, mime_type="image/jpeg")
-                            )
-                        except Exception:
-                            pass
+                    try:
+                        raw_hud = await asyncio.to_thread(hud_scanner.parse_hud, frame)
+                        hud_smoother.update(raw_hud)
+                        smoothed = hud_smoother.get_smoothed()
+                        shared_context["hud_text"] = (
+                            f"HP:{smoothed.get('hp')} | "
+                            f"Ammo:{smoothed.get('loaded_ammo')}/{smoothed.get('stored_ammo')} | "
+                            f"Creds:{smoothed.get('credits')}"
+                        )
+                    except Exception:
+                        pass
 
-                    # HUD scan — throttled to CAPTURE_FPS (1 FPS)
-                    if now - last_hud_t >= 1.0 / CAPTURE_FPS:
-                        last_hud_t = now
-                        try:
-                            raw_hud = await asyncio.to_thread(hud_scanner.parse_hud, frame)
-                            hud_smoother.update(raw_hud)
-                            smoothed = hud_smoother.get_smoothed()
-                            shared_context["hud_text"] = (
-                                f"HP:{smoothed.get('hp')} | "
-                                f"Ammo:{smoothed.get('loaded_ammo')}/{smoothed.get('stored_ammo')} | "
-                                f"Creds:{smoothed.get('credits')}"
-                            )
-                        except Exception:
-                            pass
+                await asyncio.sleep(1.0 / CAPTURE_FPS)
 
-                await asyncio.sleep(1.0 / RECORD_FPS)
         except asyncio.CancelledError:
             pass
 

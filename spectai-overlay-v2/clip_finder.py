@@ -14,16 +14,17 @@ import sys
 import dotenv
 from google import genai
 from google.genai import types
+from pydantic import BaseModel
 
 dotenv.load_dotenv()
 
-MODEL = "gemini-2.5-flash-preview-05-20"
+MODEL = "gemini-2.5-flash"
 
 SYSTEM_PROMPT = """You are a Valorant coaching analyst reviewing post-match AI coaching logs.
 Your job is to identify exactly 5 moments where the player made mistakes or showed clear areas for improvement.
 
 Focus on:
-- Repeated poor positioning or over-extension (same mistake flagged multiple times is one moment)
+- Repeated poor positioning or over-extension (same mistake flagged multiple times = one moment)
 - Missed rotations or failing to regroup with the team
 - Economy mismanagement (buying in a save round, not buying in a full-buy round, sitting on excess credits)
 - Taking unnecessary duels while low HP or low ammo
@@ -32,18 +33,33 @@ Focus on:
 Do NOT select highlights or moments where the player performed well.
 Prioritize the 5 moments that, if corrected, would have the highest impact on improvement.
 
-Each moment may span several coaching events. Use the surrounding events to set a generous clip window:
-- "start_s": ~10 seconds before the first relevant event in the cluster
-- "end_s": ~5 seconds after the last relevant event in the cluster
+Each moment may span several coaching events. Set a generous clip window:
+- start_s: ~10 seconds before the first relevant event in the cluster
+- end_s: ~5 seconds after the last relevant event in the cluster
 - Clamp both values to [0, session_duration_s]
+- Make sure the clip is not too short (<5s) or too long (>1minute); adjust the window as needed.
 
-Return ONLY a valid JSON array of exactly 5 objects, each with:
-  "title"       — 5 words max
-  "description" — 1-2 sentences: what went wrong and the specific fix
-  "start_s"     — clip start (float, seconds)
-  "end_s"       — clip end (float, seconds)
+For each moment provide:
+  title       — 5 words max label
+  description — 1-2 sentence summary of the mistake
+  paragraph   — full coaching paragraph covering:
+                  (a) what the player did right in this stretch, if anything
+                  (b) exactly what went wrong and why it cost them
+                  (c) a specific, actionable drill or habit to fix it next game
+  start_s     — clip start in seconds (float)
+  end_s       — clip end in seconds (float)"""
 
-No markdown, no code fences, no extra text — raw JSON array only."""
+
+class KeyMoment(BaseModel):
+    title: str
+    description: str
+    paragraph: str
+    start_s: float
+    end_s: float
+
+
+class KeyMomentsResponse(BaseModel):
+    moments: list[KeyMoment]
 
 
 def _resolve_path(path: str) -> str:
@@ -59,13 +75,10 @@ def _load_summary(json_path: str) -> dict:
 
 def _clean_events(events: list[dict]) -> list[dict]:
     """Drop malformed voice events that leaked raw JSON/code blocks."""
-    clean = []
-    for ev in events:
-        text = ev.get("text", "")
-        if text.lstrip().startswith("```") or text.lstrip().startswith('{"should_coach"'):
-            continue
-        clean.append(ev)
-    return clean
+    return [
+        ev for ev in events
+        if not ev.get("text", "").lstrip().startswith(("```", '{"should_coach"'))
+    ]
 
 
 def _build_prompt(summary: dict) -> str:
@@ -84,7 +97,7 @@ def _build_prompt(summary: dict) -> str:
     return "\n".join(lines)
 
 
-def find_key_moments(summary_path: str) -> list[dict]:
+def find_key_moments(summary_path: str) -> list[KeyMoment]:
     summary = _load_summary(summary_path)
     prompt = _build_prompt(summary)
 
@@ -94,19 +107,13 @@ def find_key_moments(summary_path: str) -> list[dict]:
         config=types.GenerateContentConfig(
             system_instruction=SYSTEM_PROMPT,
             temperature=0.2,
+            response_mime_type="application/json",
+            response_schema=KeyMomentsResponse,
         ),
         contents=prompt,
     )
 
-    text = response.text.strip()
-    # Strip markdown fences if the model ignores the instruction
-    if text.startswith("```"):
-        text = text.split("```", 2)[1]
-        if text.startswith("json"):
-            text = text[4:]
-        text = text.strip()
-
-    return json.loads(text)
+    return response.parsed.moments
 
 
 def main():
@@ -122,12 +129,13 @@ def main():
 
     print(f"\n5 Key Moments — {summary.get('match_id', '')}\n{'─' * 50}")
     for i, m in enumerate(moments, 1):
-        print(f"\n{i}. {m['title']}  [{m['start_s']:.1f}s → {m['end_s']:.1f}s]")
-        print(f"   {m['description']}")
+        print(f"\n{i}. {m.title}  [{m.start_s:.1f}s → {m.end_s:.1f}s]")
+        print(f"   {m.description}")
+        print(f"   {m.paragraph}")
 
     out_path = os.path.join(os.path.dirname(json_path), "key_moments.json")
     with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(moments, f, indent=2)
+        json.dump([m.model_dump() for m in moments], f, indent=2)
     print(f"\nSaved → {out_path}")
 
 

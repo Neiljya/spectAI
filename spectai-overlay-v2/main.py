@@ -10,6 +10,7 @@
 #   ALT + X  — toggle speech bubble overlay
 # ============================================================
 
+import json
 import sys
 import os
 import threading
@@ -23,9 +24,12 @@ from live_llm_s import SpectAI, set_muted
 from overlay import Overlay
 from minimap import MinimapOverlay
 from plays   import list_plays, get_plays_summary
-from session  import GameSession
 from recorder import ScreenRecorder
 from lineups import LineupOverlay
+from session        import GameSession
+from recorder       import ScreenRecorder
+from clip_finder    import find_key_moments
+from clip_extractor import extract_clips
 import coach
 
 # ── Custom Voice Overlay ──────────────────────────────────
@@ -101,6 +105,7 @@ def _cycle_play():
 
 # ── Session / SpectAI toggle ───────────────────────────────
 _session_active  = False
+_analysis_active = False
 _current_session: GameSession    | None = None
 _spect_ai:        SpectAI        | None = None
 _recorder:        ScreenRecorder | None = None
@@ -154,6 +159,8 @@ def _toggle_session():
             if session:
                 path = session.save()
                 coach.push(f"Session saved → {path}", "positive")
+                session_dir = os.path.dirname(path)
+                _run_analysis_pipeline(session_dir)
         threading.Thread(target=_stop, daemon=True).start()
 
 def _toggle_mute():
@@ -163,11 +170,39 @@ def _toggle_mute():
     label = "MUTED" if _is_muted else "unmuted"
     coach.push(f"AI voice {label}.  F10 to toggle.", "info")
 
+def _run_analysis_pipeline(session_dir: str):
+    global _analysis_active
+    _analysis_active = True
+    coach.push("Analyzing match…  hotkeys disabled.", "info")
+    try:
+        json_path = os.path.join(session_dir, "match_summary.json")
+        moments = find_key_moments(json_path)
+        moments_path = os.path.join(session_dir, "key_moments.json")
+        with open(moments_path, "w", encoding="utf-8") as f:
+            json.dump([m.model_dump() for m in moments], f, indent=2)
+        coach.push(f"Found {len(moments)} moments — extracting clips…", "info")
+        extract_clips(session_dir)
+        coach.push("Analysis complete.  Check sessions folder.", "positive")
+    except Exception as e:
+        coach.push(f"Analysis failed: {e}", "warning")
+    finally:
+        _analysis_active = False
+
 # ── Hotkey state ───────────────────────────────────────────
 _held = set()
 
 def _on_press(key):
     _held.add(key)
+
+    if key == keyboard.Key.f12:
+        QMetaObject.invokeMethod(
+            QApplication.instance(), "quit",
+            Qt.ConnectionType.QueuedConnection,
+        )
+        return
+
+    if _analysis_active:
+        return
 
     if key == keyboard.Key.f8:
         _toggle_session()
@@ -175,13 +210,6 @@ def _on_press(key):
 
     if key == keyboard.Key.f10:
         _toggle_mute()
-        return
-
-    if key == keyboard.Key.f12:
-        QMetaObject.invokeMethod(
-            QApplication.instance(), "quit",
-            Qt.ConnectionType.QueuedConnection,
-        )
         return
 
     alt = keyboard.Key.alt_l in _held or keyboard.Key.alt_r in _held

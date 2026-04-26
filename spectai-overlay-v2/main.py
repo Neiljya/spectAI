@@ -18,7 +18,7 @@ from live_llm_s import SpectAI
 
 from overlay import Overlay
 from minimap import MinimapOverlay
-from plays   import list_plays
+from plays   import list_plays, get_plays_summary
 import coach
 
 # ── Custom Voice Overlay ──────────────────────────────────
@@ -132,7 +132,9 @@ def main():
     # Initialize SpectAI with callbacks for both coach nudges and voice queries
     spect_ai = SpectAI(
         response_callback=lambda text: coach.push(text, "coach"),
-        voice_callback=lambda text: _voice_overlay.response_received.emit(text)
+        voice_callback=lambda text: _voice_overlay.response_received.emit(text),
+        play_callback=lambda m, p: coach.show_play(m, p),
+        plays_summary=get_plays_summary(),
     )
     spect_ai.start()
 

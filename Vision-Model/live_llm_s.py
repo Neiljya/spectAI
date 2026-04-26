@@ -195,9 +195,14 @@ def build_game_context_summary(val_client: ValorantLocalClient, resolver: Valora
 
     my_puuid = resolved.puuid
     my_team_id = next((p.team_id for p in valid_players if p.puuid == my_puuid), None)
+    my_agent = next((p.agent.name for p in valid_players if p.puuid == my_puuid), None)
     allies, enemies = _classify_players(valid_players, my_puuid, my_team_id)
 
     lines = [f"Phase: {resolved.phase}"]
+    if resolved.map:
+        lines.append(f"Map: {resolved.map.name}")
+    if my_agent:
+        lines.append(f"Your agent: {my_agent}")
     lines.append(f"Teammates ({len(allies)}): {', '.join(allies)}" if allies else "Teammates: 0")
     lines.append(f"Enemies ({len(enemies)}): {', '.join(enemies)}" if enemies else "Enemies: 0")
     lines.append(f"Total Players: {len(valid_players)}")
@@ -210,7 +215,7 @@ def build_game_context_summary(val_client: ValorantLocalClient, resolver: Valora
 
 
 # --- System Prompt & Models ---
-SYSTEM_PROMPT = """You are SpectAI, a real-time competitive FPS coaching system (Valorant).
+_SYSTEM_PROMPT_BASE = """You are SpectAI, a real-time competitive FPS coaching system (Valorant).
 You watch the video stream, track HUD data, and receive LIVE GAME DATA. Every few seconds, you will be nudged to analyze the situation.
 
 Prioritize player positioning, map control, gamesense. Focus less on weapon choice. Positioning and awareness are key!
@@ -225,10 +230,22 @@ OUTPUT RULES:
 - Decide if the player needs immediate, actionable coaching based on the current context (e.g., low ammo, bad crosshair placement, enemy rotation spotted, economy failure).
 - If no immediate advice is needed, set should_coach to false.
 - Use this exact JSON format:
-{"should_coach": true, "advice": "Your crosshair is too low, aim at head level. Also, reload your Vandal before peeking."}
+{{"should_coach": true, "advice": "Your crosshair is too low, aim at head level. Also, reload your Vandal before peeking."}}
 
 VOICE EXCEPTION: If the user speaks to you directly (via audio), answer in 1-2 sentences max — direct and actionable. Do NOT respond with JSON for voice questions.
+
+PLAY RECOMMENDATION: When the user asks which play to run (e.g. "what play should I make?", "what should we execute?"), follow this exact process:
+1. Note the current map and the FULL team composition from LIVE GAME DATA (Your agent + all Teammates).
+2. Scan the Available plays below for the current map. For each play, count how many of its agents are present on the actual team.
+3. AGENT MATCH REQUIRED: Only recommend a play from the list if at least 2 of its agents match agents on the actual team. Pick the play with the highest overlap.
+4. If a matching play exists: respond in 1-2 natural sentences recommending it and explaining the agent fit, then on a new line append: [SHOW_PLAY:MapName:PlayName] using exact names from the list.
+5. If NO play has sufficient agent overlap (e.g. solo lobby, unusual comp, or map not in the list): do NOT output [SHOW_PLAY:]. Instead, describe a 1-2 sentence custom strategy tailored to the actual agents and their abilities.
+
+{plays_summary}
 """
+
+def _build_system_prompt(plays_summary: str) -> str:
+    return _SYSTEM_PROMPT_BASE.format(plays_summary=plays_summary)
 
 class CoachResponse(BaseModel):
     should_coach: bool = Field(description="Whether anything worth coaching is happening right now.")
@@ -259,14 +276,22 @@ def parse_coach_response(text: str) -> CoachResponse | None:
 
 
 class SpectAI:
-    def __init__(self, response_callback: Callable[[str], None], voice_callback: Callable[[str], None] = None):
+    def __init__(
+        self,
+        response_callback: Callable[[str], None],
+        voice_callback: Callable[[str], None] = None,
+        play_callback: Callable[[str, str], None] = None,
+        plays_summary: str = "",
+    ):
         self._response_callback = response_callback
         self._voice_callback = voice_callback
+        self._play_callback = play_callback
+        self._plays_summary = plays_summary
         self._thread: threading.Thread | None = None
         self._loop: asyncio.AbstractEventLoop | None = None
         self._stop_event: asyncio.Event | None = None
         self._session = None
-        
+
         # State routing variables
         self._expecting_voice_response = False
         self._voice_query_timestamp = 0.0
@@ -306,9 +331,10 @@ class SpectAI:
         print("[SpectAI] Starting vision layer (Live API)...")
         client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
+        system_prompt = _build_system_prompt(self._plays_summary)
         config = types.LiveConnectConfig(
             response_modalities=["AUDIO"],
-            system_instruction=types.Content(parts=[types.Part.from_text(text=SYSTEM_PROMPT)]),
+            system_instruction=types.Content(parts=[types.Part.from_text(text=system_prompt)]),
             temperature=0.1,
             output_audio_transcription=types.AudioTranscriptionConfig(),
             realtime_input_config=types.RealtimeInputConfig(
@@ -526,13 +552,23 @@ class SpectAI:
 
     def _process_voice_response(self, full_response: str):
         print(f"[Voice Telemetry] Raw Gemini Text: {full_response}")
-        sentences = re.split(r'(?<=[.!?])\s+', full_response)
-        spoken = sentences[-1] if sentences else full_response
+
+        play_match = re.search(r'\[SHOW_PLAY:([^:\]]+):([^\]]+)\]', full_response)
+        clean = re.sub(r'\[SHOW_PLAY:[^\]]+\]', '', full_response).strip()
+
+        sentences = re.split(r'(?<=[.!?])\s+', clean)
+        spoken = sentences[-1] if sentences else clean
         print(f"[Voice Telemetry] Filtered text for TTS: {spoken}")
-        
+
         if self._voice_callback:
-            self._voice_callback(spoken)
-            
+            self._voice_callback(clean)
+
+        if play_match and self._play_callback:
+            map_name = play_match.group(1).strip()
+            play_name = play_match.group(2).strip()
+            print(f"[Voice Telemetry] Play recommendation: {map_name} — {play_name}")
+            self._play_callback(map_name, play_name)
+
         asyncio.get_event_loop().run_in_executor(None, _speak_sync, spoken)
 
     def _process_coach_response(self, full_response: str, coaching_history: deque):

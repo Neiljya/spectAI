@@ -128,6 +128,18 @@ def parse_coach_response(text: str) -> CoachResponse | None:
     return None
 
 
+def _classify_players(valid_players, my_puuid: str, my_team_id) -> tuple[list, list]:
+    allies, enemies = [], []
+    for p in valid_players:
+        if p.puuid == my_puuid:
+            continue
+        name = p.agent.name if p.agent else "Unknown"
+        role = p.agent.role if p.agent else ""
+        entry = f"{name} ({role})" if role else name
+        (allies if my_team_id and p.team_id == my_team_id else enemies).append(entry)
+    return allies, enemies
+
+
 def build_game_context_summary(val_client: ValorantLocalClient, resolver: ValorantResolver) -> tuple[str, int, int] | None:
     try:
         raw_state = val_client.get_full_game_state()
@@ -138,32 +150,19 @@ def build_game_context_summary(val_client: ValorantLocalClient, resolver: Valora
         return None
 
     resolved = resolver.resolve_game_state(asdict(raw_state))
-    lines = [f"Phase: {resolved.phase}"]
-
-    my_puuid = resolved.puuid
-    my_team_id = None
     valid_players = [p for p in resolved.players if p.puuid and p.agent and p.agent.name != "Unknown"]
 
-    for p in valid_players:
-        if p.puuid == my_puuid:
-            my_team_id = p.team_id
-            break
+    my_puuid = resolved.puuid
+    my_team_id = next((p.team_id for p in valid_players if p.puuid == my_puuid), None)
+    allies, enemies = _classify_players(valid_players, my_puuid, my_team_id)
 
-    allies, enemies = [], []
-    for p in valid_players:
-        if p.puuid == my_puuid:
-            continue
-        name = p.agent.name if p.agent else "Unknown"
-        role = p.agent.role if p.agent else ""
-        entry = f"{name} ({role})" if role else name
-        (allies if my_team_id and p.team_id == my_team_id else enemies).append(entry)
-
+    lines = [f"Phase: {resolved.phase}"]
     lines.append(f"Teammates ({len(allies)}): {', '.join(allies)}" if allies else "Teammates: 0")
     lines.append(f"Enemies ({len(enemies)}): {', '.join(enemies)}" if enemies else "Enemies: 0")
     lines.append(f"Total Players: {len(valid_players)}")
 
     if resolved.map and resolved.map.callouts:
-        callout_names = sorted(set(c.region_name for c in resolved.map.callouts))
+        callout_names = sorted({c.region_name for c in resolved.map.callouts})
         lines.append(f"Map callouts: {', '.join(callout_names)}")
 
     return "\n".join(lines), len(allies), len(enemies)
@@ -301,6 +300,49 @@ class SpectAI:
 
         print("[SpectAI] Session closed.")
 
+    def _build_analysis_prompt(self, game_context_summary: str | None, history_buffer: list[str]) -> str:
+        parts = []
+        if game_context_summary:
+            parts.append(f"LIVE GAME DATA (from Valorant API):\n{game_context_summary}")
+        if history_buffer:
+            history_lines = "\n".join(f"T-{len(history_buffer)-i}: {h}" for i, h in enumerate(history_buffer))
+            parts.append(f"RECENT COACHING HISTORY:\n{history_lines}")
+        parts.append("Analyze the CURRENT frame. Respond with JSON only.")
+        return "\n\n".join(parts)
+
+    def _process_coach_text(self, full_text: str, history_buffer: list[str], loop) -> None:
+        ctx = parse_coach_response(full_text)
+        if not ctx:
+            print(f"\n[Parse Failed]: {full_text[:200]}")
+            return
+        if ctx.should_coach and ctx.advice:
+            loop.run_in_executor(None, _speak_sync, ctx.advice)
+            self._response_callback(ctx.advice)
+            history_buffer.append(ctx.advice)
+            if len(history_buffer) > MAX_HISTORY:
+                history_buffer.pop(0)
+        else:
+            print(".", end="", flush=True)
+
+    def _try_refresh_context(self, val_client, resolver, now: float, last_fetch: float, summary: str | None) -> tuple[str | None, float]:
+        if not (val_client and resolver and (now - last_fetch) >= GAME_STATE_REFRESH_SECONDS):
+            return summary, last_fetch
+        try:
+            result = build_game_context_summary(val_client, resolver)
+            if result:
+                print("[SpectAI] Game context refreshed.")
+                return result[0], now
+        except Exception:
+            pass
+        return summary, now
+
+    async def _analyze_frame(self, session, jpeg_bytes: bytes, game_context_summary: str | None, history_buffer: list[str], loop) -> None:
+        await session.send_realtime_input(video=types.Blob(data=jpeg_bytes, mime_type="image/jpeg"))
+        await session.send_realtime_input(text=self._build_analysis_prompt(game_context_summary, history_buffer))
+        full_text = await self._collect_turn_response(session)
+        if full_text:
+            self._process_coach_text(full_text, history_buffer, loop)
+
     async def _analysis_loop(
         self,
         session,
@@ -312,14 +354,12 @@ class SpectAI:
         last_coached = 0.0
         history_buffer: list[str] = []
         game_context_summary: str | None = None
-        max_allies, max_enemies = 4, 5
         last_game_state_fetch = 0.0
         loop = asyncio.get_event_loop()
 
         while True:
             now = loop.time()
 
-            # Voice query takes priority over screen analysis
             if not voice_queue.empty():
                 pcm_bytes = await voice_queue.get()
                 await self._handle_voice_query_async(pcm_bytes)
@@ -330,16 +370,9 @@ class SpectAI:
                 await asyncio.sleep(0.1)
                 continue
 
-            # Refresh Valorant API context periodically
-            if val_client and resolver and (now - last_game_state_fetch) >= GAME_STATE_REFRESH_SECONDS:
-                try:
-                    result = build_game_context_summary(val_client, resolver)
-                    last_game_state_fetch = now
-                    if result:
-                        game_context_summary, max_allies, max_enemies = result
-                        print("[SpectAI] Game context refreshed.")
-                except Exception:
-                    pass
+            game_context_summary, last_game_state_fetch = self._try_refresh_context(
+                val_client, resolver, now, last_game_state_fetch, game_context_summary
+            )
 
             frame = await asyncio.to_thread(screen_capture.capture)
             if frame is None:
@@ -348,35 +381,7 @@ class SpectAI:
 
             try:
                 jpeg_bytes = await asyncio.to_thread(screen_capture.frame_to_jpeg, frame)
-                await session.send_realtime_input(
-                    video=types.Blob(data=jpeg_bytes, mime_type="image/jpeg")
-                )
-
-                parts = []
-                if game_context_summary:
-                    parts.append(f"LIVE GAME DATA (from Valorant API):\n{game_context_summary}")
-                if history_buffer:
-                    history_lines = "\n".join(f"T-{len(history_buffer)-i}: {h}" for i, h in enumerate(history_buffer))
-                    parts.append(f"RECENT COACHING HISTORY:\n{history_lines}")
-                parts.append("Analyze the CURRENT frame. Respond with JSON only.")
-
-                await session.send_realtime_input(text="\n\n".join(parts))
-
-                full_text = await self._collect_turn_response(session)
-                if full_text:
-                    ctx = parse_coach_response(full_text)
-                    if ctx:
-                        if ctx.should_coach and ctx.advice:
-                            loop.run_in_executor(None, _speak_sync, ctx.advice)
-                            self._response_callback(ctx.advice)
-                            history_buffer.append(ctx.advice)
-                            if len(history_buffer) > MAX_HISTORY:
-                                history_buffer.pop(0)
-                        else:
-                            print(".", end="", flush=True)
-                    else:
-                        print(f"\n[Parse Failed]: {full_text[:200]}")
-
+                await self._analyze_frame(session, jpeg_bytes, game_context_summary, history_buffer, loop)
             except asyncio.CancelledError:
                 raise
             except Exception as e:

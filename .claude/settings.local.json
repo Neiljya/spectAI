@@ -3,7 +3,10 @@
     "allow": [
       "Bash(pip show:*)",
       "Bash(.venv/Scripts/python.exe -c \"from google.genai import types; gc = types.LiveConnectConfig.model_fields.get\\('generation_config'\\); print\\(gc.annotation if gc else 'N/A'\\)\")",
-      "Bash(.venv/Scripts/python.exe -c \"from google.genai import types; print\\([f for f in types.GenerationConfig.model_fields.keys\\(\\)]\\)\")"
+      "Bash(.venv/Scripts/python.exe -c \"from google.genai import types; print\\([f for f in types.GenerationConfig.model_fields.keys\\(\\)]\\)\")",
+      "Bash(git ls-tree *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }

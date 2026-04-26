@@ -25,6 +25,7 @@ from minimap import MinimapOverlay
 from plays   import list_plays, get_plays_summary
 from session  import GameSession
 from recorder import ScreenRecorder
+from lineups import LineupOverlay
 import coach
 
 # ── Custom Voice Overlay ──────────────────────────────────
@@ -103,6 +104,7 @@ _session_active  = False
 _current_session: GameSession    | None = None
 _spect_ai:        SpectAI        | None = None
 _recorder:        ScreenRecorder | None = None
+_lineups_overlay: LineupOverlay  | None = None
 _is_muted = False
 
 def _on_coach_response(text: str):
@@ -114,6 +116,18 @@ def _on_voice_response(text: str):
     _voice_overlay.response_received.emit(text)
     if _current_session:
         _current_session.add_event(text, source="voice")
+
+
+def _on_lineup_request(map_name: str, position: str):
+    agent = "Sova"
+
+    if _lineups_overlay:
+        _lineups_overlay.show(map_name, agent, position)
+
+    msg = f"Showing {agent} lineups for {position} on {map_name}."
+    coach.push(msg, "coach")
+    if _current_session:
+        _current_session.add_event(msg, source="lineup")
 
 def _toggle_session():
     global _session_active, _current_session
@@ -190,7 +204,7 @@ def _on_release(key):
 
 
 def main():
-    global _overlay, _voice_overlay, _spect_ai, _recorder
+    global _overlay, _voice_overlay, _spect_ai, _recorder, _lineups_overlay
 
     app = QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
@@ -198,6 +212,7 @@ def main():
     # UI Components
     _overlay = Overlay()
     _voice_overlay = VoiceOverlay()
+    _lineups_overlay = LineupOverlay()
     minimap  = MinimapOverlay()
     coach.init(_overlay, minimap)
 
@@ -208,6 +223,7 @@ def main():
         response_callback=_on_coach_response,
         voice_callback=_on_voice_response,
         play_callback=lambda m, p: coach.show_play(m, p),
+        lineup_callback=_on_lineup_request,
         frame_callback=_recorder.write_frame,
         plays_summary=get_plays_summary(),
     )

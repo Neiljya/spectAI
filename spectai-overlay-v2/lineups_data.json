@@ -1,0 +1,3297 @@
+[
+  {
+    "id": "15",
+    "map": "Ascent",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Reveal all of A Site",
+    "from": "A Lobby",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/15/3.webp",
+    "img_local": "assets\\lineups\\15_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\15_1.webp",
+      "assets\\lineups\\15_2.webp",
+      "assets\\lineups\\15_3.webp"
+    ]
+  },
+  {
+    "id": "286",
+    "map": "Ascent",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Recon from B Lobby to B site",
+    "from": "B Lobby",
+    "to": "B Front",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/286/3.webp",
+    "img_local": "assets\\lineups\\286_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\286_1.webp",
+      "assets\\lineups\\286_2.webp",
+      "assets\\lineups\\286_3.webp"
+    ]
+  },
+  {
+    "id": "1085",
+    "map": "Ascent",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Site Fast God Recon",
+    "from": "A Lobby",
+    "to": "A Generator",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1085/3.webp",
+    "img_local": "assets\\lineups\\1085_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1085_1.webp",
+      "assets\\lineups\\1085_2.webp",
+      "assets\\lineups\\1085_3.webp"
+    ]
+  },
+  {
+    "id": "303",
+    "map": "Ascent",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Reveal mid link,b lobby, and some parts of b main",
+    "from": "B Front",
+    "to": "B Lobby",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/303/3.webp",
+    "img_local": "assets\\lineups\\303_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\303_1.webp",
+      "assets\\lineups\\303_2.webp",
+      "assets\\lineups\\303_3.webp"
+    ]
+  },
+  {
+    "id": "287",
+    "map": "Ascent",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Easy A Anti-Rush Recon Dart",
+    "from": "A Rafters",
+    "to": "A Lobby",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/287/3.webp",
+    "img_local": "assets\\lineups\\287_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\287_1.webp",
+      "assets\\lineups\\287_2.webp",
+      "assets\\lineups\\287_3.webp"
+    ]
+  },
+  {
+    "id": "387",
+    "map": "Ascent",
+    "agent": "Sova",
+    "ability": "Shock Bolt",
+    "title": "A Main Double Shock",
+    "from": "A Rafters",
+    "to": "A Main",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/387/4.webp",
+    "img_local": "assets\\lineups\\387_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\387_1.webp",
+      "assets\\lineups\\387_2.webp",
+      "assets\\lineups\\387_3.webp",
+      "assets\\lineups\\387_4.webp"
+    ]
+  },
+  {
+    "id": "304",
+    "map": "Ascent",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Reveal b site from b lobby",
+    "from": "B Lobby",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/304/3.webp",
+    "img_local": "assets\\lineups\\304_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\304_1.webp",
+      "assets\\lineups\\304_2.webp",
+      "assets\\lineups\\304_3.webp"
+    ]
+  },
+  {
+    "id": "671",
+    "map": "Ascent",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "B Lobby Recon for B Main Wallbang",
+    "from": "B Lane",
+    "to": "B Lobby",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/671/4.webp",
+    "img_local": "assets\\lineups\\671_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\671_1.webp",
+      "assets\\lineups\\671_2.webp",
+      "assets\\lineups\\671_3.webp",
+      "assets\\lineups\\671_4.webp"
+    ]
+  },
+  {
+    "id": "453",
+    "map": "Ascent",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Heaven to Mid Top and A Lobby",
+    "from": "A Rafters",
+    "to": "A Lobby",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/453/3.webp",
+    "img_local": "assets\\lineups\\453_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\453_1.webp",
+      "assets\\lineups\\453_2.webp",
+      "assets\\lineups\\453_3.webp"
+    ]
+  },
+  {
+    "id": "640",
+    "map": "Ascent",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Fake Recon to A Site From B Lobby",
+    "from": "B Lobby",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/640/3.webp",
+    "img_local": "assets\\lineups\\640_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\640_1.webp",
+      "assets\\lineups\\640_2.webp",
+      "assets\\lineups\\640_3.webp"
+    ]
+  },
+  {
+    "id": "359",
+    "map": "Ascent",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Offense B Site from B Lobby",
+    "from": "B Lobby",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/359/4.webp",
+    "img_local": "assets\\lineups\\359_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\359_1.webp",
+      "assets\\lineups\\359_2.webp",
+      "assets\\lineups\\359_3.webp",
+      "assets\\lineups\\359_4.webp"
+    ]
+  },
+  {
+    "id": "419",
+    "map": "Ascent",
+    "agent": "Sova",
+    "ability": "Shock Bolt",
+    "title": "A Site Plant Denial Double Shock",
+    "from": "A Garden",
+    "to": "A Generator",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/419/4.webp",
+    "img_local": "assets\\lineups\\419_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\419_1.webp",
+      "assets\\lineups\\419_2.webp",
+      "assets\\lineups\\419_3.webp",
+      "assets\\lineups\\419_4.webp"
+    ]
+  },
+  {
+    "id": "280",
+    "map": "Ascent",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Rafters to A Lobby Recon Dart",
+    "from": "A Rafters",
+    "to": "A Lobby",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/280/3.webp",
+    "img_local": "assets\\lineups\\280_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\280_1.webp",
+      "assets\\lineups\\280_2.webp",
+      "assets\\lineups\\280_3.webp"
+    ]
+  },
+  {
+    "id": "390",
+    "map": "Ascent",
+    "agent": "Sova",
+    "ability": "Shock Bolt",
+    "title": "B Main Double Shock",
+    "from": "B Front",
+    "to": "B Main",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/390/4.webp",
+    "img_local": "assets\\lineups\\390_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\390_1.webp",
+      "assets\\lineups\\390_2.webp",
+      "assets\\lineups\\390_3.webp",
+      "assets\\lineups\\390_4.webp"
+    ]
+  },
+  {
+    "id": "2183",
+    "map": "Ascent",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Fake/support B Cross-map (god) Arrow",
+    "from": "A Lobby",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2183/3.webp",
+    "img_local": "assets\\lineups\\2183_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2183_1.webp",
+      "assets\\lineups\\2183_2.webp",
+      "assets\\lineups\\2183_3.webp"
+    ]
+  },
+  {
+    "id": "151",
+    "map": "Ascent",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Reveal of A rafters",
+    "from": "A Lobby",
+    "to": "A Rafters",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/151/3.webp",
+    "img_local": "assets\\lineups\\151_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\151_1.webp",
+      "assets\\lineups\\151_2.webp",
+      "assets\\lineups\\151_3.webp"
+    ]
+  },
+  {
+    "id": "1127",
+    "map": "Ascent",
+    "agent": "Sova",
+    "ability": "Shock Bolt",
+    "title": "Sova A Lobby to A Green Boxes Double Shock",
+    "from": "A Lobby",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1127/3.webp",
+    "img_local": "assets\\lineups\\1127_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1127_1.webp",
+      "assets\\lineups\\1127_2.webp",
+      "assets\\lineups\\1127_3.webp"
+    ]
+  },
+  {
+    "id": "288",
+    "map": "Ascent",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Easy A Retake Recon Dart",
+    "from": "A Rafters",
+    "to": "A Generator",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/288/3.webp",
+    "img_local": "assets\\lineups\\288_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\288_1.webp",
+      "assets\\lineups\\288_2.webp",
+      "assets\\lineups\\288_3.webp"
+    ]
+  },
+  {
+    "id": "208",
+    "map": "Ascent",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Reveal B Lobby, some of B main and some of B Link",
+    "from": "B Site",
+    "to": "B Lobby",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/208/3.webp",
+    "img_local": "assets\\lineups\\208_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\208_1.webp",
+      "assets\\lineups\\208_2.webp",
+      "assets\\lineups\\208_3.webp"
+    ]
+  },
+  {
+    "id": "2159",
+    "map": "Ascent",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Lobby to A Site",
+    "from": "A Lobby",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2159/3.webp",
+    "img_local": "assets\\lineups\\2159_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2159_1.webp",
+      "assets\\lineups\\2159_2.webp",
+      "assets\\lineups\\2159_3.webp"
+    ]
+  },
+  {
+    "id": "681",
+    "map": "Bind",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Bind B Site God Recon Dart",
+    "from": "B Short",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/681/3.webp",
+    "img_local": "assets\\lineups\\681_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\681_1.webp",
+      "assets\\lineups\\681_2.webp",
+      "assets\\lineups\\681_3.webp"
+    ]
+  },
+  {
+    "id": "2548",
+    "map": "Bind",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Site Attack god Recon",
+    "from": "A Short",
+    "to": "A Truck",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2548/4.webp",
+    "img_local": "assets\\lineups\\2548_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2548_1.webp",
+      "assets\\lineups\\2548_2.webp",
+      "assets\\lineups\\2548_3.webp",
+      "assets\\lineups\\2548_4.webp"
+    ]
+  },
+  {
+    "id": "1077",
+    "map": "Bind",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Early Reavel Ennemy Pushing A Site",
+    "from": "A Boxes",
+    "to": "A Short",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1077/4.webp",
+    "img_local": "assets\\lineups\\1077_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1077_1.webp",
+      "assets\\lineups\\1077_2.webp",
+      "assets\\lineups\\1077_3.webp",
+      "assets\\lineups\\1077_4.webp"
+    ]
+  },
+  {
+    "id": "3713",
+    "map": "Bind",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Reveal B Short From CT",
+    "from": "B Hall",
+    "to": "B Short",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/3713/2.webp",
+    "img_local": "assets\\lineups\\3713_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\3713_1.webp",
+      "assets\\lineups\\3713_2.webp"
+    ]
+  },
+  {
+    "id": "299",
+    "map": "Bind",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Labs to A Short Recon",
+    "from": "B Hall",
+    "to": "A Short",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/299/4.webp",
+    "img_local": "assets\\lineups\\299_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\299_1.webp",
+      "assets\\lineups\\299_2.webp",
+      "assets\\lineups\\299_3.webp",
+      "assets\\lineups\\299_4.webp"
+    ]
+  },
+  {
+    "id": "3710",
+    "map": "Bind",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "god a Site Lamp Reveal",
+    "from": "A Short",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/3710/4.webp",
+    "img_local": "assets\\lineups\\3710_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\3710_1.webp",
+      "assets\\lineups\\3710_2.webp",
+      "assets\\lineups\\3710_3.webp",
+      "assets\\lineups\\3710_4.webp"
+    ]
+  },
+  {
+    "id": "660",
+    "map": "Bind",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Recon Bolt From Garden to B Window For Hooka Wallbang",
+    "from": "B Garden",
+    "to": "B Window",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/660/5.webp",
+    "img_local": "assets\\lineups\\660_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\660_1.webp",
+      "assets\\lineups\\660_2.webp",
+      "assets\\lineups\\660_3.webp",
+      "assets\\lineups\\660_4.webp",
+      "assets\\lineups\\660_5.webp"
+    ]
+  },
+  {
+    "id": "1083",
+    "map": "Bind",
+    "agent": "Sova",
+    "ability": "Shock Bolt",
+    "title": "Steel Defuse Dual Shock Dart A Site",
+    "from": "A Short",
+    "to": "A Truck",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1083/4.webp",
+    "img_local": "assets\\lineups\\1083_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1083_1.webp",
+      "assets\\lineups\\1083_2.webp",
+      "assets\\lineups\\1083_3.webp",
+      "assets\\lineups\\1083_4.webp"
+    ]
+  },
+  {
+    "id": "2588",
+    "map": "Bind",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "From A Short to A Site Generator",
+    "from": "A Short",
+    "to": "A Boxes",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2588/4.webp",
+    "img_local": "assets\\lineups\\2588_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2588_1.webp",
+      "assets\\lineups\\2588_2.webp",
+      "assets\\lineups\\2588_3.webp",
+      "assets\\lineups\\2588_4.webp"
+    ]
+  },
+  {
+    "id": "4189",
+    "map": "Bind",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Sova GOD Recon From A Link to A Truck",
+    "from": "A Link",
+    "to": "A Truck",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/4189/4.webp",
+    "img_local": "assets\\lineups\\4189_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\4189_1.webp",
+      "assets\\lineups\\4189_2.webp",
+      "assets\\lineups\\4189_3.webp",
+      "assets\\lineups\\4189_4.webp"
+    ]
+  },
+  {
+    "id": "3708",
+    "map": "Bind",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "B Short to Site",
+    "from": "B Short",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/3708/3.webp",
+    "img_local": "assets\\lineups\\3708_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\3708_1.webp",
+      "assets\\lineups\\3708_2.webp",
+      "assets\\lineups\\3708_3.webp"
+    ]
+  },
+  {
+    "id": "3736",
+    "map": "Bind",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Sova Lineup B Site mid Scan",
+    "from": "B Site",
+    "to": "B Short",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/3736/4.webp",
+    "img_local": "assets\\lineups\\3736_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\3736_1.webp",
+      "assets\\lineups\\3736_2.webp",
+      "assets\\lineups\\3736_3.webp",
+      "assets\\lineups\\3736_4.webp"
+    ]
+  },
+  {
+    "id": "3737",
+    "map": "Bind",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Crazy Sova Scan From B Link to A Boxes",
+    "from": "B Link",
+    "to": "A Boxes",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/3737/4.webp",
+    "img_local": "assets\\lineups\\3737_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\3737_1.webp",
+      "assets\\lineups\\3737_2.webp",
+      "assets\\lineups\\3737_3.webp",
+      "assets\\lineups\\3737_4.webp"
+    ]
+  },
+  {
+    "id": "5735",
+    "map": "Bind",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "B Long to B Site (attack)",
+    "from": "B Long",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/5735/4.webp",
+    "img_local": "assets\\lineups\\5735_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\5735_1.webp",
+      "assets\\lineups\\5735_2.webp",
+      "assets\\lineups\\5735_3.webp",
+      "assets\\lineups\\5735_4.webp"
+    ]
+  },
+  {
+    "id": "3711",
+    "map": "Bind",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Hookah From B Short",
+    "from": "B Link",
+    "to": "B Window",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/3711/3.webp",
+    "img_local": "assets\\lineups\\3711_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\3711_1.webp",
+      "assets\\lineups\\3711_2.webp",
+      "assets\\lineups\\3711_3.webp"
+    ]
+  },
+  {
+    "id": "177",
+    "map": "Bind",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Info dart for B Site retake",
+    "from": "Defenders",
+    "to": "B Front",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/177/3.webp",
+    "img_local": "assets\\lineups\\177_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\177_1.webp",
+      "assets\\lineups\\177_2.webp",
+      "assets\\lineups\\177_3.webp"
+    ]
+  },
+  {
+    "id": "3160",
+    "map": "Bind",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Main to B Site",
+    "from": "A Lobby",
+    "to": "A Truck",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/3160/3.webp",
+    "img_local": "assets\\lineups\\3160_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\3160_1.webp",
+      "assets\\lineups\\3160_2.webp",
+      "assets\\lineups\\3160_3.webp"
+    ]
+  },
+  {
+    "id": "4553",
+    "map": "Bind",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "B Site to A Short/cubby",
+    "from": "B Site",
+    "to": "A Teleporter",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/4553/3.webp",
+    "img_local": "assets\\lineups\\4553_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\4553_1.webp",
+      "assets\\lineups\\4553_2.webp",
+      "assets\\lineups\\4553_3.webp"
+    ]
+  },
+  {
+    "id": "1738",
+    "map": "Bind",
+    "agent": "Sova",
+    "ability": "Shock Bolt",
+    "title": "Shock Dart / Recon on B Site",
+    "from": "B Site",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1738/3.webp",
+    "img_local": "assets\\lineups\\1738_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1738_1.webp",
+      "assets\\lineups\\1738_2.webp",
+      "assets\\lineups\\1738_3.webp"
+    ]
+  },
+  {
+    "id": "36",
+    "map": "Bind",
+    "agent": "Sova",
+    "ability": "Shock Bolt",
+    "title": "A Site Boxes Defuse Prevention",
+    "from": "A Short",
+    "to": "A Boxes",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/36/4.webp",
+    "img_local": "assets\\lineups\\36_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\36_1.webp",
+      "assets\\lineups\\36_2.webp",
+      "assets\\lineups\\36_3.webp",
+      "assets\\lineups\\36_4.webp"
+    ]
+  },
+  {
+    "id": "3014",
+    "map": "Breeze",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Site Deep Recon Reveal",
+    "from": "A Lobby",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/3014/3.webp",
+    "img_local": "assets\\lineups\\3014_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\3014_1.webp",
+      "assets\\lineups\\3014_2.webp",
+      "assets\\lineups\\3014_3.webp"
+    ]
+  },
+  {
+    "id": "1035",
+    "map": "Breeze",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Fake B to A Dart",
+    "from": "Mid Cannon",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1035/4.webp",
+    "img_local": "assets\\lineups\\1035_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1035_1.webp",
+      "assets\\lineups\\1035_2.webp",
+      "assets\\lineups\\1035_3.webp",
+      "assets\\lineups\\1035_4.webp"
+    ]
+  },
+  {
+    "id": "308",
+    "map": "Breeze",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Breeze Recon Bolt to retake B Site",
+    "from": "Defenders",
+    "to": "B Back",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/308/3.webp",
+    "img_local": "assets\\lineups\\308_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\308_1.webp",
+      "assets\\lineups\\308_2.webp",
+      "assets\\lineups\\308_3.webp"
+    ]
+  },
+  {
+    "id": "3443",
+    "map": "Breeze",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Site to A Shop Full Scan",
+    "from": "A Pyramids",
+    "to": "A Shop",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/3443/4.webp",
+    "img_local": "assets\\lineups\\3443_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\3443_1.webp",
+      "assets\\lineups\\3443_2.webp",
+      "assets\\lineups\\3443_3.webp",
+      "assets\\lineups\\3443_4.webp"
+    ]
+  },
+  {
+    "id": "3354",
+    "map": "Breeze",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "B Site Support Recon Dart",
+    "from": "Mid Link",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/3354/4.webp",
+    "img_local": "assets\\lineups\\3354_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\3354_1.webp",
+      "assets\\lineups\\3354_2.webp",
+      "assets\\lineups\\3354_3.webp",
+      "assets\\lineups\\3354_4.webp"
+    ]
+  },
+  {
+    "id": "6810",
+    "map": "Breeze",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Mid Cannon to B Site, Partial B Back",
+    "from": "Mid Cannon",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/6810/3.webp",
+    "img_local": "assets\\lineups\\6810_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\6810_1.webp",
+      "assets\\lineups\\6810_2.webp",
+      "assets\\lineups\\6810_3.webp"
+    ]
+  },
+  {
+    "id": "1224",
+    "map": "Breeze",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Troll Double Tiddies Lineup",
+    "from": "Mid Cannon",
+    "to": "A Pyramids",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1224/3.webp",
+    "img_local": "assets\\lineups\\1224_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1224_1.webp",
+      "assets\\lineups\\1224_2.webp",
+      "assets\\lineups\\1224_3.webp"
+    ]
+  },
+  {
+    "id": "1657",
+    "map": "Breeze",
+    "agent": "Sova",
+    "ability": "Shock Bolt",
+    "title": "Reconing Backsite A From Spawn",
+    "from": "A Site",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1657/3.webp",
+    "img_local": "assets\\lineups\\1657_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1657_1.webp",
+      "assets\\lineups\\1657_2.webp",
+      "assets\\lineups\\1657_3.webp"
+    ]
+  },
+  {
+    "id": "3013",
+    "map": "Breeze",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Sova Reveal A Shop",
+    "from": "A Stairs",
+    "to": "A Shop",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/3013/3.webp",
+    "img_local": "assets\\lineups\\3013_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\3013_1.webp",
+      "assets\\lineups\\3013_2.webp",
+      "assets\\lineups\\3013_3.webp"
+    ]
+  },
+  {
+    "id": "872",
+    "map": "Breeze",
+    "agent": "Sova",
+    "ability": "Shock Bolt",
+    "title": "Anti Defuse B Site Breeze",
+    "from": "Attacker Snake",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/872/7.webp",
+    "img_local": "assets\\lineups\\872_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\872_1.webp",
+      "assets\\lineups\\872_2.webp",
+      "assets\\lineups\\872_3.webp",
+      "assets\\lineups\\872_4.webp",
+      "assets\\lineups\\872_5.webp"
+    ]
+  },
+  {
+    "id": "5353",
+    "map": "Breeze",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Lobby to A Site Scan Behind Pyramids",
+    "from": "A Lobby",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/5353/3.webp",
+    "img_local": "assets\\lineups\\5353_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\5353_1.webp",
+      "assets\\lineups\\5353_2.webp",
+      "assets\\lineups\\5353_3.webp"
+    ]
+  },
+  {
+    "id": "7233",
+    "map": "Breeze",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "From B Main to Back of B Site",
+    "from": "B Main",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/7233/3.webp",
+    "img_local": "assets\\lineups\\7233_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\7233_1.webp",
+      "assets\\lineups\\7233_2.webp",
+      "assets\\lineups\\7233_3.webp"
+    ]
+  },
+  {
+    "id": "4677",
+    "map": "Breeze",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Lineup Arrow Sova for A Site on Breeze",
+    "from": "A Shop",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/4677/3.webp",
+    "img_local": "assets\\lineups\\4677_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\4677_1.webp",
+      "assets\\lineups\\4677_2.webp",
+      "assets\\lineups\\4677_3.webp"
+    ]
+  },
+  {
+    "id": "5351",
+    "map": "Breeze",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "B Site to A Site Cross map Scan!",
+    "from": "B Site",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/5351/3.webp",
+    "img_local": "assets\\lineups\\5351_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\5351_1.webp",
+      "assets\\lineups\\5351_2.webp",
+      "assets\\lineups\\5351_3.webp"
+    ]
+  },
+  {
+    "id": "3279",
+    "map": "Breeze",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Breeze A to B Site Retake Dart",
+    "from": "A Site",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/3279/4.webp",
+    "img_local": "assets\\lineups\\3279_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\3279_1.webp",
+      "assets\\lineups\\3279_2.webp",
+      "assets\\lineups\\3279_3.webp",
+      "assets\\lineups\\3279_4.webp"
+    ]
+  },
+  {
+    "id": "7283",
+    "map": "Breeze",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "B Back to A Pyramids",
+    "from": "B Back",
+    "to": "A Pyramids",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/7283/5.webp",
+    "img_local": "assets\\lineups\\7283_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\7283_1.webp",
+      "assets\\lineups\\7283_2.webp",
+      "assets\\lineups\\7283_3.webp",
+      "assets\\lineups\\7283_4.webp",
+      "assets\\lineups\\7283_5.webp"
+    ]
+  },
+  {
+    "id": "5352",
+    "map": "Breeze",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Site to A Lobby Easy Starting Scan",
+    "from": "A Site",
+    "to": "A Lobby",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/5352/3.webp",
+    "img_local": "assets\\lineups\\5352_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\5352_1.webp",
+      "assets\\lineups\\5352_2.webp",
+      "assets\\lineups\\5352_3.webp"
+    ]
+  },
+  {
+    "id": "1947",
+    "map": "Breeze",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "mid Cannon to b Back",
+    "from": "B Back",
+    "to": "B Back",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1947/3.webp",
+    "img_local": "assets\\lineups\\1947_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1947_1.webp",
+      "assets\\lineups\\1947_2.webp",
+      "assets\\lineups\\1947_3.webp"
+    ]
+  },
+  {
+    "id": "6809",
+    "map": "Breeze",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Lobby to A Site/pyramid 2 Different Variations",
+    "from": "A Lobby",
+    "to": "A Pyramids",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/6809/3.webp",
+    "img_local": "assets\\lineups\\6809_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\6809_1.webp",
+      "assets\\lineups\\6809_2.webp",
+      "assets\\lineups\\6809_3.webp"
+    ]
+  },
+  {
+    "id": "4676",
+    "map": "Breeze",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Lineup Aroow Sova for B Lobby on Breeze",
+    "from": "B Site",
+    "to": "B Elbow",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/4676/4.webp",
+    "img_local": "assets\\lineups\\4676_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\4676_1.webp",
+      "assets\\lineups\\4676_2.webp",
+      "assets\\lineups\\4676_3.webp",
+      "assets\\lineups\\4676_4.webp"
+    ]
+  },
+  {
+    "id": "812",
+    "map": "Fracture",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Early Info A Site Recon",
+    "from": "Attacker Side Spawn",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/812/3.webp",
+    "img_local": "assets\\lineups\\812_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\812_1.webp",
+      "assets\\lineups\\812_2.webp",
+      "assets\\lineups\\812_3.webp"
+    ]
+  },
+  {
+    "id": "120",
+    "map": "Fracture",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Early Info for Defenders - B Main/Spawn",
+    "from": "B Site",
+    "to": "B Main",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/120/3.webp",
+    "img_local": "assets\\lineups\\120_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\120_1.webp",
+      "assets\\lineups\\120_2.webp",
+      "assets\\lineups\\120_3.webp"
+    ]
+  },
+  {
+    "id": "1517",
+    "map": "Fracture",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Quick and Efficient Arrow to B Site as Attacker on Fracture.",
+    "from": "Attacker Side Spawn",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1517/4.webp",
+    "img_local": "assets\\lineups\\1517_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1517_1.webp",
+      "assets\\lineups\\1517_2.webp",
+      "assets\\lineups\\1517_3.webp",
+      "assets\\lineups\\1517_4.webp"
+    ]
+  },
+  {
+    "id": "1700",
+    "map": "Fracture",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Sova Recon Bolt | Attacker Spawn to A Site (A Bit Slow)",
+    "from": "Attacker Side Spawn",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1700/3.webp",
+    "img_local": "assets\\lineups\\1700_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1700_1.webp",
+      "assets\\lineups\\1700_2.webp",
+      "assets\\lineups\\1700_3.webp"
+    ]
+  },
+  {
+    "id": "856",
+    "map": "Fracture",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "From B Main to B Site",
+    "from": "B Main",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/856/4.webp",
+    "img_local": "assets\\lineups\\856_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\856_1.webp",
+      "assets\\lineups\\856_2.webp",
+      "assets\\lineups\\856_3.webp",
+      "assets\\lineups\\856_4.webp"
+    ]
+  },
+  {
+    "id": "1737",
+    "map": "Fracture",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Defender Spawn to B Tree",
+    "from": "Defender Side Spawn",
+    "to": "B Main",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1737/3.webp",
+    "img_local": "assets\\lineups\\1737_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1737_1.webp",
+      "assets\\lineups\\1737_2.webp",
+      "assets\\lineups\\1737_3.webp"
+    ]
+  },
+  {
+    "id": "1938",
+    "map": "Fracture",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "T Bridge to top A Site",
+    "from": "A Site",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1938/3.webp",
+    "img_local": "assets\\lineups\\1938_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1938_1.webp",
+      "assets\\lineups\\1938_2.webp",
+      "assets\\lineups\\1938_3.webp"
+    ]
+  },
+  {
+    "id": "815",
+    "map": "Fracture",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Early Info Attacker Side Bridge Recon",
+    "from": "B Tower",
+    "to": "Attacker Side Bridge",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/815/4.webp",
+    "img_local": "assets\\lineups\\815_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\815_1.webp",
+      "assets\\lineups\\815_2.webp",
+      "assets\\lineups\\815_3.webp",
+      "assets\\lineups\\815_4.webp"
+    ]
+  },
+  {
+    "id": "1518",
+    "map": "Fracture",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Fracture : Scan B Tower.",
+    "from": "Attacker Side Spawn",
+    "to": "B Tower",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1518/4.webp",
+    "img_local": "assets\\lineups\\1518_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1518_1.webp",
+      "assets\\lineups\\1518_2.webp",
+      "assets\\lineups\\1518_3.webp",
+      "assets\\lineups\\1518_4.webp"
+    ]
+  },
+  {
+    "id": "114",
+    "map": "Fracture",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Early Info A Rope Recon",
+    "from": "Attacker Side Spawn",
+    "to": "A Rope",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/114/3.webp",
+    "img_local": "assets\\lineups\\114_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\114_1.webp",
+      "assets\\lineups\\114_2.webp",
+      "assets\\lineups\\114_3.webp"
+    ]
+  },
+  {
+    "id": "1393",
+    "map": "Fracture",
+    "agent": "Sova",
+    "ability": "Shock Bolt",
+    "title": "B Default Double Shock Dart",
+    "from": "B Arcade",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1393/6.webp",
+    "img_local": "assets\\lineups\\1393_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1393_1.webp",
+      "assets\\lineups\\1393_2.webp",
+      "assets\\lineups\\1393_3.webp",
+      "assets\\lineups\\1393_4.webp",
+      "assets\\lineups\\1393_5.webp"
+    ]
+  },
+  {
+    "id": "2326",
+    "map": "Fracture",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Sova Lineup From Attacker Side Spawn to B Site",
+    "from": "Attacker Side Spawn",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2326/3.webp",
+    "img_local": "assets\\lineups\\2326_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2326_1.webp",
+      "assets\\lineups\\2326_2.webp",
+      "assets\\lineups\\2326_3.webp"
+    ]
+  },
+  {
+    "id": "1744",
+    "map": "Fracture",
+    "agent": "Sova",
+    "ability": "Shock Bolt",
+    "title": "Shock Dart From Spawn to B Site",
+    "from": "B Site",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1744/3.webp",
+    "img_local": "assets\\lineups\\1744_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1744_1.webp",
+      "assets\\lineups\\1744_2.webp",
+      "assets\\lineups\\1744_3.webp"
+    ]
+  },
+  {
+    "id": "2510",
+    "map": "Fracture",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Sova Recon Bolt From A Dish to A Site",
+    "from": "A Dish",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2510/3.webp",
+    "img_local": "assets\\lineups\\2510_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2510_1.webp",
+      "assets\\lineups\\2510_2.webp",
+      "assets\\lineups\\2510_3.webp",
+      "assets\\lineups\\2510_4.webp"
+    ]
+  },
+  {
+    "id": "7483",
+    "map": "Fracture",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Retake Recon",
+    "from": "Defender Side Spawn",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/7483/3.webp",
+    "img_local": "assets\\lineups\\7483_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\7483_1.webp",
+      "assets\\lineups\\7483_2.webp",
+      "assets\\lineups\\7483_3.webp"
+    ]
+  },
+  {
+    "id": "1939",
+    "map": "Fracture",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "T Bridge to Dish/drop Cubby",
+    "from": "A Drop",
+    "to": "A Drop",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1939/3.webp",
+    "img_local": "assets\\lineups\\1939_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1939_1.webp",
+      "assets\\lineups\\1939_2.webp",
+      "assets\\lineups\\1939_3.webp"
+    ]
+  },
+  {
+    "id": "2559",
+    "map": "Fracture",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Site Retake Dart",
+    "from": "Defender Side Spawn",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2559/4.webp",
+    "img_local": "assets\\lineups\\2559_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2559_1.webp",
+      "assets\\lineups\\2559_2.webp",
+      "assets\\lineups\\2559_3.webp",
+      "assets\\lineups\\2559_4.webp"
+    ]
+  },
+  {
+    "id": "2508",
+    "map": "Fracture",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Sova Recon Bolt From B Tower to Attacker Side Bridge",
+    "from": "B Tower",
+    "to": "Attacker Side Bridge",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2508/3.webp",
+    "img_local": "assets\\lineups\\2508_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2508_1.webp",
+      "assets\\lineups\\2508_2.webp",
+      "assets\\lineups\\2508_3.webp"
+    ]
+  },
+  {
+    "id": "2576",
+    "map": "Fracture",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Arcade Full Clear",
+    "from": "B Main",
+    "to": "B Arcade",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2576/4.webp",
+    "img_local": "assets\\lineups\\2576_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2576_1.webp",
+      "assets\\lineups\\2576_2.webp",
+      "assets\\lineups\\2576_3.webp",
+      "assets\\lineups\\2576_4.webp"
+    ]
+  },
+  {
+    "id": "115",
+    "map": "Fracture",
+    "agent": "Sova",
+    "ability": "Shock Bolt",
+    "title": "Double Shockdart for Boxes Post Plant B Site",
+    "from": "B Main",
+    "to": "B Boxes",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/115/4.webp",
+    "img_local": "assets\\lineups\\115_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\115_1.webp",
+      "assets\\lineups\\115_2.webp",
+      "assets\\lineups\\115_3.webp",
+      "assets\\lineups\\115_4.webp"
+    ]
+  },
+  {
+    "id": "2292",
+    "map": "Haven",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Attack A Site",
+    "from": "A Long",
+    "to": "A Hell",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2292/3.webp",
+    "img_local": "assets\\lineups\\2292_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2292_1.webp",
+      "assets\\lineups\\2292_2.webp",
+      "assets\\lineups\\2292_3.webp"
+    ]
+  },
+  {
+    "id": "106",
+    "map": "Haven",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Early Info on Attackers in A Lobby",
+    "from": "B Site",
+    "to": "A Lobby",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/106/3.webp",
+    "img_local": "assets\\lineups\\106_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\106_1.webp",
+      "assets\\lineups\\106_2.webp",
+      "assets\\lineups\\106_3.webp"
+    ]
+  },
+  {
+    "id": "382",
+    "map": "Haven",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Site C recon bolt from A Lobby",
+    "from": "A Lobby",
+    "to": "C Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/382/3.webp",
+    "img_local": "assets\\lineups\\382_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\382_1.webp",
+      "assets\\lineups\\382_2.webp",
+      "assets\\lineups\\382_3.webp"
+    ]
+  },
+  {
+    "id": "1157",
+    "map": "Haven",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "God Early Info Reveals Onto A Lobby",
+    "from": "B Site",
+    "to": "A Main",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1157/5.webp",
+    "img_local": "assets\\lineups\\1157_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1157_1.webp",
+      "assets\\lineups\\1157_2.webp",
+      "assets\\lineups\\1157_3.webp",
+      "assets\\lineups\\1157_4.webp",
+      "assets\\lineups\\1157_5.webp"
+    ]
+  },
+  {
+    "id": "802",
+    "map": "Haven",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Site to A Garden Recon",
+    "from": "A Heaven",
+    "to": "A Lobby",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/802/3.webp",
+    "img_local": "assets\\lineups\\802_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\802_1.webp",
+      "assets\\lineups\\802_2.webp",
+      "assets\\lineups\\802_3.webp"
+    ]
+  },
+  {
+    "id": "2590",
+    "map": "Haven",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "From A Looby to A Site",
+    "from": "A Lobby",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2590/3.webp",
+    "img_local": "assets\\lineups\\2590_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2590_1.webp",
+      "assets\\lineups\\2590_2.webp",
+      "assets\\lineups\\2590_3.webp"
+    ]
+  },
+  {
+    "id": "3790",
+    "map": "Haven",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "c Attack Early (from c Lobby)",
+    "from": "C Lobby",
+    "to": "C Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/3790/3.webp",
+    "img_local": "assets\\lineups\\3790_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\3790_1.webp",
+      "assets\\lineups\\3790_2.webp",
+      "assets\\lineups\\3790_3.webp"
+    ]
+  },
+  {
+    "id": "122",
+    "map": "Haven",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Early info dart C Long",
+    "from": "C Site",
+    "to": "C Long",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/122/4.webp",
+    "img_local": "assets\\lineups\\122_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\122_1.webp",
+      "assets\\lineups\\122_2.webp",
+      "assets\\lineups\\122_3.webp",
+      "assets\\lineups\\122_4.webp"
+    ]
+  },
+  {
+    "id": "2850",
+    "map": "Haven",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Sova A God Arrow",
+    "from": "A Long",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2850/3.webp",
+    "img_local": "assets\\lineups\\2850_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2850_1.webp",
+      "assets\\lineups\\2850_2.webp",
+      "assets\\lineups\\2850_3.webp"
+    ]
+  },
+  {
+    "id": "1410",
+    "map": "Haven",
+    "agent": "Sova",
+    "ability": "Shock Bolt",
+    "title": "Shock for Default A Defuse",
+    "from": "A Long",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1410/5.webp",
+    "img_local": "assets\\lineups\\1410_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1410_1.webp",
+      "assets\\lineups\\1410_2.webp",
+      "assets\\lineups\\1410_3.webp",
+      "assets\\lineups\\1410_4.webp",
+      "assets\\lineups\\1410_5.webp"
+    ]
+  },
+  {
+    "id": "1257",
+    "map": "Haven",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "God Recon for b Site Haven",
+    "from": "A Lobby",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1257/4.webp",
+    "img_local": "assets\\lineups\\1257_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1257_1.webp",
+      "assets\\lineups\\1257_2.webp",
+      "assets\\lineups\\1257_3.webp",
+      "assets\\lineups\\1257_4.webp"
+    ]
+  },
+  {
+    "id": "107",
+    "map": "Haven",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Info on A Long for Defense",
+    "from": "A Link",
+    "to": "A Long",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/107/3.webp",
+    "img_local": "assets\\lineups\\107_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\107_1.webp",
+      "assets\\lineups\\107_2.webp",
+      "assets\\lineups\\107_3.webp"
+    ]
+  },
+  {
+    "id": "4194",
+    "map": "Haven",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Site Sinatraa's God Arrow",
+    "from": "A Long",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/4194/3.webp",
+    "img_local": "assets\\lineups\\4194_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\4194_1.webp",
+      "assets\\lineups\\4194_2.webp",
+      "assets\\lineups\\4194_3.webp"
+    ]
+  },
+  {
+    "id": "805",
+    "map": "Haven",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Site God Recon for Retake",
+    "from": "A Link",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/805/3.webp",
+    "img_local": "assets\\lineups\\805_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\805_1.webp",
+      "assets\\lineups\\805_2.webp",
+      "assets\\lineups\\805_3.webp"
+    ]
+  },
+  {
+    "id": "123",
+    "map": "Haven",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Early Info Dart C Long",
+    "from": "C Link",
+    "to": "C Long",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/123/3.webp",
+    "img_local": "assets\\lineups\\123_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\123_1.webp",
+      "assets\\lineups\\123_2.webp",
+      "assets\\lineups\\123_3.webp"
+    ]
+  },
+  {
+    "id": "808",
+    "map": "Haven",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Main Early Round Recon",
+    "from": "A Long",
+    "to": "A Main",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/808/3.webp",
+    "img_local": "assets\\lineups\\808_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\808_1.webp",
+      "assets\\lineups\\808_2.webp",
+      "assets\\lineups\\808_3.webp"
+    ]
+  },
+  {
+    "id": "804",
+    "map": "Haven",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "C Garage Recon",
+    "from": "Attackers",
+    "to": "C Garage",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/804/3.webp",
+    "img_local": "assets\\lineups\\804_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\804_1.webp",
+      "assets\\lineups\\804_2.webp",
+      "assets\\lineups\\804_3.webp"
+    ]
+  },
+  {
+    "id": "4422",
+    "map": "Haven",
+    "agent": "Sova",
+    "ability": "Shock Bolt",
+    "title": "Double Shock on Spike A Site",
+    "from": "A Link",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/4422/4.webp",
+    "img_local": "assets\\lineups\\4422_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\4422_1.webp",
+      "assets\\lineups\\4422_2.webp",
+      "assets\\lineups\\4422_3.webp",
+      "assets\\lineups\\4422_4.webp"
+    ]
+  },
+  {
+    "id": "806",
+    "map": "Haven",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "C Site Retake Recon",
+    "from": "C Link",
+    "to": "C Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/806/3.webp",
+    "img_local": "assets\\lineups\\806_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\806_1.webp",
+      "assets\\lineups\\806_2.webp",
+      "assets\\lineups\\806_3.webp"
+    ]
+  },
+  {
+    "id": "2848",
+    "map": "Haven",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Garden to A Long Arrow",
+    "from": "A Lobby",
+    "to": "A Long",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2848/3.webp",
+    "img_local": "assets\\lineups\\2848_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2848_1.webp",
+      "assets\\lineups\\2848_2.webp",
+      "assets\\lineups\\2848_3.webp"
+    ]
+  },
+  {
+    "id": "1070",
+    "map": "Icebox",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Sova A Attack Info Dart",
+    "from": "A Main",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1070/4.webp",
+    "img_local": "assets\\lineups\\1070_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1070_1.webp",
+      "assets\\lineups\\1070_2.webp",
+      "assets\\lineups\\1070_3.webp",
+      "assets\\lineups\\1070_4.webp"
+    ]
+  },
+  {
+    "id": "365",
+    "map": "Icebox",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Defense A Belt Wallbang Recon from Default",
+    "from": "A Site",
+    "to": "A Belt",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/365/3.webp",
+    "img_local": "assets\\lineups\\365_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\365_1.webp",
+      "assets\\lineups\\365_2.webp",
+      "assets\\lineups\\365_3.webp"
+    ]
+  },
+  {
+    "id": "1674",
+    "map": "Icebox",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Attacker Spawn To B Site God Dart",
+    "from": "Attackers",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1674/4.webp",
+    "img_local": "assets\\lineups\\1674_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1674_1.webp",
+      "assets\\lineups\\1674_2.webp",
+      "assets\\lineups\\1674_3.webp",
+      "assets\\lineups\\1674_4.webp"
+    ]
+  },
+  {
+    "id": "366",
+    "map": "Icebox",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Defense B Main God Dart from B Hut",
+    "from": "B Hut",
+    "to": "B Green",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/366/4.webp",
+    "img_local": "assets\\lineups\\366_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\366_1.webp",
+      "assets\\lineups\\366_2.webp",
+      "assets\\lineups\\366_3.webp",
+      "assets\\lineups\\366_4.webp"
+    ]
+  },
+  {
+    "id": "23",
+    "map": "Icebox",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Early Enemy Info",
+    "from": "Mid Boiler",
+    "to": "B Green",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/23/2.webp",
+    "img_local": "assets\\lineups\\23_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\23_1.webp",
+      "assets\\lineups\\23_2.webp"
+    ]
+  },
+  {
+    "id": "4071",
+    "map": "Icebox",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Attacker Side Spawn to A Site Fake Recon",
+    "from": "Attackers",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/4071/3.webp",
+    "img_local": "assets\\lineups\\4071_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\4071_1.webp",
+      "assets\\lineups\\4071_2.webp",
+      "assets\\lineups\\4071_3.webp"
+    ]
+  },
+  {
+    "id": "3361",
+    "map": "Icebox",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "B Attack Site",
+    "from": "B Green",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/3361/4.webp",
+    "img_local": "assets\\lineups\\3361_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\3361_1.webp",
+      "assets\\lineups\\3361_2.webp",
+      "assets\\lineups\\3361_3.webp",
+      "assets\\lineups\\3361_4.webp"
+    ]
+  },
+  {
+    "id": "1100",
+    "map": "Icebox",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "B Green Recon From Attacker Spawn",
+    "from": "Attackers",
+    "to": "B Green",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1100/3.webp",
+    "img_local": "assets\\lineups\\1100_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1100_1.webp",
+      "assets\\lineups\\1100_2.webp",
+      "assets\\lineups\\1100_3.webp"
+    ]
+  },
+  {
+    "id": "3349",
+    "map": "Icebox",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Icebox T Spawn to A Upper Wall Bang",
+    "from": "Attackers",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/3349/3.webp",
+    "img_local": "assets\\lineups\\3349_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\3349_1.webp",
+      "assets\\lineups\\3349_2.webp",
+      "assets\\lineups\\3349_3.webp"
+    ]
+  },
+  {
+    "id": "4069",
+    "map": "Icebox",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Site to A Main Recon",
+    "from": "A Site",
+    "to": "A Main",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/4069/3.webp",
+    "img_local": "assets\\lineups\\4069_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\4069_1.webp",
+      "assets\\lineups\\4069_2.webp",
+      "assets\\lineups\\4069_3.webp"
+    ]
+  },
+  {
+    "id": "33",
+    "map": "Icebox",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Defender Recon Dart for B Retake",
+    "from": "B Hut",
+    "to": "B Yellow",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/33/3.webp",
+    "img_local": "assets\\lineups\\33_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\33_1.webp",
+      "assets\\lineups\\33_2.webp",
+      "assets\\lineups\\33_3.webp"
+    ]
+  },
+  {
+    "id": "1394",
+    "map": "Icebox",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Defense Dart From Mid to B Main",
+    "from": "Mid Boiler",
+    "to": "B Green",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1394/5.webp",
+    "img_local": "assets\\lineups\\1394_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1394_1.webp",
+      "assets\\lineups\\1394_2.webp",
+      "assets\\lineups\\1394_3.webp",
+      "assets\\lineups\\1394_4.webp",
+      "assets\\lineups\\1394_5.webp"
+    ]
+  },
+  {
+    "id": "4339",
+    "map": "Icebox",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Sova A Site god Arrow",
+    "from": "Mid Blue",
+    "to": "Mid Pallet",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/4339/4.webp",
+    "img_local": "assets\\lineups\\4339_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\4339_1.webp",
+      "assets\\lineups\\4339_2.webp",
+      "assets\\lineups\\4339_3.webp",
+      "assets\\lineups\\4339_4.webp"
+    ]
+  },
+  {
+    "id": "184",
+    "map": "Icebox",
+    "agent": "Sova",
+    "ability": "Shock Bolt",
+    "title": "Double shock dart for clearing Ramp",
+    "from": "Attackers",
+    "to": "Mid Boiler",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/184/4.webp",
+    "img_local": "assets\\lineups\\184_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\184_1.webp",
+      "assets\\lineups\\184_2.webp",
+      "assets\\lineups\\184_3.webp",
+      "assets\\lineups\\184_4.webp"
+    ]
+  },
+  {
+    "id": "4097",
+    "map": "Icebox",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Fake A From B",
+    "from": "Attackers",
+    "to": "A Screens",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/4097/3.webp",
+    "img_local": "assets\\lineups\\4097_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\4097_1.webp",
+      "assets\\lineups\\4097_2.webp",
+      "assets\\lineups\\4097_3.webp"
+    ]
+  },
+  {
+    "id": "31",
+    "map": "Icebox",
+    "agent": "Sova",
+    "ability": "Shock Bolt",
+    "title": "Double Shock Dart for B Orb",
+    "from": "Mid Boiler",
+    "to": "B Green",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/31/4.webp",
+    "img_local": "assets\\lineups\\31_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\31_1.webp",
+      "assets\\lineups\\31_2.webp",
+      "assets\\lineups\\31_3.webp",
+      "assets\\lineups\\31_4.webp"
+    ]
+  },
+  {
+    "id": "367",
+    "map": "Icebox",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Defense Mid Dart from Boiler",
+    "from": "Mid Pallet",
+    "to": "Mid Blue",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/367/3.webp",
+    "img_local": "assets\\lineups\\367_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\367_1.webp",
+      "assets\\lineups\\367_2.webp",
+      "assets\\lineups\\367_3.webp"
+    ]
+  },
+  {
+    "id": "4376",
+    "map": "Icebox",
+    "agent": "Sova",
+    "ability": "Shock Bolt",
+    "title": "Sova A Site Post Plant Shock Dart",
+    "from": "A Main",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/4376/5.webp",
+    "img_local": "assets\\lineups\\4376_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\4376_1.webp",
+      "assets\\lineups\\4376_2.webp",
+      "assets\\lineups\\4376_3.webp",
+      "assets\\lineups\\4376_4.webp",
+      "assets\\lineups\\4376_5.webp"
+    ]
+  },
+  {
+    "id": "1141",
+    "map": "Icebox",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Snowman B Site Recon Dart From Attacker Spawn A Side",
+    "from": "Attackers",
+    "to": "B Snowman",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1141/3.webp",
+    "img_local": "assets\\lineups\\1141_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1141_1.webp",
+      "assets\\lineups\\1141_2.webp",
+      "assets\\lineups\\1141_3.webp"
+    ]
+  },
+  {
+    "id": "4072",
+    "map": "Icebox",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Attacker Side Spawn to B Green Early Push Recon",
+    "from": "Attackers",
+    "to": "B Green",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/4072/4.webp",
+    "img_local": "assets\\lineups\\4072_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\4072_1.webp",
+      "assets\\lineups\\4072_2.webp",
+      "assets\\lineups\\4072_3.webp",
+      "assets\\lineups\\4072_4.webp"
+    ]
+  },
+  {
+    "id": "2554",
+    "map": "Lotus",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Main Defense God Arrow",
+    "from": "A Site",
+    "to": "A Main",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2554/4.webp",
+    "img_local": "assets\\lineups\\2554_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2554_1.webp",
+      "assets\\lineups\\2554_2.webp",
+      "assets\\lineups\\2554_3.webp",
+      "assets\\lineups\\2554_4.webp"
+    ]
+  },
+  {
+    "id": "2166",
+    "map": "Lotus",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Attacker Side Spawn to A Main",
+    "from": "Attacker Side Spawn",
+    "to": "A Main",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2166/3.webp",
+    "img_local": "assets\\lineups\\2166_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2166_1.webp",
+      "assets\\lineups\\2166_2.webp",
+      "assets\\lineups\\2166_3.webp",
+      "assets\\lineups\\2166_4.webp"
+    ]
+  },
+  {
+    "id": "1974",
+    "map": "Lotus",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Sova Lineup to A From Defender Spawn",
+    "from": "Defender Side Spawn",
+    "to": "A Rubble",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1974/4.webp",
+    "img_local": "assets\\lineups\\1974_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1974_1.webp",
+      "assets\\lineups\\1974_2.webp",
+      "assets\\lineups\\1974_3.webp",
+      "assets\\lineups\\1974_4.webp"
+    ]
+  },
+  {
+    "id": "1764",
+    "map": "Lotus",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Attacker Spawn to B Site Recon",
+    "from": "Attacker Side Spawn",
+    "to": "B Upper",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1764/3.webp",
+    "img_local": "assets\\lineups\\1764_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1764_1.webp",
+      "assets\\lineups\\1764_2.webp",
+      "assets\\lineups\\1764_3.webp"
+    ]
+  },
+  {
+    "id": "3653",
+    "map": "Lotus",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Sova A Lobby to A Site Recon",
+    "from": "A Lobby",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/3653/4.webp",
+    "img_local": "assets\\lineups\\3653_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\3653_1.webp",
+      "assets\\lineups\\3653_2.webp",
+      "assets\\lineups\\3653_3.webp",
+      "assets\\lineups\\3653_4.webp"
+    ]
+  },
+  {
+    "id": "1770",
+    "map": "Lotus",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Main Wallbang Recon",
+    "from": "A Tree",
+    "to": "A Rubble",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1770/3.webp",
+    "img_local": "assets\\lineups\\1770_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1770_1.webp",
+      "assets\\lineups\\1770_2.webp",
+      "assets\\lineups\\1770_3.webp"
+    ]
+  },
+  {
+    "id": "1769",
+    "map": "Lotus",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "C Main and C Link Wallbang Recon",
+    "from": "C Main",
+    "to": "C Waterfall",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1769/3.webp",
+    "img_local": "assets\\lineups\\1769_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1769_1.webp",
+      "assets\\lineups\\1769_2.webp",
+      "assets\\lineups\\1769_3.webp"
+    ]
+  },
+  {
+    "id": "1975",
+    "map": "Lotus",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Sova Reveal From C Gravel to A Site",
+    "from": "C Gravel",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1975/4.webp",
+    "img_local": "assets\\lineups\\1975_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1975_1.webp",
+      "assets\\lineups\\1975_2.webp",
+      "assets\\lineups\\1975_3.webp",
+      "assets\\lineups\\1975_4.webp"
+    ]
+  },
+  {
+    "id": "1911",
+    "map": "Lotus",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Best Lineup Retake",
+    "from": "A Site",
+    "to": "C Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1911/3.webp",
+    "img_local": "assets\\lineups\\1911_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1911_1.webp",
+      "assets\\lineups\\1911_2.webp",
+      "assets\\lineups\\1911_3.webp"
+    ]
+  },
+  {
+    "id": "2553",
+    "map": "Lotus",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "C Main to C Site Easy Arrow",
+    "from": "C Main",
+    "to": "C Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2553/3.webp",
+    "img_local": "assets\\lineups\\2553_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2553_1.webp",
+      "assets\\lineups\\2553_2.webp",
+      "assets\\lineups\\2553_3.webp"
+    ]
+  },
+  {
+    "id": "2256",
+    "map": "Lotus",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "C Main to C Site Quick Scan Arrow",
+    "from": "C Main",
+    "to": "C Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2256/3.webp",
+    "img_local": "assets\\lineups\\2256_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2256_1.webp",
+      "assets\\lineups\\2256_2.webp",
+      "assets\\lineups\\2256_3.webp"
+    ]
+  },
+  {
+    "id": "2756",
+    "map": "Lotus",
+    "agent": "Sova",
+    "ability": "Shock Bolt",
+    "title": "Double Shockdart Left of A Default",
+    "from": "A Root",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2756/4.webp",
+    "img_local": "assets\\lineups\\2756_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2756_1.webp",
+      "assets\\lineups\\2756_2.webp",
+      "assets\\lineups\\2756_3.webp",
+      "assets\\lineups\\2756_4.webp"
+    ]
+  },
+  {
+    "id": "1829",
+    "map": "Lotus",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Reconing A way From A Site",
+    "from": "A Root",
+    "to": "A Root",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1829/3.webp",
+    "img_local": "assets\\lineups\\1829_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1829_1.webp",
+      "assets\\lineups\\1829_2.webp",
+      "assets\\lineups\\1829_3.webp"
+    ]
+  },
+  {
+    "id": "1816",
+    "map": "Lotus",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "C Mound to A Site Recon",
+    "from": "C Main",
+    "to": "A Main",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1816/4.webp",
+    "img_local": "assets\\lineups\\1816_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1816_1.webp",
+      "assets\\lineups\\1816_2.webp",
+      "assets\\lineups\\1816_3.webp",
+      "assets\\lineups\\1816_4.webp"
+    ]
+  },
+  {
+    "id": "5770",
+    "map": "Lotus",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "C Link to C Main (defence)",
+    "from": "C Link",
+    "to": "C Main",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/5770/5.webp",
+    "img_local": "assets\\lineups\\5770_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\5770_1.webp",
+      "assets\\lineups\\5770_2.webp",
+      "assets\\lineups\\5770_3.webp",
+      "assets\\lineups\\5770_4.webp",
+      "assets\\lineups\\5770_5.webp"
+    ]
+  },
+  {
+    "id": "4368",
+    "map": "Lotus",
+    "agent": "Sova",
+    "ability": "Shock Bolt",
+    "title": "Sova A Site Shock/recon Dart Post Plant",
+    "from": "A Main",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/4368/4.webp",
+    "img_local": "assets\\lineups\\4368_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\4368_1.webp",
+      "assets\\lineups\\4368_2.webp",
+      "assets\\lineups\\4368_3.webp",
+      "assets\\lineups\\4368_4.webp"
+    ]
+  },
+  {
+    "id": "2564",
+    "map": "Lotus",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Full Scan B Site Dart",
+    "from": "Attacker Side Spawn",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2564/6.webp",
+    "img_local": "assets\\lineups\\2564_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2564_1.webp",
+      "assets\\lineups\\2564_2.webp",
+      "assets\\lineups\\2564_3.webp",
+      "assets\\lineups\\2564_4.webp",
+      "assets\\lineups\\2564_5.webp"
+    ]
+  },
+  {
+    "id": "3309",
+    "map": "Lotus",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Wallbang A Dart",
+    "from": "A Site",
+    "to": "A Rubble",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/3309/3.webp",
+    "img_local": "assets\\lineups\\3309_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\3309_1.webp",
+      "assets\\lineups\\3309_2.webp",
+      "assets\\lineups\\3309_3.webp"
+    ]
+  },
+  {
+    "id": "2556",
+    "map": "Lotus",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "C Site Easy Retake Dart",
+    "from": "C Hall",
+    "to": "C Bend",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2556/3.webp",
+    "img_local": "assets\\lineups\\2556_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2556_1.webp",
+      "assets\\lineups\\2556_2.webp",
+      "assets\\lineups\\2556_3.webp"
+    ]
+  },
+  {
+    "id": "5767",
+    "map": "Lotus",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "B Upper to A Main (support)",
+    "from": "B Upper",
+    "to": "A Main",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/5767/5.webp",
+    "img_local": "assets\\lineups\\5767_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\5767_1.webp",
+      "assets\\lineups\\5767_2.webp",
+      "assets\\lineups\\5767_3.webp",
+      "assets\\lineups\\5767_4.webp",
+      "assets\\lineups\\5767_5.webp"
+    ]
+  },
+  {
+    "id": "727",
+    "map": "Pearl",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Reveal B From T Spawn",
+    "from": "Attackers",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/727/3.webp",
+    "img_local": "assets\\lineups\\727_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\727_1.webp",
+      "assets\\lineups\\727_2.webp",
+      "assets\\lineups\\727_3.webp"
+    ]
+  },
+  {
+    "id": "736",
+    "map": "Pearl",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Early Recon Attacker to A Spot",
+    "from": "Attackers",
+    "to": "Vending Machine",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/736/3.webp",
+    "img_local": "assets\\lineups\\736_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\736_1.webp",
+      "assets\\lineups\\736_2.webp",
+      "assets\\lineups\\736_3.webp"
+    ]
+  },
+  {
+    "id": "686",
+    "map": "Pearl",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Sova God Recon Dart A Site",
+    "from": "A Main",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/686/3.webp",
+    "img_local": "assets\\lineups\\686_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\686_1.webp",
+      "assets\\lineups\\686_2.webp",
+      "assets\\lineups\\686_3.webp"
+    ]
+  },
+  {
+    "id": "1420",
+    "map": "Pearl",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Recon From A to B Ramps",
+    "from": "A Top Site",
+    "to": "B Ramp",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1420/3.webp",
+    "img_local": "assets\\lineups\\1420_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1420_1.webp",
+      "assets\\lineups\\1420_2.webp",
+      "assets\\lineups\\1420_3.webp"
+    ]
+  },
+  {
+    "id": "2121",
+    "map": "Pearl",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Secret to A Main Early Round Scan",
+    "from": "A Secret",
+    "to": "A Main",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2121/3.webp",
+    "img_local": "assets\\lineups\\2121_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2121_1.webp",
+      "assets\\lineups\\2121_2.webp",
+      "assets\\lineups\\2121_3.webp"
+    ]
+  },
+  {
+    "id": "2124",
+    "map": "Pearl",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "B Site to B Ramp Early Arrow Info",
+    "from": "B Site",
+    "to": "B Ramp",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2124/3.webp",
+    "img_local": "assets\\lineups\\2124_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2124_1.webp",
+      "assets\\lineups\\2124_2.webp",
+      "assets\\lineups\\2124_3.webp"
+    ]
+  },
+  {
+    "id": "688",
+    "map": "Pearl",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "B Site Recon",
+    "from": "B Ramp",
+    "to": "Hell",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/688/3.webp",
+    "img_local": "assets\\lineups\\688_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\688_1.webp",
+      "assets\\lineups\\688_2.webp",
+      "assets\\lineups\\688_3.webp"
+    ]
+  },
+  {
+    "id": "1200",
+    "map": "Pearl",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Reveal Mid Top and Mid Shop",
+    "from": "Mid Doors",
+    "to": "Mid Plaza",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1200/3.webp",
+    "img_local": "assets\\lineups\\1200_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1200_1.webp",
+      "assets\\lineups\\1200_2.webp",
+      "assets\\lineups\\1200_3.webp"
+    ]
+  },
+  {
+    "id": "2217",
+    "map": "Pearl",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Sova Recon Dart to Attack b",
+    "from": "Ramp Stairs",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2217/3.webp",
+    "img_local": "assets\\lineups\\2217_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2217_1.webp",
+      "assets\\lineups\\2217_2.webp",
+      "assets\\lineups\\2217_3.webp"
+    ]
+  },
+  {
+    "id": "2368",
+    "map": "Pearl",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Main Scan Dart",
+    "from": "A Site",
+    "to": "A Main",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2368/3.webp",
+    "img_local": "assets\\lineups\\2368_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2368_1.webp",
+      "assets\\lineups\\2368_2.webp",
+      "assets\\lineups\\2368_3.webp"
+    ]
+  },
+  {
+    "id": "2562",
+    "map": "Pearl",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Site God Attack Dart",
+    "from": "A Main",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2562/4.webp",
+    "img_local": "assets\\lineups\\2562_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2562_1.webp",
+      "assets\\lineups\\2562_2.webp",
+      "assets\\lineups\\2562_3.webp",
+      "assets\\lineups\\2562_4.webp"
+    ]
+  },
+  {
+    "id": "739",
+    "map": "Pearl",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Secret to A Link Recon",
+    "from": "A Secret",
+    "to": "A Link",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/739/3.webp",
+    "img_local": "assets\\lineups\\739_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\739_1.webp",
+      "assets\\lineups\\739_2.webp",
+      "assets\\lineups\\739_3.webp"
+    ]
+  },
+  {
+    "id": "1883",
+    "map": "Pearl",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "T Spawn to B Site Pearl Full Site Recon",
+    "from": "Attackers",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1883/3.webp",
+    "img_local": "assets\\lineups\\1883_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1883_1.webp",
+      "assets\\lineups\\1883_2.webp",
+      "assets\\lineups\\1883_3.webp"
+    ]
+  },
+  {
+    "id": "5169",
+    "map": "Pearl",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Recon Dart From A Restaurant to A Site",
+    "from": "A Restaurant",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/5169/4.webp",
+    "img_local": "assets\\lineups\\5169_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\5169_1.webp",
+      "assets\\lineups\\5169_2.webp",
+      "assets\\lineups\\5169_3.webp",
+      "assets\\lineups\\5169_4.webp"
+    ]
+  },
+  {
+    "id": "2364",
+    "map": "Pearl",
+    "agent": "Sova",
+    "ability": "Shock Bolt",
+    "title": "Post Plant Double Dart B Long",
+    "from": "B Ramp",
+    "to": "B Radianite Plant",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2364/3.webp",
+    "img_local": "assets\\lineups\\2364_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2364_1.webp",
+      "assets\\lineups\\2364_2.webp",
+      "assets\\lineups\\2364_3.webp"
+    ]
+  },
+  {
+    "id": "4864",
+    "map": "Pearl",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Fast Recon A Main",
+    "from": "A Art",
+    "to": "A Main",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/4864/3.webp",
+    "img_local": "assets\\lineups\\4864_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\4864_1.webp",
+      "assets\\lineups\\4864_2.webp",
+      "assets\\lineups\\4864_3.webp"
+    ]
+  },
+  {
+    "id": "2560",
+    "map": "Pearl",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "B Retake God Recon",
+    "from": "B Link",
+    "to": "B Cubby",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2560/4.webp",
+    "img_local": "assets\\lineups\\2560_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2560_1.webp",
+      "assets\\lineups\\2560_2.webp",
+      "assets\\lineups\\2560_3.webp",
+      "assets\\lineups\\2560_4.webp"
+    ]
+  },
+  {
+    "id": "687",
+    "map": "Pearl",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Sova Recon for Retake A Site",
+    "from": "A Secret",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/687/3.webp",
+    "img_local": "assets\\lineups\\687_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\687_1.webp",
+      "assets\\lineups\\687_2.webp",
+      "assets\\lineups\\687_3.webp"
+    ]
+  },
+  {
+    "id": "2563",
+    "map": "Pearl",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "B Site Attack Dart",
+    "from": "B Ramp",
+    "to": "Hell",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2563/4.webp",
+    "img_local": "assets\\lineups\\2563_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2563_1.webp",
+      "assets\\lineups\\2563_2.webp",
+      "assets\\lineups\\2563_3.webp",
+      "assets\\lineups\\2563_4.webp"
+    ]
+  },
+  {
+    "id": "2734",
+    "map": "Pearl",
+    "agent": "Sova",
+    "ability": "Shock Bolt",
+    "title": "Double Shock From Ramp to Corner of B Site",
+    "from": "B Ramp",
+    "to": "B Corner Plant",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2734/4.webp",
+    "img_local": "assets\\lineups\\2734_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2734_1.webp",
+      "assets\\lineups\\2734_2.webp",
+      "assets\\lineups\\2734_3.webp",
+      "assets\\lineups\\2734_4.webp"
+    ]
+  },
+  {
+    "id": "1702",
+    "map": "Split",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Sova Recon Bolt | B Lobby to B Site/b Rafter",
+    "from": "B Lobby",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1702/3.webp",
+    "img_local": "assets\\lineups\\1702_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1702_1.webp",
+      "assets\\lineups\\1702_2.webp",
+      "assets\\lineups\\1702_3.webp"
+    ]
+  },
+  {
+    "id": "126",
+    "map": "Split",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Early Info Dart A Lobby",
+    "from": "A Rafters",
+    "to": "A Lobby",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/126/3.webp",
+    "img_local": "assets\\lineups\\126_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\126_1.webp",
+      "assets\\lineups\\126_2.webp",
+      "assets\\lineups\\126_3.webp"
+    ]
+  },
+  {
+    "id": "2156",
+    "map": "Split",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Reveal B Lobby",
+    "from": "B Rafters",
+    "to": "B Lobby",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2156/4.webp",
+    "img_local": "assets\\lineups\\2156_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2156_1.webp",
+      "assets\\lineups\\2156_2.webp",
+      "assets\\lineups\\2156_3.webp",
+      "assets\\lineups\\2156_4.webp"
+    ]
+  },
+  {
+    "id": "131",
+    "map": "Split",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "B Backsite info dart",
+    "from": "B Main",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/131/3.webp",
+    "img_local": "assets\\lineups\\131_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\131_1.webp",
+      "assets\\lineups\\131_2.webp",
+      "assets\\lineups\\131_3.webp"
+    ]
+  },
+  {
+    "id": "2117",
+    "map": "Split",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Whole of A Site Scan Mostly-indestructable Troll Arrow",
+    "from": "A Lobby",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2117/3.webp",
+    "img_local": "assets\\lineups\\2117_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2117_1.webp",
+      "assets\\lineups\\2117_2.webp",
+      "assets\\lineups\\2117_3.webp"
+    ]
+  },
+  {
+    "id": "4568",
+    "map": "Split",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Attack A Site Scan",
+    "from": "A Lobby",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/4568/4.webp",
+    "img_local": "assets\\lineups\\4568_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\4568_1.webp",
+      "assets\\lineups\\4568_2.webp",
+      "assets\\lineups\\4568_3.webp",
+      "assets\\lineups\\4568_4.webp"
+    ]
+  },
+  {
+    "id": "127",
+    "map": "Split",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Early info dart for A Lobby",
+    "from": "A Heaven",
+    "to": "A Lobby",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/127/3.webp",
+    "img_local": "assets\\lineups\\127_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\127_1.webp",
+      "assets\\lineups\\127_2.webp",
+      "assets\\lineups\\127_3.webp"
+    ]
+  },
+  {
+    "id": "3475",
+    "map": "Split",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "B Lobby to B Heaven/hell",
+    "from": "B Lobby",
+    "to": "B Heaven",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/3475/3.webp",
+    "img_local": "assets\\lineups\\3475_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\3475_1.webp",
+      "assets\\lineups\\3475_2.webp",
+      "assets\\lineups\\3475_3.webp"
+    ]
+  },
+  {
+    "id": "3224",
+    "map": "Split",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "God Recon Dart From Attackers to A Ramp",
+    "from": "Attackers",
+    "to": "A Ramp",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/3224/3.webp",
+    "img_local": "assets\\lineups\\3224_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\3224_1.webp",
+      "assets\\lineups\\3224_2.webp",
+      "assets\\lineups\\3224_3.webp"
+    ]
+  },
+  {
+    "id": "1882",
+    "map": "Split",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Delayed Info From A Attackers to A Ramp",
+    "from": "A Ramp",
+    "to": "A Ramp",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/1882/3.webp",
+    "img_local": "assets\\lineups\\1882_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\1882_1.webp",
+      "assets\\lineups\\1882_2.webp",
+      "assets\\lineups\\1882_3.webp"
+    ]
+  },
+  {
+    "id": "6971",
+    "map": "Split",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "B Site to B Lobby",
+    "from": "B Site",
+    "to": "B Lobby",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/6971/5.webp",
+    "img_local": "assets\\lineups\\6971_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\6971_1.webp",
+      "assets\\lineups\\6971_2.webp",
+      "assets\\lineups\\6971_3.webp",
+      "assets\\lineups\\6971_4.webp",
+      "assets\\lineups\\6971_5.webp"
+    ]
+  },
+  {
+    "id": "2119",
+    "map": "Split",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Attacking Spawn to B Site Troll Arrow",
+    "from": "Attackers",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2119/3.webp",
+    "img_local": "assets\\lineups\\2119_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2119_1.webp",
+      "assets\\lineups\\2119_2.webp",
+      "assets\\lineups\\2119_3.webp"
+    ]
+  },
+  {
+    "id": "2565",
+    "map": "Split",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Site Retake Dart",
+    "from": "Screens",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2565/4.webp",
+    "img_local": "assets\\lineups\\2565_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2565_1.webp",
+      "assets\\lineups\\2565_2.webp",
+      "assets\\lineups\\2565_3.webp",
+      "assets\\lineups\\2565_4.webp"
+    ]
+  },
+  {
+    "id": "17",
+    "map": "Split",
+    "agent": "Sova",
+    "ability": "Shock Bolt",
+    "title": "B Site Default Post Plant",
+    "from": "B Main",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/17/3.webp",
+    "img_local": "assets\\lineups\\17_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\17_1.webp",
+      "assets\\lineups\\17_2.webp",
+      "assets\\lineups\\17_3.webp"
+    ]
+  },
+  {
+    "id": "3478",
+    "map": "Split",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Mid Mail to A Main",
+    "from": "Mid Mail",
+    "to": "A Main",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/3478/3.webp",
+    "img_local": "assets\\lineups\\3478_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\3478_1.webp",
+      "assets\\lineups\\3478_2.webp",
+      "assets\\lineups\\3478_3.webp"
+    ]
+  },
+  {
+    "id": "4569",
+    "map": "Split",
+    "agent": "Sova",
+    "ability": "Shock Bolt",
+    "title": "Double Shock A Main",
+    "from": "A Rafters",
+    "to": "A Main",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/4569/4.webp",
+    "img_local": "assets\\lineups\\4569_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\4569_1.webp",
+      "assets\\lineups\\4569_2.webp",
+      "assets\\lineups\\4569_3.webp",
+      "assets\\lineups\\4569_4.webp"
+    ]
+  },
+  {
+    "id": "7009",
+    "map": "Split",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Lobby to A Site #7",
+    "from": "A Lobby",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/7009/4.webp",
+    "img_local": "assets\\lineups\\7009_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\7009_1.webp",
+      "assets\\lineups\\7009_2.webp",
+      "assets\\lineups\\7009_3.webp",
+      "assets\\lineups\\7009_4.webp"
+    ]
+  },
+  {
+    "id": "421",
+    "map": "Split",
+    "agent": "Sova",
+    "ability": "Shock Bolt",
+    "title": "B Heaven to Plant Denial Shock",
+    "from": "B Heaven",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/421/3.webp",
+    "img_local": "assets\\lineups\\421_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\421_1.webp",
+      "assets\\lineups\\421_2.webp",
+      "assets\\lineups\\421_3.webp"
+    ]
+  },
+  {
+    "id": "2567",
+    "map": "Split",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "B Site Retake Dart",
+    "from": "B Heaven",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2567/3.webp",
+    "img_local": "assets\\lineups\\2567_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2567_1.webp",
+      "assets\\lineups\\2567_2.webp",
+      "assets\\lineups\\2567_3.webp"
+    ]
+  },
+  {
+    "id": "418",
+    "map": "Split",
+    "agent": "Sova",
+    "ability": "Shock Bolt",
+    "title": "A Site Defuse Denial Double Shock",
+    "from": "A Lobby",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/418/4.webp",
+    "img_local": "assets\\lineups\\418_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\418_1.webp",
+      "assets\\lineups\\418_2.webp",
+      "assets\\lineups\\418_3.webp",
+      "assets\\lineups\\418_4.webp"
+    ]
+  },
+  {
+    "id": "2932",
+    "map": "Sunset",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "B Site Attackers Easy Lineup",
+    "from": "B Lobby",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2932/5.webp",
+    "img_local": "assets\\lineups\\2932_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2932_1.webp",
+      "assets\\lineups\\2932_2.webp",
+      "assets\\lineups\\2932_3.webp",
+      "assets\\lineups\\2932_4.webp",
+      "assets\\lineups\\2932_5.webp"
+    ]
+  },
+  {
+    "id": "3191",
+    "map": "Sunset",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Sunset B Site Sova Dart (back Site)",
+    "from": "Mid Bottom",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/3191/3.webp",
+    "img_local": "assets\\lineups\\3191_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\3191_1.webp",
+      "assets\\lineups\\3191_2.webp",
+      "assets\\lineups\\3191_3.webp"
+    ]
+  },
+  {
+    "id": "3307",
+    "map": "Sunset",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Start Attack A Site",
+    "from": "A Lobby",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/3307/3.webp",
+    "img_local": "assets\\lineups\\3307_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\3307_1.webp",
+      "assets\\lineups\\3307_2.webp",
+      "assets\\lineups\\3307_3.webp",
+      "assets\\lineups\\3307_4.webp",
+      "assets\\lineups\\3307_5.webp"
+    ]
+  },
+  {
+    "id": "4555",
+    "map": "Sunset",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "GOD Arrow Defender Mid to B Main",
+    "from": "Mid Top",
+    "to": "B Main",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/4555/4.webp",
+    "img_local": "assets\\lineups\\4555_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\4555_1.webp",
+      "assets\\lineups\\4555_2.webp",
+      "assets\\lineups\\4555_3.webp",
+      "assets\\lineups\\4555_4.webp"
+    ]
+  },
+  {
+    "id": "2933",
+    "map": "Sunset",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Main Defenders Dart",
+    "from": "A Link",
+    "to": "A Lobby",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2933/3.webp",
+    "img_local": "assets\\lineups\\2933_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2933_1.webp",
+      "assets\\lineups\\2933_2.webp",
+      "assets\\lineups\\2933_3.webp"
+    ]
+  },
+  {
+    "id": "3200",
+    "map": "Sunset",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Lobby Early Info Dart",
+    "from": "A Link",
+    "to": "A Lobby",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/3200/3.webp",
+    "img_local": "assets\\lineups\\3200_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\3200_1.webp",
+      "assets\\lineups\\3200_2.webp",
+      "assets\\lineups\\3200_3.webp"
+    ]
+  },
+  {
+    "id": "3490",
+    "map": "Sunset",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "B Lobby to Front B Site",
+    "from": "B Lobby",
+    "to": "B Site Plant",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/3490/3.webp",
+    "img_local": "assets\\lineups\\3490_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\3490_1.webp",
+      "assets\\lineups\\3490_2.webp",
+      "assets\\lineups\\3490_3.webp"
+    ]
+  },
+  {
+    "id": "4426",
+    "map": "Sunset",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "God Arrow B Attack",
+    "from": "B Lobby",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/4426/3.webp",
+    "img_local": "assets\\lineups\\4426_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\4426_1.webp",
+      "assets\\lineups\\4426_2.webp",
+      "assets\\lineups\\4426_3.webp"
+    ]
+  },
+  {
+    "id": "2931",
+    "map": "Sunset",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Site Attackers Simple Dart",
+    "from": "A Lobby",
+    "to": "A Top",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2931/4.webp",
+    "img_local": "assets\\lineups\\2931_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2931_1.webp",
+      "assets\\lineups\\2931_2.webp",
+      "assets\\lineups\\2931_3.webp",
+      "assets\\lineups\\2931_4.webp"
+    ]
+  },
+  {
+    "id": "2934",
+    "map": "Sunset",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "God Mid Dart Defenders",
+    "from": "Mid Top",
+    "to": "Mid Bottom",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2934/4.webp",
+    "img_local": "assets\\lineups\\2934_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2934_1.webp",
+      "assets\\lineups\\2934_2.webp",
+      "assets\\lineups\\2934_3.webp",
+      "assets\\lineups\\2934_4.webp"
+    ]
+  },
+  {
+    "id": "5826",
+    "map": "Sunset",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Site to B Main (support)",
+    "from": "A Top",
+    "to": "B Main",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/5826/5.webp",
+    "img_local": "assets\\lineups\\5826_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\5826_1.webp",
+      "assets\\lineups\\5826_2.webp",
+      "assets\\lineups\\5826_3.webp",
+      "assets\\lineups\\5826_4.webp",
+      "assets\\lineups\\5826_5.webp"
+    ]
+  },
+  {
+    "id": "2995",
+    "map": "Sunset",
+    "agent": "Sova",
+    "ability": "Shock Bolt",
+    "title": "Easy Li̇neup FOR B Si̇te",
+    "from": "B Main",
+    "to": "B Site Plant",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2995/3.webp",
+    "img_local": "assets\\lineups\\2995_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2995_1.webp",
+      "assets\\lineups\\2995_2.webp",
+      "assets\\lineups\\2995_3.webp"
+    ]
+  },
+  {
+    "id": "3492",
+    "map": "Sunset",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Lobby to A Link",
+    "from": "A Lobby",
+    "to": "A Link",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/3492/3.webp",
+    "img_local": "assets\\lineups\\3492_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\3492_1.webp",
+      "assets\\lineups\\3492_2.webp",
+      "assets\\lineups\\3492_3.webp"
+    ]
+  },
+  {
+    "id": "2975",
+    "map": "Sunset",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Reval b",
+    "from": "B Boba",
+    "to": "B Main",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2975/3.webp",
+    "img_local": "assets\\lineups\\2975_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2975_1.webp",
+      "assets\\lineups\\2975_2.webp",
+      "assets\\lineups\\2975_3.webp"
+    ]
+  },
+  {
+    "id": "2936",
+    "map": "Sunset",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "A Retake Dart",
+    "from": "A Alley",
+    "to": "A Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2936/4.webp",
+    "img_local": "assets\\lineups\\2936_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2936_1.webp",
+      "assets\\lineups\\2936_2.webp",
+      "assets\\lineups\\2936_3.webp",
+      "assets\\lineups\\2936_4.webp"
+    ]
+  },
+  {
+    "id": "2930",
+    "map": "Sunset",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Easy Mid Attackers God Lineup",
+    "from": "Mid Bottom",
+    "to": "Mid Courtyard",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/2930/5.webp",
+    "img_local": "assets\\lineups\\2930_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\2930_1.webp",
+      "assets\\lineups\\2930_2.webp",
+      "assets\\lineups\\2930_3.webp",
+      "assets\\lineups\\2930_4.webp",
+      "assets\\lineups\\2930_5.webp"
+    ]
+  },
+  {
+    "id": "3938",
+    "map": "Sunset",
+    "agent": "Sova",
+    "ability": "Shock Bolt",
+    "title": "Sunset Anti Sentinel Shock Dart",
+    "from": "B Lobby",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/3938/3.webp",
+    "img_local": "assets\\lineups\\3938_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\3938_1.webp",
+      "assets\\lineups\\3938_2.webp",
+      "assets\\lineups\\3938_3.webp"
+    ]
+  },
+  {
+    "id": "4302",
+    "map": "Sunset",
+    "agent": "Sova",
+    "ability": "Shock Bolt",
+    "title": "Fast Anti Sentinel Shock Dart",
+    "from": "B Lobby",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/4302/3.webp",
+    "img_local": "assets\\lineups\\4302_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\4302_1.webp",
+      "assets\\lineups\\4302_2.webp",
+      "assets\\lineups\\4302_3.webp"
+    ]
+  },
+  {
+    "id": "6377",
+    "map": "Sunset",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "B Lobby to B Backsite",
+    "from": "B Lobby",
+    "to": "B Site Plant",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/6377/5.webp",
+    "img_local": "assets\\lineups\\6377_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\6377_1.webp",
+      "assets\\lineups\\6377_2.webp",
+      "assets\\lineups\\6377_3.webp",
+      "assets\\lineups\\6377_4.webp",
+      "assets\\lineups\\6377_5.webp"
+    ]
+  },
+  {
+    "id": "3496",
+    "map": "Sunset",
+    "agent": "Sova",
+    "ability": "Recon Bolt",
+    "title": "Defender Spawn to B Site Retake",
+    "from": "Defender Spawn",
+    "to": "B Site",
+    "img_url": "https://lineupsvalorant.b-cdn.net/static/lineup_images_thumbnail/3496/3.webp",
+    "img_local": "assets\\lineups\\3496_thumb.webp",
+    "all_images": [
+      "assets\\lineups\\3496_1.webp",
+      "assets\\lineups\\3496_2.webp",
+      "assets\\lineups\\3496_3.webp"
+    ]
+  }
+]

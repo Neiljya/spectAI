@@ -42,7 +42,7 @@ dotenv.load_dotenv()
 TARGET_WINDOW = "VALORANT  "
 CAPTURE_FPS = 1
 RECORD_FPS  = 24
-NUDGE_INTERVAL = 6
+NUDGE_INTERVAL = 9
 GAME_STATE_REFRESH_SECONDS = 10
 MODEL = "gemini-3.1-flash-live-preview"
 
@@ -253,6 +253,13 @@ PLAY RECOMMENDATION: When the user asks which play to run (e.g. "what play shoul
 4. If a matching play exists: respond in 1-2 natural sentences recommending it and explaining the agent fit, then on a new line append: [SHOW_PLAY:MapName:PlayName] using exact names from the list.
 5. If NO play has sufficient agent overlap (e.g. solo lobby, unusual comp, or map not in the list): do NOT output [SHOW_PLAY:]. Instead, describe a 1-2 sentence custom strategy tailored to the actual agents and their abilities.
 
+LINEUP REQUESTS: When the user asks to show lineups, lineups here, Sova lineups, shock dart, recon lineup, dart lineup, or similar:
+1. Determine the current map from LIVE GAME DATA.
+2. Determine the player's current location/callout from the user's wording and the current video/minimap context. Look at the top of the minimap and read the text, (top left corner of screen for location) Examples: B Lobby, B Main, A Main, Mid, Tree, Market, Generator, Heaven.
+3. Respond in 1 short sentence, then append this exact tag on a new line: [SHOW_LINEUP:MapName:Position]
+4. Do not include the agent in the tag. The app hardcodes lineups to Sova.
+5. If the map is unknown, use the most likely map from LIVE GAME DATA. If the position is uncertain, use the best visible/current callout guess instead of refusing.
+
 {plays_summary}
 """
 
@@ -293,12 +300,14 @@ class SpectAI:
         response_callback: Callable[[str], None],
         voice_callback: Callable[[str], None] = None,
         play_callback: Callable[[str, str], None] = None,
+        lineup_callback: Callable[[str, str], None] = None,
         frame_callback: Callable = None,
         plays_summary: str = "",
     ):
         self._response_callback = response_callback
         self._voice_callback = voice_callback
         self._play_callback = play_callback
+        self._lineup_callback = lineup_callback
         self._frame_callback = frame_callback
         self._plays_summary = plays_summary
         self._thread: threading.Thread | None = None
@@ -582,10 +591,13 @@ class SpectAI:
         print(f"[Voice Telemetry] Raw Gemini Text: {full_response}")
 
         play_match = re.search(r'\[SHOW_PLAY:([^:\]]+):([^\]]+)\]', full_response)
-        clean = re.sub(r'\[SHOW_PLAY:[^\]]+\]', '', full_response).strip()
+        lineup_match = re.search(r'\[SHOW_LINEUP:([^:\]]+):([^\]]+)\]', full_response)
+
+        clean = re.sub(r'\[SHOW_PLAY:[^\]]+\]', '', full_response)
+        clean = re.sub(r'\[SHOW_LINEUP:[^\]]+\]', '', clean).strip()
 
         sentences = re.split(r'(?<=[.!?])\s+', clean)
-        spoken = sentences[-1] if sentences else clean
+        spoken = sentences[-1] if sentences and sentences[-1] else clean
         print(f"[Voice Telemetry] Filtered text for TTS: {spoken}")
 
         if self._voice_callback:
@@ -597,7 +609,14 @@ class SpectAI:
             print(f"[Voice Telemetry] Play recommendation: {map_name} — {play_name}")
             self._play_callback(map_name, play_name)
 
-        asyncio.get_event_loop().run_in_executor(None, _speak_sync, spoken)
+        if lineup_match and self._lineup_callback:
+            map_name = lineup_match.group(1).strip()
+            position = lineup_match.group(2).strip()
+            print(f"[Voice Telemetry] Lineup request: {map_name} — {position} — Sova")
+            self._lineup_callback(map_name, position)
+
+        if spoken:
+            asyncio.get_event_loop().run_in_executor(None, _speak_sync, spoken)
 
     def _process_coach_response(self, full_response: str, coaching_history: deque):
         if time.time() - self._last_voice_time < 8.0:

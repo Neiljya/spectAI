@@ -1444,7 +1444,7 @@ export async function processCoachAnalysis(
 
   const { data: matches, error: matchError } = await supabase
     .from('match_data')
-    .select('data, map, agent, outcome')
+    .select('data, map, agent, outcome, coach_notes')
     .eq('profile_id', userId)
     .order('played_at', { ascending: false })
     .limit(10);
@@ -1483,7 +1483,10 @@ export async function processCoachAnalysis(
   if (mode === 'summary') {
     const result = await model.generateContent(`
 Expert Valorant coach. Analyze and return JSON only.
+Also rate the level of the player from: Beginner, Intermediate, Experienced, High Elo, Top Tier, Pro
+Be supportive but also honest at same time, not disrespectful
 
+this should be based on experience and also player weakness/strengths
 MATCHES:
 ${JSON.stringify(matches)}
 
@@ -1493,6 +1496,7 @@ ${JSON.stringify(playerStats)}
 Return ONLY:
 {
   "summary": "2-3 direct sentences with actual numbers",
+  "rating": "beginner, intermediate, experienced, high elo, top tier, pro"
   "strengths": ["specific strength"],
   "weaknesses": ["specific weakness"]
 }

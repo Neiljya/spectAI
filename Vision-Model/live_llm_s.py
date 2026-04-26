@@ -89,7 +89,7 @@ Use the HUD: health, ammo, top bar (agent icons, ult status, time, scores), kill
 IMPORTANT: To identify the player's agent, look at the top bar icon or the center of the minimap.
 You will sometimes receive a RECENT HISTORY buffer of previous game states. Use it to understand context and changes over time. Always prioritize the current frame over history.
 You may also receive LIVE GAME DATA from the Valorant API. Use it to fill in map_name, player_character, and team compositions accurately. Use the provided callout names for player_position.
-When the player asks a voice question (marked PLAYER VOICE QUESTION), answer it directly in plain conversational text, 12 words or fewer — do NOT respond with JSON for voice questions.
+When the player asks a voice question (marked PLAYER VOICE QUESTION), answer it in 1-2 sentences max — direct and actionable, no long explanations. Do NOT respond with JSON for voice questions.
 
 OUTPUT RULES for screen analysis — follow these exactly:
 - Respond with ONLY a valid JSON object. Nothing else.
@@ -186,6 +186,9 @@ LIVE_CONFIG = types.LiveConnectConfig(
     ),
     temperature=0.1,
     output_audio_transcription=types.AudioTranscriptionConfig(),
+    realtime_input_config=types.RealtimeInputConfig(
+        automatic_activity_detection=types.AutomaticActivityDetection(disabled=True)
+    ),
 )
 
 
@@ -342,24 +345,31 @@ def start_ptt_listener(loop: asyncio.AbstractEventLoop, voice_queue: asyncio.Que
 # --- Voice Query Handler ---
 async def handle_voice_query(session, pcm_bytes: bytes, loop: asyncio.AbstractEventLoop):
     """Send player voice audio to Gemini, TTS the plain-text coaching response."""
+    await session.send_realtime_input(activity_start=types.ActivityStart())
     await session.send_realtime_input(
         audio=types.Blob(data=pcm_bytes, mime_type=f"audio/pcm;rate={MIC_SAMPLE_RATE}")
     )
-    await session.send_realtime_input(
-        text="PLAYER VOICE QUESTION — answer this directly as their Valorant coach. Be concise and actionable. Respond in plain conversational text, NOT JSON."
-    )
+    await session.send_realtime_input(activity_end=types.ActivityEnd())
 
     full_text = ""
     async for msg in session.receive():
         if msg.server_content:
-            if msg.server_content.output_transcription:
-                full_text += msg.server_content.output_transcription.text or ""
-            if msg.server_content.turn_complete:
+            sc = msg.server_content
+            if sc.output_transcription:
+                full_text += sc.output_transcription.text or ""
+            if sc.model_turn:
+                for part in sc.model_turn.parts or []:
+                    if part.text:
+                        full_text += part.text
+            if sc.turn_complete:
                 break
 
     if full_text:
-        print(f"[SpectAI] Voice response: {full_text}")
-        loop.run_in_executor(None, _speak_sync, full_text)
+        import re
+        sentences = re.split(r'(?<=[.!?])\s+', full_text.strip())
+        spoken = sentences[-1] if sentences else full_text
+        print(f"[SpectAI] Voice response: {spoken}")
+        loop.run_in_executor(None, _speak_sync, spoken)
 
 
 # --- Core ---

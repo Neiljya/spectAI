@@ -115,8 +115,11 @@ async def handle_voice_query(session, pcm_bytes: bytes, loop):
             if sc.turn_complete:
                 break
     if full_text:
-        print(f"[Test] Gemini: {full_text}")
-        await loop.run_in_executor(None, _speak_sync, full_text)
+        import re
+        sentences = re.split(r'(?<=[.!?])\s+', full_text.strip())
+        spoken = sentences[-1] if sentences else full_text
+        print(f"[Test] Gemini: {spoken}")
+        await loop.run_in_executor(None, _speak_sync, spoken)
     else:
         print("[Test] No text in response")
 
@@ -126,7 +129,7 @@ async def main():
     config = types.LiveConnectConfig(
         response_modalities=["AUDIO"],
         system_instruction=types.Content(parts=[types.Part(
-            text="You are SpectAI, an elite Valorant coach. Answer questions in 12 words or fewer — sharp and actionable."
+            text="You are SpectAI, an elite Valorant coach. Answer questions in 1-2 sentences max — direct and actionable, no long explanations."
         )]),
         output_audio_transcription=types.AudioTranscriptionConfig(),
         realtime_input_config=types.RealtimeInputConfig(

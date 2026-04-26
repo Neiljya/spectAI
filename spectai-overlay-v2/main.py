@@ -252,7 +252,6 @@ def main():
         voice_callback=_on_voice_response,
         play_callback=lambda m, p: coach.show_play(m, p),
         lineup_callback=_on_lineup_request,
-        frame_callback=_recorder.write_frame,
         plays_summary=get_plays_summary(),
     )
 

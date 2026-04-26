@@ -1,0 +1,66 @@
+/* src/components/dashboard/SkillRadar.css */
+
+.skill-radar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.skill-radar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.skill-radar__avg {
+  font-size: 26px;
+  color: var(--t1);
+  line-height: 1;
+}
+
+.skill-radar__avg-label {
+  font-size: 11px;
+  color: var(--t3);
+  margin-left: 2px;
+}
+
+.skill-radar__svg {
+  max-width: 220px;
+  align-self: center;
+}
+
+.skill-radar__legend {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skill-radar__item {
+  display: grid;
+  grid-template-columns: 90px 1fr 32px;
+  align-items: center;
+  gap: 10px;
+}
+
+.skill-radar__item-label {
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.skill-radar__item-bar {
+  height: 2px;
+  background: var(--b2);
+  overflow: hidden;
+}
+
+.skill-radar__item-fill {
+  height: 100%;
+  background: var(--red);
+  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.skill-radar__item-score {
+  font-size: 11px;
+  color: var(--t2);
+  text-align: right;
+}

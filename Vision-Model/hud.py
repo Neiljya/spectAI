@@ -1,23 +1,28 @@
 import sys
+import os
 import cv2
 import numpy as np
-sys.path.insert(0, ".")
+import json
 
 from stream import WindowCapture
+from core.ocr import extract_text as easyocr_extract_text, initialize_ocr
+from core.image_processing import enhance_for_ocr
 
 # (left, top, right, bottom) as fractions of frame width/height
 REGIONS = {
     # "hp_bar":       (0.008, 0.916, 0.160, 0.944),
     # "shield_bar":   (0.008, 0.890, 0.160, 0.917),
-    "hp_number":    (0.28, 0.92, 0.34, 0.96),
-    "shield_number":(0.34, 0.92, 0.38, 0.96),
-    "credits":      (0.92, 0.95, 0.99, 0.98),
-    "timer":        (0.46, 0.00, 0.54, 0.05),
-    "score_left":   (0.42, 0.02, 0.44, 0.05),
-    "score_right":  (0.56, 0.02, 0.58, 0.05),
-    "spike":        (0.45, 0.05, 0.55, 0.09),
-    "phase_bar":    (0.35, 0.06, 0.65, 0.09),
-    "ult_orbs":     (0.57, 0.90, 0.62, 0.97),
+    "hp_number":    (0.30, 0.93, 0.34, 0.97),
+    "shield_number":(0.28, 0.93, 0.30, 0.97),
+    "credits":      (0.945, 0.96, 0.98, 0.98),
+    "timer":        (0.47, 0.03, 0.53, 0.06),
+    "score_left":   (0.42, 0.03, 0.44, 0.06),
+    "score_right":  (0.56, 0.03, 0.58, 0.06),
+    # "spike":        (0.45, 0.05, 0.55, 0.09),
+    # "phase_bar":    (0.35, 0.06, 0.65, 0.09),
+    # "ult_orbs":     (0.56, 0.95, 0.62, 0.97),
+    "loaded_ammo": (0.665, 0.93, 0.695, 0.97),
+    "stored_ammo": (0.703, 0.94, 0.72, 0.96),
 }
 
 COLOURS = {
@@ -29,9 +34,11 @@ COLOURS = {
     "timer":        (255, 255, 0),
     "score_left":   (255, 100, 0),
     "score_right":  (255, 100, 0),
-    "spike":        (0, 0, 255),
-    "phase_bar":    (200, 0, 200),
-    "ult_orbs":     (0, 215, 255),
+    # "spike":        (0, 0, 255),
+    # "phase_bar":    (200, 0, 200),
+    # "ult_orbs":     (0, 215, 255),
+    "loaded_ammo":  (0, 255, 0),
+    "stored_ammo":  (0, 200, 255),
 }
 
 
@@ -68,36 +75,109 @@ def draw_regions(frame: np.ndarray) -> np.ndarray:
     return out
 
 
-TARGET = "VALORANT  "
-print(f"Connecting to '{TARGET}'...")
-cap = WindowCapture(TARGET)
+# --- Skeleton for Extraction Logistics ---
+# Uncomment and install pytesseract / easyocr as needed:
+# import pytesseract
 
-cv2.namedWindow("SpectAI - HUD", cv2.WINDOW_NORMAL)
+class ValorantHUDScanner:
+    def __init__(self, templates=None):
+        """
+        Store templates for opencv matching (spike, ult icons, abilities, phases).
+        e.g., self.spike_template = cv2.imread('templates/spike_planted.png', 0)
+        """
+        self.templates = templates or {}
+        # Ensure OCR is initialized
+        initialize_ocr()
 
-print("Running — press Q to quit, D to toggle overlay, G to toggle grid")
+    def get_roi_image(self, frame: np.ndarray, region_name: str) -> np.ndarray:
+        if region_name not in REGIONS:
+            return None
+        h, w = frame.shape[:2]
+        l, t, r, b = REGIONS[region_name]
+        return frame[int(t*h):int(b*h), int(l*w):int(r*w)]
 
-show_overlay = True
-show_grid    = False
+    def extract_text(self, roi_img: np.ndarray, is_number=False, region_name="unnamed") -> str:
+        """
+        OCR text extraction using the valorant-data-extraction engine.
+        """
+        if roi_img is None or roi_img.size == 0: 
+            return ""
+        
+        # Preprocess the ROI
+        enhanced_img = enhance_for_ocr(roi_img, region_name=region_name)
+        
+        # Configure EasyOCR arguments depending on if we are looking for numbers
+        kwargs = {}
+        if is_number:
+            kwargs["allowlist"] = "0123456789"
+            
+        # extract_text returns a List[str]. Join them into a single string.
+        results = easyocr_extract_text(enhanced_img, detail=0, region_name=region_name, **kwargs)
+        if results:
+            return " ".join(results).strip()
+        
+        return ""
 
-while True:
-    frame = cap.capture()
-    if frame is None:
-        continue
+    def parse_hud(self, frame: np.ndarray) -> dict:
+        """Main method to parse all HUD elements."""
+        credits_str = self.extract_text(self.get_roi_image(frame, "credits"), is_number=True, region_name="credits")
+        
+        # Hack to fix '$' often read as '5' in larger credit counts resulting in e.g. 35800 instead of 3800
+        if credits_str.isdigit() and int(credits_str) > 9000 and len(credits_str) >= 2 and credits_str[1] == '5':
+            credits_str = credits_str[0] + credits_str[2:]
 
-    display = frame
-    if show_grid:
-        display = draw_grid(display)
-    if show_overlay:
-        display = draw_regions(display)
+        data = {
+            "hp": self.extract_text(self.get_roi_image(frame, "hp_number"), is_number=True, region_name="hp"),
+            "shield": self.extract_text(self.get_roi_image(frame, "shield_number"), is_number=True, region_name="shield"),
+            "credits": credits_str,
+            "match_timer": self.extract_text(self.get_roi_image(frame, "timer"), is_number=False, region_name="match_timer"),
+            "my_team_score": self.extract_text(self.get_roi_image(frame, "score_left"), is_number=True, region_name="my_team_score"),
+            "enemy_team_score": self.extract_text(self.get_roi_image(frame, "score_right"), is_number=True, region_name="enemy_team_score"),
+            "game_phase": self.extract_text(self.get_roi_image(frame, "phase_bar"), is_number=False, region_name="game_phase"),
+            "loaded_ammo": self.extract_text(self.get_roi_image(frame, "loaded_ammo"), is_number=True, region_name="loaded_ammo"),
+            "stored_ammo": self.extract_text(self.get_roi_image(frame, "stored_ammo"), is_number=True, region_name="stored_ammo"),
+        }
+        return data
 
-    cv2.imshow("SpectAI - HUD", display)
 
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
-    elif key == ord("d"):
-        show_overlay = not show_overlay
-    elif key == ord("g"):
-        show_grid = not show_grid
+if __name__ == "__main__":
+    TARGET = "VALORANT  "
+    print(f"Connecting to '{TARGET}'...")
+    cap = WindowCapture(TARGET)
 
-cv2.destroyAllWindows()
+    cv2.namedWindow("SpectAI - HUD", cv2.WINDOW_NORMAL)
+
+    print("Running — press Q to quit, D to toggle overlay, G to toggle grid")
+
+    show_overlay = True
+    show_grid    = False
+    scanner      = ValorantHUDScanner()
+
+    while True:
+        frame = cap.capture()
+        if frame is None:
+            continue
+
+        # HUD Parsing (Skeleton disabled by default or logging sparingly)
+        data = scanner.parse_hud(frame)
+        # Clear the console/print structured JSON so it updates in real time relatively cleanly
+        os.system('cls' if os.name == 'nt' else 'clear')
+        print(json.dumps(data, indent=4))
+
+        display = frame
+        if show_grid:
+            display = draw_grid(display)
+        if show_overlay:
+            display = draw_regions(display)
+
+        cv2.imshow("SpectAI - HUD", display)
+
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+        elif key == ord("d"):
+            show_overlay = not show_overlay
+        elif key == ord("g"):
+            show_grid = not show_grid
+
+    cv2.destroyAllWindows()

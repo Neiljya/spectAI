@@ -1,0 +1,200 @@
+/* ── Main Glass Container ── */
+.ai-card {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 32px;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle Red Glow behind the glass */
+.ai-card::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  left: -10%;
+  width: 40%;
+  height: 60%;
+  background: radial-gradient(circle, rgba(255, 59, 48, 0.05), transparent 70%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ── Header & Button ── */
+.ai-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.ai-card__title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-top: 6px;
+  color: var(--t1);
+}
+
+.ai-card__build-btn {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--t1);
+  padding: 12px 24px;
+  border-radius: 40px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ai-card__build-btn:hover:not(:disabled) {
+  background: var(--red);
+  border-color: var(--red);
+  box-shadow: 0 0 25px rgba(255, 59, 48, 0.4);
+  transform: translateY(-2px);
+}
+
+.ai-card__build-btn--busy {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+/* ── Summary Box (More Frosted) ── */
+.ai-card__summary {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 24px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-left: 3px solid var(--red);
+}
+
+.ai-card__summary p {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--t2);
+  margin: 0;
+  font-weight: 300;
+}
+
+/* ── Grid & Lists ── */
+.ai-card__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+.ai-card__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ai-card__list li {
+  font-size: 14px;
+  color: var(--t1);
+  position: relative;
+  padding-left: 24px;
+  line-height: 1.4;
+}
+
+.ai-card__list li::before {
+  content: '▹';
+  position: absolute;
+  left: 0;
+  opacity: 0.5;
+}
+
+.ai-card__list--green li { color: #4ade80; }
+.ai-card__list--red li { color: #ffbaba; }
+
+/* ── Status Messages ── */
+.ai-card__msg {
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-family: var(--font-mono);
+  animation: smoothFadeUp 0.4s ease;
+}
+
+.ai-card__msg--ok {
+  background: rgba(74, 222, 128, 0.1);
+  color: #4ade80;
+  border: 1px solid rgba(74, 222, 128, 0.2);
+}
+
+.ai-card__msg--err {
+  background: rgba(255, 59, 48, 0.1);
+  color: var(--red);
+  border: 1px solid rgba(255, 59, 48, 0.2);
+}
+
+/* ── Loaders ── */
+.ai-card--loading {
+  justify-content: center;
+  align-items: center;
+  min-height: 320px;
+}
+
+.ai-card__spinner, .ai-card__btn-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top-color: var(--t1);
+  border-radius: 50%;
+  animation: db-spin 0.8s linear infinite;
+}
+
+@keyframes db-spin {
+  to { transform: rotate(360deg); }
+}
+
+
+.ai-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ai-card__refresh-btn {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text, #fff);
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 120ms ease, background 120ms ease, opacity 120ms ease;
+}
+
+.ai-card__refresh-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.ai-card__refresh-btn:disabled,
+.ai-card__build-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ai-card__refresh-btn--busy {
+  pointer-events: none;
+}

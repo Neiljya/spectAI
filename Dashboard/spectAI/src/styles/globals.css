@@ -1,0 +1,118 @@
+/* ============================================================
+   SPECT AI — DESIGN SYSTEM v4
+   Direction: Fluid editorial · Breathing space · Mixed radii
+   Fonts: Syne · Space Grotesk · DM Mono
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap');
+
+:root {
+  --void:       #030405;
+  --base:       #06080A;
+  --surface:    #0A0D10;
+  --raised:     #0E1216;
+  --overlay:    #131820;
+  --high:       #19202A;
+
+  --red:        #E63946;
+  --red-soft:   rgba(230, 57, 70, 0.10);
+  --red-border: rgba(230, 57, 70, 0.25);
+  --teal:       #06D6A0;
+  --teal-soft:  rgba(6, 214, 160, 0.09);
+  --gold:       #FFB703;
+  --gold-soft:  rgba(255, 183, 3, 0.09);
+
+  --t1: #EDF0F3;
+  --t2: #7B8896;
+  --t3: #3A4852;
+  --t4: #1C262E;
+
+  --b1: rgba(255,255,255,0.02);
+  --b2: rgba(255,255,255,0.05);
+  --b3: rgba(255,255,255,0.09);
+  --b4: rgba(255,255,255,0.14);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'Space Grotesk', sans-serif;
+  --font-mono:    'DM Mono', monospace;
+
+  /* Varied radii — use them, don't default to 0 everywhere */
+  --ra: 4px;    /* subtle */
+  --rb: 10px;   /* medium */
+  --rc: 16px;   /* card */
+  --rd: 24px;   /* large */
+  --re: 999px;  /* pill */
+
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --fast: 110ms;
+  --mid:  210ms;
+  --slow: 380ms;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--void);
+  color: var(--t1);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.08;
+  color: var(--t1);
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--t3);
+}
+
+.mono { font-family: var(--font-mono); }
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--b3); border-radius: 2px; }
+:focus-visible { outline: 1px solid var(--red); outline-offset: 3px; border-radius: var(--ra); }
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border: 1px solid transparent;
+  border-radius: var(--re);
+}
+.badge--red  { background: var(--red-soft);  color: var(--red);  border-color: var(--red-border); }
+.badge--teal { background: var(--teal-soft); color: var(--teal); border-color: rgba(6,214,160,0.2); }
+.badge--gold { background: var(--gold-soft); color: var(--gold); border-color: rgba(255,183,3,0.2); }
+.badge--dim  { background: var(--raised);    color: var(--t3);   border-color: var(--b2); }
+
+.divider { height: 1px; background: var(--b2); }
+
+@keyframes fadeUp  { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
+@keyframes spin    { to { transform:rotate(360deg); } }
+@keyframes pulse   { 0%,100% { opacity:1; } 50% { opacity:0.35; } }
+
+.anim-up   { animation: fadeUp var(--slow) var(--ease) both; }
+.anim-up-1 { animation: fadeUp var(--slow) var(--ease) 60ms  both; }
+.anim-up-2 { animation: fadeUp var(--slow) var(--ease) 120ms both; }
+.anim-up-3 { animation: fadeUp var(--slow) var(--ease) 180ms both; }
+
+.sr-only {
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0;
+}
